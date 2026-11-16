@@ -1,0 +1,241 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_view.gd" id="e1"]
+
+[ext_resource type="Script" path="res://scripts/combat_effects.gd" id="e2"]
+
+[ext_resource type="Texture2D" path="res://assets/dongling.png" id="e3"]
+
+[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="e4"]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guan_yu.tscn" id="e5"]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guard.tscn" id="e6"]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/kong_xiu.tscn" id="e7"]
+
+[ext_resource type="Texture2D" path="res://assets/carriage.png" id="e8"]
+
+[ext_resource type="Texture2D" path="res://assets/red-hare.png" id="e9"]
+
+[ext_resource type="Texture2D" path="res://assets/tea-set.png" id="tea_set"]
+
+[sub_resource type="AtlasTexture" id="s1"]
+atlas = ExtResource("e3")
+region = Rect2(450, 610, 1000, 130)
+
+[node name="DonglingPass" type="Node2D"]
+script = ExtResource("e1")
+texture_filter = 1
+
+[node name="Backdrop" type="Sprite2D" parent="."]
+position = Vector2(0, -20)
+scale = Vector2(0.7236842, 0.7226355)
+texture = ExtResource("e3")
+centered = false
+modulate = Color(0.84, 0.83, 0.74, 1)
+
+[node name="Atmosphere" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0.000, 350.000, 3000.000, 350.000, 3000.000, 540.000, 0.000, 540.000)
+color = Color(0.06, 0.1, 0.09, 0.36)
+
+[node name="Ground" type="Node2D" parent="."]
+
+
+[node name="Fill" type="Polygon2D" parent="Ground"]
+polygon = PackedVector2Array(0.000, 442.000, 3000.000, 442.000, 3000.000, 540.000, 0.000, 540.000)
+color = Color(0.29, 0.286, 0.216, 1)
+
+[node name="Texture" type="TextureRect" parent="Ground"]
+offset_top = 443.0
+offset_right = 1000.0
+offset_bottom = 523.0
+mouse_filter = 2
+texture = SubResource("s1")
+expand_mode = 1
+modulate = Color(0.65, 0.64, 0.48, 0.65)
+
+[node name="TextureMiddle" type="TextureRect" parent="Ground"]
+offset_left = 1000.0
+offset_top = 443.0
+offset_right = 2000.0
+offset_bottom = 523.0
+mouse_filter = 2
+texture = SubResource("s1")
+expand_mode = 1
+modulate = Color(0.65, 0.64, 0.48, 0.65)
+
+[node name="TextureGate" type="TextureRect" parent="Ground"]
+offset_left = 2000.0
+offset_top = 443.0
+offset_right = 3000.0
+offset_bottom = 523.0
+mouse_filter = 2
+texture = SubResource("s1")
+expand_mode = 1
+modulate = Color(0.65, 0.64, 0.48, 0.65)
+
+[node name="Edge" type="Line2D" parent="Ground"]
+points = PackedVector2Array(0.000, 442.000, 3000.000, 442.000)
+width = 2.0
+default_color = Color(0.73, 0.64, 0.45, 1)
+
+[node name="Companions" type="Node2D" parent="."]
+
+
+[node name="Carriage" type="Sprite2D" parent="Companions"]
+position = Vector2(115, 364.5)
+texture = ExtResource("e8")
+region_enabled = true
+region_rect = Rect2(8, 19, 80, 69)
+scale = Vector2(1.9565217391304348, 1.9565217391304348)
+
+[node name="RedHare" type="Sprite2D" parent="Companions"]
+position = Vector2(270, 381.0)
+texture = ExtResource("e9")
+region_enabled = true
+region_rect = Rect2(8, 11, 80, 77)
+scale = Vector2(1.4025974025974026, 1.4025974025974026)
+
+[node name="Training" type="Node2D" parent="."]
+
+
+[node name="Flag" type="Node2D" parent="Training"]
+position = Vector2(445, 440)
+
+[node name="Pole" type="Line2D" parent="Training/Flag"]
+points = PackedVector2Array(0.000, 0.000, 0.000, -110.000)
+width = 3.0
+default_color = Color(0.87, 0.74, 0.46, 1)
+
+[node name="Cloth" type="Polygon2D" parent="Training/Flag"]
+polygon = PackedVector2Array(0.000, -110.000, 35.000, -103.000, 30.000, -68.000, 0.000, -75.000)
+color = Color(0.59, 0.247, 0.196, 1)
+
+[node name="Hint" type="Label" parent="Training/Flag"]
+offset_left = -12.0
+offset_top = -144.0
+offset_right = 48.0
+offset_bottom = -120.0
+theme_override_fonts/font = ExtResource("e4")
+theme_override_font_sizes/font_size = 13
+text = "前行"
+
+[node name="Dummy" type="Node2D" parent="Training"]
+position = Vector2(650, 440)
+
+[node name="Pole" type="Line2D" parent="Training/Dummy"]
+points = PackedVector2Array(0.000, 0.000, 0.000, -85.000)
+width = 7.0
+default_color = Color(0.72, 0.596, 0.38, 1)
+
+[node name="Target" type="Polygon2D" parent="Training/Dummy"]
+position = Vector2(0, -62)
+polygon = PackedVector2Array(22.000, 0.000, 21.577, 4.292, 20.325, 8.419, 18.292, 12.223, 15.556, 15.556, 12.223, 18.292, 8.419, 20.325, 4.292, 21.577, 0.000, 22.000, -4.292, 21.577, -8.419, 20.325, -12.223, 18.292, -15.556, 15.556, -18.292, 12.223, -20.325, 8.419, -21.577, 4.292, -22.000, 0.000, -21.577, -4.292, -20.325, -8.419, -18.292, -12.223, -15.556, -15.556, -12.223, -18.292, -8.419, -20.325, -4.292, -21.577, -0.000, -22.000, 4.292, -21.577, 8.419, -20.325, 12.223, -18.292, 15.556, -15.556, 18.292, -12.223, 20.325, -8.419, 21.577, -4.292)
+color = Color(0.49, 0.36, 0.22, 1)
+
+[node name="Ring" type="Line2D" parent="Training/Dummy"]
+position = Vector2(0, -62)
+points = PackedVector2Array(14.000, 0.000, 13.731, 2.731, 12.934, 5.358, 11.641, 7.778, 9.899, 9.899, 7.778, 11.641, 5.358, 12.934, 2.731, 13.731, 0.000, 14.000, -2.731, 13.731, -5.358, 12.934, -7.778, 11.641, -9.899, 9.899, -11.641, 7.778, -12.934, 5.358, -13.731, 2.731, -14.000, 0.000, -13.731, -2.731, -12.934, -5.358, -11.641, -7.778, -9.899, -9.899, -7.778, -11.641, -5.358, -12.934, -2.731, -13.731, -0.000, -14.000, 2.731, -13.731, 5.358, -12.934, 7.778, -11.641, 9.899, -9.899, 11.641, -7.778, 12.934, -5.358, 13.731, -2.731)
+closed = true
+width = 3.0
+default_color = Color(0.87, 0.74, 0.46, 1)
+
+[node name="Hint" type="Label" parent="Training/Dummy"]
+offset_left = -26.0
+offset_top = -122.0
+offset_right = 50.0
+offset_bottom = -98.0
+theme_override_fonts/font = ExtResource("e4")
+theme_override_font_sizes/font_size = 12
+text = "训练靶"
+
+[node name="Player" parent="." instance=ExtResource("e5")]
+position = Vector2(330, 440)
+
+[node name="Guards" type="Node2D" parent="."]
+
+
+[node name="WaveOne" type="Node2D" parent="Guards"]
+
+
+[node name="Guard1" parent="Guards/WaveOne" instance=ExtResource("e6")]
+position = Vector2(1150, 440)
+
+[node name="Guard2" parent="Guards/WaveOne" instance=ExtResource("e6")]
+position = Vector2(1370, 440)
+
+[node name="WaveTwo" type="Node2D" parent="Guards"]
+
+
+[node name="Guard1" parent="Guards/WaveTwo" instance=ExtResource("e6")]
+position = Vector2(1740, 440)
+
+[node name="Guard2" parent="Guards/WaveTwo" instance=ExtResource("e6")]
+position = Vector2(1930, 440)
+
+[node name="Guard3" parent="Guards/WaveTwo" instance=ExtResource("e6")]
+position = Vector2(2110, 440)
+
+[node name="Boss" parent="." instance=ExtResource("e7")]
+position = Vector2(2780, 440)
+
+[node name="BossPlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(2460, 440)
+
+[node name="RetreatGuards" type="Node2D" parent="."]
+visible = false
+
+[node name="Guard1" parent="RetreatGuards" instance=ExtResource("e6")]
+position = Vector2(2670, 440)
+modulate = Color(1, 1, 1, 0.5)
+
+[node name="Guard2" parent="RetreatGuards" instance=ExtResource("e6")]
+position = Vector2(2880, 440)
+modulate = Color(1, 1, 1, 0.5)
+
+[node name="Effects" type="Node2D" parent="."]
+script = ExtResource("e2")
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(480, 270)
+position_smoothing_enabled = false
+
+[node name="RestPoint" type="Node2D" parent="."]
+position = Vector2(2060, 440)
+
+[node name="Table" type="Polygon2D" parent="RestPoint"]
+color = Color(0.35, 0.22, 0.12, 1)
+polygon = PackedVector2Array(-48, -43, 48, -43, 48, -33, -48, -33)
+
+[node name="LeftLeg" type="Polygon2D" parent="RestPoint"]
+color = Color(0.25, 0.16, 0.1, 1)
+polygon = PackedVector2Array(-39, -33, -31, -33, -31, 0, -39, 0)
+
+[node name="RightLeg" type="Polygon2D" parent="RestPoint"]
+color = Color(0.25, 0.16, 0.1, 1)
+polygon = PackedVector2Array(31, -33, 39, -33, 39, 0, 31, 0)
+
+[node name="TeaPot" type="Sprite2D" parent="RestPoint"]
+position = Vector2(6, -64)
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("tea_set")
+region_enabled = true
+region_rect = Rect2(650, 0, 850, 570)
+
+[node name="Cup" type="Sprite2D" parent="RestPoint"]
+position = Vector2(-29, -54)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("tea_set")
+region_enabled = true
+region_rect = Rect2(190, 210, 400, 330)
+
+[node name="Hint" type="Label" parent="RestPoint"]
+offset_left = -75.0
+offset_top = -112.0
+offset_right = 110.0
+offset_bottom = -86.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("e4")
+theme_override_font_sizes/font_size = 13
+text = "E  茶摊歇脚"

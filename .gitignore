@@ -1,0 +1,11 @@
+# macOS / IDE local state
+.DS_Store
+.idea/
+.vscode/
+
+# Godot generated imports and editor cache; keep source .uid files
+.godot/
+
+# Local exports
+/builds/
+/godot/builds/
