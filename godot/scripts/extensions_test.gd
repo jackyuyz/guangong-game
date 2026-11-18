@@ -12,6 +12,8 @@ var state = "play"
 var phase = 3
 var hp = 6
 var x = 1000.0
+var player_y = 440.0
+var rest_x = 2060.0
 var facing = 1.0
 var enemies: Array[Dictionary] = []
 var checkpoint: Dictionary = {}
@@ -27,10 +29,10 @@ var hit_stop = 0.0
 var banners: Array = []
 var win_calls = 0
 
-func _hurt(direction: float) -> void:
+func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 	if invincible > 0 or (dodge_time > 0.06 and dodge_time < 0.30) or state != "play":
 		return
-	if ext.absorb_damage(self, direction):
+	if ext.absorb_damage(self, direction, attacker):
 		return
 	hp -= 1
 	hits += 1
@@ -74,7 +76,7 @@ func make_game() -> Node:
 
 func enemy(px: float, boss: bool = false, mode: String = "approach") -> Dictionary:
 	var hp = 16 if boss else 2
-	return {"x": px, "hp": hp, "max_hp": hp, "boss": boss, "mode": mode, "timer": 0.4,
+	return {"x": px, "y": 440.0, "hp": hp, "max_hp": hp, "boss": boss, "mode": mode, "timer": 0.4,
 		"facing": -1.0, "last_swing": -1, "flash": 0.0, "move": 1, "struck": mode == "strike",
 		"combo_pending": false}
 
@@ -117,7 +119,7 @@ func test_guard_and_parry() -> void:
 	game.enemies.append(foe)
 	check(ext.handle_key(game, KEY_K) and ext.is_guarding() and ext.in_parry_window(), "K raises guard in parry window")
 	ext.update(game, 0.1)
-	game._hurt(foe.facing)
+	game._hurt(foe.facing, foe)
 	check(game.hp == 6 and ext.parries == 1 and ext.resource == ext.PARRY_GAIN, "early hit is a perfect parry and grants 义气")
 	check(foe.mode == "recover" and is_equal_approx(foe.timer, ext.PARRY_STAGGER_GUARD) and not foe.combo_pending, "parry staggers the attacker")
 	check(ext.guard_cooldown == 0.0, "parry clears guard cooldown")
@@ -127,12 +129,12 @@ func test_guard_and_parry() -> void:
 	ext.handle_key(game, KEY_K)
 	ext.update(game, 0.25)
 	var x_before: float = game.x
-	game._hurt(foe.facing)
+	game._hurt(foe.facing, foe)
 	check(game.hp == 6 and ext.blocks == 1 and ext.resource == 0 and ext.parries == 0, "late hit is a plain block with no 义气")
 	check(game.x < x_before and foe.mode == "strike", "block pushes back and does not stagger")
 	# Stance expiry.
 	ext.update(game, 0.2)
-	game._hurt(foe.facing)
+	game._hurt(foe.facing, foe)
 	check(not ext.is_guarding() and game.hp == 5, "expired guard lets damage through")
 
 func test_guard_rules() -> void:
@@ -178,7 +180,7 @@ func test_boss_sweep() -> void:
 	game.enemies.append(boss)
 	ext.handle_key(game, KEY_K)
 	ext.update(game, 0.25)
-	game._hurt(boss.facing)
+	game._hurt(boss.facing, boss)
 	check(game.hp == 5 and not ext.is_guarding() and ext.guard_broken > 0, "boss sweep breaks a plain guard")
 	game.invincible = 0
 	ext.reset()
@@ -186,14 +188,14 @@ func test_boss_sweep() -> void:
 	boss.struck = true
 	ext.handle_key(game, KEY_K)
 	ext.update(game, 0.05)
-	game._hurt(boss.facing)
+	game._hurt(boss.facing, boss)
 	check(game.hp == 5 and boss.mode == "recover" and is_equal_approx(boss.timer, ext.PARRY_STAGGER), "boss sweep can be perfectly parried")
 	ext.reset()
 	boss.mode = "strike"
 	boss.move = 3
 	ext.handle_key(game, KEY_K)
 	ext.update(game, 0.3)
-	game._hurt(boss.facing)
+	game._hurt(boss.facing, boss)
 	check(game.hp == 5 and ext.blocks == 1, "boss thrust can be blocked")
 
 func test_state_guards() -> void:
@@ -269,16 +271,16 @@ func test_rest_point() -> void:
 	var ext = game.ext
 	game.phase = 4
 	game.hp = 3
-	game.x = ext.REST_X
+	game.x = game.rest_x
 	game.enemies.append(enemy(1900))
 	check(not ext.handle_key(game, KEY_E), "rest closed while guards remain")
 	game.enemies.clear()
 	ext.update(game, 0.01)
 	ext.update(game, 0.01)
 	check(game.banners.count(game.banners[-1]) == 1 and "E" in game.banners[-1], "rest point announced once")
-	game.x = ext.REST_X + ext.REST_RANGE + 10
+	game.x = game.rest_x + ext.REST_RANGE + 10
 	check(not ext.handle_key(game, KEY_E), "rest needs proximity")
-	game.x = ext.REST_X
+	game.x = game.rest_x
 	check(ext.handle_key(game, KEY_E) and game.hp == 4 and ext.resource == ext.RESOURCE_MAX, "rest heals one and fills 义气")
 	check(not ext.handle_key(game, KEY_E) and game.hp == 4, "rest is one-time")
 	ext.reset()
@@ -319,7 +321,7 @@ func test_status_text() -> void:
 	check("K" in text and "L" in text and "0/4" in text and not text.contains("E "), "status names keys and 义气")
 	ext.resource = 4
 	game.phase = 4
-	game.x = ext.REST_X
+	game.x = game.rest_x
 	text = ext.status_text(game)
 	check("就绪" in text and "E 茶摊" in text and text.length() <= 70, "status shows ready and nearby rest")
 	ext.handle_key(game, KEY_K)

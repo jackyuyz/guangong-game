@@ -40,7 +40,7 @@ func present(game: Node) -> void:
 		var line: Array = game.dialogue[game.dialogue_index]
 		$Root/Dialogue/Speaker.text = str(line[0])
 		$Root/Dialogue/Body.text = str(line[1])
-	$Root/Defeat/Retry.text = "重试孔秀  ↵" if not game.checkpoint.is_empty() else "从第一阵重试  ↵"
+	$Root/Defeat/Retry.text = "重试孔秀  ENTER" if not game.checkpoint.is_empty() else "从第一阵重试  ENTER"
 	$Root/Victory/Score.text = str(game.score)
 	$Root/Victory/Best.text = "本次得分    /    最佳 %d" % game.best
 	$Root/Victory/Stats.text = "战斗 %ds    剩余 %d / 6    受击 %d    重试 %d" % [int(game.combat_seconds), game.hp, game.hits, game.retries]

@@ -19,10 +19,8 @@ const HEAVY_BACK = 30.0 # Also catches enemies overlapping from behind.
 const HEAVY_TIME = 0.35 # Pose time; also the heroic invincibility window.
 const HEAVY_COOLDOWN = 0.9
 const HEAVY_STAGGER = 0.9
-const REST_X = 2060.0 # Between wave two and the gate trigger (x > 2170).
 const REST_RANGE = 85.0
 const REST_HEAL = 1
-const GROUND = 440.0
 const JADE = Color("72b69a")
 const GOLD = Color("dfbc76")
 const PAPER = Color("f3e8cd")
@@ -75,7 +73,7 @@ func heavy_ready() -> bool:
 
 func can_rest(game: Node) -> bool:
 	return not rest_used and game.state == "play" and game.phase == 4 \
-		and game.enemies.is_empty() and absf(game.x - REST_X) <= REST_RANGE
+		and game.enemies.is_empty() and absf(game.x - game.rest_x) <= REST_RANGE
 
 func update(game: Node, dt: float) -> void:
 	if game.state != "play":
@@ -104,6 +102,8 @@ func update(game: Node, dt: float) -> void:
 func handle_key(game: Node, key: int) -> bool:
 	if game.state != "play":
 		return false
+	if heavy_time > 0 and key in [KEY_J, KEY_SPACE, KEY_K, KEY_L]:
+		return true
 	match key:
 		KEY_K:
 			if guard_cooldown <= 0.0 and game.attack_time <= 0.0 and game.dodge_time <= 0.0:
@@ -120,7 +120,7 @@ func handle_key(game: Node, key: int) -> bool:
 				rest_used = true
 				game.hp = mini(6, game.hp + REST_HEAL)
 				resource = RESOURCE_MAX
-				game._sparks(game.x, GROUND - 70, JADE)
+				game._sparks(game.x, game.player_y - 70, JADE)
 				game._tone(440, 0.18, 0.07)
 				game._banner("茶摊歇脚 · 气血回复一格，义气充盈")
 				return true
@@ -147,6 +147,7 @@ func _heavy(game: Node) -> void:
 		game._tone(110, 0.06, 0.05)
 		return
 	resource -= HEAVY_COST
+	game.attack_time = 0.0
 	heavy_time = HEAVY_TIME
 	heavy_cooldown = HEAVY_COOLDOWN
 	guard_timer = 0.0
@@ -158,12 +159,13 @@ func _heavy(game: Node) -> void:
 	for enemy in targets:
 		enemy.hp -= HEAVY_DAMAGE
 		enemy.flash = 0.2
-		game._sparks(enemy.x, GROUND - 60, GOLD)
+		game._sparks(enemy.x, enemy.y - 60, GOLD)
 		if enemy.hp <= 0:
 			boss_down = boss_down or enemy.boss
 		else:
 			_stagger(enemy, HEAVY_STAGGER)
 	if boss_down:
+		heavy_time = 0.0
 		game._win()
 		return
 	game.enemies = game.enemies.filter(func(e): return e.hp > 0)
@@ -175,38 +177,27 @@ func _stagger(enemy: Dictionary, seconds: float) -> void:
 	enemy.combo_pending = false
 	enemy.struck = true
 
-## Finds the enemy whose strike is landing now: striking, already flagged as
-## struck this frame, facing the given direction and nearest the player.
-func _attacker(game: Node, direction: float):
-	var best = null
-	for enemy in game.enemies:
-		if enemy.hp > 0 and enemy.mode == "strike" and enemy.struck and signf(enemy.facing) == signf(direction):
-			if best == null or absf(enemy.x - game.x) < absf(best.x - game.x):
-				best = enemy
-	return best
-
-func absorb_damage(game: Node, direction: float) -> bool:
+func absorb_damage(game: Node, direction: float, attacker: Dictionary = {}) -> bool:
 	if game.state != "play" or guard_timer <= 0.0:
 		return false
 	# The guard only covers the front: the attack must come toward Guan Yu's face.
 	if game.facing * direction >= 0.0:
 		return false
-	var attacker = _attacker(game, direction)
 	if in_parry_window():
 		parries += 1
 		resource = mini(RESOURCE_MAX, resource + PARRY_GAIN)
 		guard_cooldown = 0.0
 		parry_flash = 0.25
-		if attacker != null:
+		if not attacker.is_empty():
 			_stagger(attacker, PARRY_STAGGER if attacker.boss else PARRY_STAGGER_GUARD)
 			attacker.flash = 0.15
 		game.hit_stop = 0.08
 		game.shake = 3.0
-		game._sparks(game.x + game.facing * 40, GROUND - 70, PAPER)
+		game._sparks(game.x + game.facing * 40, game.player_y - 70, PAPER)
 		game._tone(660, 0.09, 0.12)
 		game._banner("弹反！破绽已现")
 		return true
-	if attacker != null and attacker.boss and attacker.move % 2 == 0:
+	if not attacker.is_empty() and attacker.boss and attacker.move % 2 == 0:
 		# Kong Xiu's sweep breaks a plain guard; only a perfect parry or a dodge works.
 		guard_timer = 0.0
 		guard_broken = 0.4
@@ -216,7 +207,7 @@ func absorb_damage(game: Node, direction: float) -> bool:
 	block_flash = 0.2
 	game.x += direction * BLOCK_PUSH
 	game.shake = 2.0
-	game._sparks(game.x + game.facing * 30, GROUND - 70, GOLD)
+	game._sparks(game.x + game.facing * 30, game.player_y - 70, GOLD)
 	game._tone(300, 0.06, 0.08)
 	return true
 

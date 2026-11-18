@@ -51,6 +51,7 @@ animations = [{"frames": [{"duration": 1.0, "texture": SubResource("frame_0")}],
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_0")}, {"duration": 1.0, "texture": SubResource("frame_1")}, {"duration": 1.0, "texture": SubResource("frame_2")}, {"duration": 1.0, "texture": SubResource("frame_3")}], "loop": true, "name": &"walk", "speed": 8},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_4")}], "loop": false, "name": &"windup", "speed": 4},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_5")}, {"duration": 1.0, "texture": SubResource("frame_6")}, {"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"attack", "speed": 12.5},
+{"frames": [{"duration": 1.0, "texture": SubResource("frame_5")}, {"duration": 1.0, "texture": SubResource("frame_6")}, {"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"heavy", "speed": 9},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"recover", "speed": 4},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_4")}], "loop": false, "name": &"guard", "speed": 4},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"hurt", "speed": 4}]

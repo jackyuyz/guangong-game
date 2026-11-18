@@ -4,16 +4,17 @@ extends Node2D
 @onready var visual: Node2D = $Visual
 @onready var sprite: AnimatedSprite2D = $Visual/Sprite
 @onready var rest_rotation = visual.rotation
+@onready var rest_y = visual.position.y
+@onready var animation_speed = sprite.speed_scale
 @onready var rest_tint = sprite.modulate
 
 func pose(direction: float, tint: Color = Color.WHITE, tilt: float = 0.0, bob: float = 0.0) -> void:
 	sprite.flip_h = direction != native_facing
 	sprite.modulate = rest_tint * tint
 	visual.rotation = rest_rotation + tilt
-	visual.position.y = bob
+	visual.position.y = rest_y + bob
 
-func present_enemy(enemy: Dictionary, player_x: float) -> void:
-	position.x = enemy.x
+func present_enemy(enemy: Dictionary, player_x: float, frozen: bool) -> void:
 	var windup: bool = enemy.mode == "windup"
 	var attacking: bool = windup or enemy.mode == "strike"
 	$Telegraph.visible = attacking
@@ -37,9 +38,9 @@ func present_enemy(enemy: Dictionary, player_x: float) -> void:
 		motion = "recover"
 	elif absf(enemy.x - player_x) > (145 if enemy.boss else 95):
 		motion = "walk"
-	animate(motion)
+	animate(motion, frozen)
 
-const FRAME_INDICES = {"idle": [0], "walk": [0, 1, 2, 3], "windup": [4], "attack": [5, 6, 7], "recover": [7], "guard": [4], "hurt": [7]}
+const FRAME_INDICES = {"idle": [0], "walk": [0, 1, 2, 3], "windup": [4], "attack": [5, 6, 7], "heavy": [5, 6, 7], "recover": [7], "guard": [4], "hurt": [7]}
 @export var frame_baselines = PackedFloat32Array()
 var original_offset = Vector2.ZERO
 
@@ -50,9 +51,10 @@ func _ready() -> void:
 		sprite.animation_changed.connect(_align_frame)
 		_align_frame()
 
-func animate(animation: String) -> void:
-	if sprite is AnimatedSprite2D and sprite.animation != animation:
+func animate(animation: String, frozen: bool) -> void:
+	if sprite.animation != animation:
 		sprite.play(animation)
+	sprite.speed_scale = 0.0 if frozen else animation_speed
 
 func _align_frame() -> void:
 	if frame_baselines.is_empty():

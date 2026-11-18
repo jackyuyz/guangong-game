@@ -54,6 +54,10 @@ func run() -> void:
 	game._update_play(0.01)
 	check(game.phase == 4 and game.enemies.size() == 3, "second wave")
 	game.enemies.clear()
+	game.x = 2060
+	game.hp = 3
+	press(KEY_E)
+	check(game.hp == 4 and game.ext.resource == 4 and game.ext.rest_used, "tea stall heals and fills resolve through normal key handling")
 	game.x = 2200
 	game._update_play(0.01)
 	check(game.phase == 5 and game.state == "dialogue", "boss introduction")
@@ -69,6 +73,25 @@ func run() -> void:
 	game._retry()
 	check(game.hp == 4 and game.combat_seconds == 21 and game.hits == 4 and game.retries == 1, "checkpoint restores successful path stats")
 	check(game.enemies[0].hp == 16 and game.enemies[0].mode == "approach", "boss reset")
+	check(game.ext.resource == 4, "boss retry restores resolve from the tea stall")
+	var boss: Dictionary = game.enemies[0]
+	game.x = boss.x - 100
+	game.facing = 1
+	press(KEY_K)
+	boss.mode = "strike"
+	boss.facing = -1
+	boss.timer = 0.2
+	game._update_play(0.01)
+	check(game.hp == 4 and boss.mode == "recover" and game.ext.parries == 1, "live strike can be parried through K")
+	press(KEY_J)
+	check(not game.ext.is_guarding() and game.attack_time > 0, "J releases the guard and starts a swing")
+	game._sync_scene()
+	press(KEY_L)
+	game._sync_scene()
+	check(boss.hp == 13 and game.ext.resource == 0 and game.attack_time == 0 and game.level.player.sprite.animation == &"heavy", "L replaces the J swing with one heavy hit and restarts the visual")
+	press(KEY_SPACE)
+	check(game.dodge_time == 0, "Space waits until the heavy strike finishes")
+	game._retry()
 	game.dodge_time = 0.2
 	game._hurt(1)
 	check(game.hp == 4, "dodge invulnerability")
@@ -98,6 +121,13 @@ func run() -> void:
 	check(save.load(game.save_path) == OK and save.get_value(game.SCORE_VERSION, "cleared", false), "persistent completion")
 	game._start()
 	check(game.get_meta("dummy_hits") == 0 and game.checkpoint.is_empty(), "new run clears tutorial and checkpoint")
+	game._enter_boss()
+	game.enemies[0].hp = 3
+	game.x = game.enemies[0].x - 100
+	game.ext.resource = 4
+	press(KEY_L)
+	game._sync_scene()
+	check(game.state == "dialogue" and game.ext.heavy_time == 0 and game.level.player.sprite.animation == &"idle", "lethal heavy strike clears its pose and arc before the ending")
 	print("SMOKE CHECKS COMPLETE")
 	game.queue_free()
 	await process_frame

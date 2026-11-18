@@ -7,8 +7,7 @@ const MUTED = Color("b8b6a2")
 const INK = Color("111c1b")
 const JADE = Color("72b69a")
 const RED = Color("cf6950")
-const GROUND = 440.0
-const WORLD_END = 3000.0
+const VIEWPORT_WIDTH = 960.0
 const SCORE_VERSION = "ch01-v2-checkpoint"
 var ext = preload("res://scripts/combat_extensions.gd").new()
 
@@ -19,6 +18,10 @@ var state = "menu"
 var resume_state = "play"
 var phase = 0
 var x = 180.0
+var player_y: float
+var rest_x: float:
+	get: return level.rest_origin.x
+var moving = false
 var facing = 1.0
 var camera_x = 0.0
 var hp = 6
@@ -63,7 +66,8 @@ func _ready() -> void:
 		muted = bool(save.get_value("settings", "muted", false))
 	tone_player = $Sound
 	ui.action_requested.connect(_action)
-	x = level.player_origin.x
+	_place_player(level.player_origin)
+	camera_x = level.world_left
 	_sync_scene()
 
 func _notification(what: int) -> void:
@@ -83,14 +87,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		muted = not muted
 		_save()
 	if key in [KEY_ESCAPE, KEY_P]:
-		if state == "pause":
+		if show_culture and state in ["menu", "victory"]:
+			show_culture = false
+		elif state == "confirm":
+			state = "pause"
+		elif state == "pause":
 			state = resume_state
 		elif state in ["play", "dialogue"]:
 			resume_state = state
 			state = "pause"
 		return
 	if key == KEY_ENTER:
-		if state == "menu":
+		if show_culture and state in ["menu", "victory"]:
+			show_culture = false
+		elif state == "menu":
 			_start()
 		elif state == "dialogue":
 			_next_dialogue()
@@ -133,8 +143,11 @@ func _action(action: String) -> void:
 			_retry()
 		"menu_confirm": state = "confirm"
 		"menu":
+			_reset_run()
+			phase = 0
+			_place_player(level.player_origin)
+			camera_x = level.world_left
 			state = "menu"
-			checkpoint.clear()
 			show_culture = false
 		"cancel": state = "pause"
 		"mute":
@@ -144,7 +157,7 @@ func _action(action: String) -> void:
 func _start() -> void:
 	_reset_run()
 	phase = 0
-	x = level.player_origin.x
+	_place_player(level.player_origin)
 	set_meta("dummy_hits", 0)
 	tutorial_hits = 0
 	show_culture = false
@@ -162,6 +175,7 @@ func _reset_run() -> void:
 	_reset_effects()
 
 func _reset_effects() -> void:
+	moving = false
 	attack_time = 0
 	attack_cooldown = 0
 	dodge_time = 0
@@ -192,19 +206,23 @@ func _finish_dialogue() -> void:
 	elif dialogue_after == "victory":
 		show_culture = true
 
-func _spawn(pos: float, boss: bool = false) -> void:
-	enemies.append({"x": pos, "hp": 16 if boss else 2, "max_hp": 16 if boss else 2,
+func _place_player(origin: Vector2) -> void:
+	x = origin.x
+	player_y = origin.y
+
+func _spawn(origin: Vector2, view: Node2D, boss: bool = false) -> void:
+	enemies.append({"x": origin.x, "y": origin.y, "view": view, "hp": 16 if boss else 2, "max_hp": 16 if boss else 2,
 		"boss": boss, "mode": "approach", "timer": 0.4, "facing": -1.0,
 		"last_swing": -1, "flash": 0.0, "move": 0, "struck": false, "combo_pending": false})
 
 func _enter_boss() -> void:
 	phase = 6
 	hp = maxi(hp, 4)
-	x = level.boss_player_origin.x
+	_place_player(level.boss_player_origin)
 	checkpoint = {"hp": hp, "seconds": combat_seconds, "hits": hits}
 	enemies.clear()
 	_reset_effects()
-	_spawn(level.boss_origin.x, true)
+	_spawn(level.boss_origin, level.boss, true)
 	state = "play"
 	ext.update(self, 0.0)
 	_banner("孔秀 · 东岭关守将  /  看清蓄力，闪避后反击")
@@ -218,12 +236,12 @@ func _retry() -> void:
 		hp = checkpoint.hp
 		combat_seconds = checkpoint.seconds
 		hits = checkpoint.hits
-		x = level.boss_player_origin.x
+		_place_player(level.boss_player_origin)
 		phase = 6
-		_spawn(level.boss_origin.x, true)
+		_spawn(level.boss_origin, level.boss, true)
 	else:
 		hp = 6
-		x = 800
+		_place_player(level.wave_retry_origin)
 		phase = 3
 		hits = 0
 		combat_seconds = 0
@@ -232,7 +250,7 @@ func _retry() -> void:
 	ext.update(self, 0.0)
 
 func _process(dt: float) -> void:
-	if state not in ["pause", "confirm", "dead", "victory"]:
+	if state == "menu" or (state == "play" and hit_stop <= 0):
 		clock += dt
 	if state == "play":
 		if hit_stop > 0:
@@ -240,10 +258,10 @@ func _process(dt: float) -> void:
 		else:
 			_update_play(minf(dt, 0.04))
 	if state in ["play", "dialogue", "victory"]:
-		var target = clampf(x - 350, 0, WORLD_END - 960)
-		if phase == 6:
-			target = WORLD_END - 960
+		var camera_end = maxf(level.world_left, level.world_right - VIEWPORT_WIDTH)
+		var target = camera_end if phase == 6 else clampf(x - 350, level.world_left, camera_end)
 		camera_x = lerpf(camera_x, target, minf(dt * 5, 1))
+	if state in ["play", "victory"]:
 		shake = maxf(0, shake - dt * 20)
 		for p in particles:
 			p.life -= dt
@@ -265,25 +283,27 @@ func _update_play(dt: float) -> void:
 	invincible = maxf(0, invincible - dt)
 	message_time = maxf(0, message_time - dt)
 	var direction = float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
+	moving = false
 	if dodge_time > 0:
 		dodge_time = maxf(0, dodge_time - dt)
 		x += facing * 580 * dt
-	elif attack_time <= 0:
+	elif attack_time <= 0 and ext.heavy_time <= 0:
+		moving = direction != 0
 		x += direction * 215 * dt
 		if direction != 0:
 			facing = direction
-	x = clampf(x, 65 if phase < 6 else 2220, WORLD_END - 80)
+	x = _clamp_player_x(x)
 	if phase in [3, 4, 6] and not enemies.is_empty():
 		combat_seconds += dt
-	if phase == 0 and x > 430:
+	if phase == 0 and x >= level.flag_origin.x:
 		phase = 1
 		_banner("按 J 挥刀，击中前方训练靶两次")
-	if phase == 1 and attack_time > 0.1 and absf(x - 650) < 135 and facing > 0:
+	if phase == 1 and attack_time > 0.1 and (level.dummy_origin.x - x) * facing > -24 and absf(x - level.dummy_origin.x) < 135:
 		if tutorial_hits != swing_id:
 			tutorial_hits = swing_id
 			var count = int(get_meta("dummy_hits", 0)) + 1
 			set_meta("dummy_hits", count)
-			_sparks(650, GROUND - 55, GOLD)
+			_sparks(level.dummy_origin.x, level.dummy_origin.y - 55, GOLD)
 			if count >= 2:
 				phase = 2
 				_banner("按空格向前闪避，再向右迎战守军")
@@ -305,8 +325,8 @@ func _update_play(dt: float) -> void:
 				enemy.flash = 0.15
 				if not enemy.boss:
 					enemy.x += facing * 20
-				_sparks(enemy.x, GROUND - 60, GOLD)
-				floaters.append({"x": enemy.x, "y": GROUND - 110, "life": 0.6, "text": "重斩 −2" if combo == 3 else "−1"})
+				_sparks(enemy.x, enemy.y - 60, GOLD)
+				floaters.append({"x": enemy.x, "y": enemy.y - 110, "life": 0.6, "text": "重斩 −2" if combo == 3 else "−1"})
 				shake = 2.5 if combo < 3 else 5.0
 				hit_stop = 0.035
 				_tone(360, 0.055, 0.12)
@@ -322,7 +342,7 @@ func _update_play(dt: float) -> void:
 		phase = 4
 		_spawn_wave(2)
 		_banner("第二阵 · 三名守军正在集结")
-	elif phase == 4 and enemies.is_empty() and x > 2170:
+	elif phase == 4 and enemies.is_empty() and x > level.gate_x:
 		phase = 5
 		_begin_dialogue(story.boss, "play")
 
@@ -353,7 +373,7 @@ func _update_enemy(e: Dictionary, dt: float) -> void:
 				e.x += e.facing * 390 * dt
 			if not e.struck and (x - e.x) * e.facing > -25 and distance < reach:
 				e.struck = true
-				_hurt(e.facing)
+				_hurt(e.facing, e)
 			if e.timer <= 0:
 				e.mode = "recover"
 				e.timer = 0.85 if e.boss else 1.0
@@ -368,18 +388,22 @@ func _update_enemy(e: Dictionary, dt: float) -> void:
 				e.mode = "approach"
 				e.timer = 0.2
 
-func _hurt(direction: float) -> void:
+func _clamp_player_x(position_x: float) -> float:
+	var left: float = level.world_left + 65 if phase < 6 else level.arena_min_x
+	return clampf(position_x, left, level.world_right - 80)
+
+func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 	if invincible > 0 or (dodge_time > 0.06 and dodge_time < 0.30) or state != "play":
 		return
-	if ext.absorb_damage(self, direction):
+	if ext.absorb_damage(self, direction, attacker):
 		return
 	hp -= 1
 	hits += 1
 	invincible = 0.8
-	x = clampf(x + direction * 28, 65 if phase < 6 else 2220, WORLD_END - 80)
+	x = _clamp_player_x(x + direction * 28)
 	shake = 6
 	hit_stop = 0.06
-	_sparks(x, GROUND - 60, RED)
+	_sparks(x, player_y - 60, RED)
 	_tone(80, 0.10, 0.17)
 	if hp <= 0:
 		state = "dead"
@@ -427,9 +451,12 @@ func _tone(frequency: float, seconds: float, volume: float) -> void:
 
 
 func _spawn_wave(wave: int) -> void:
-	for spawn_x in level.wave_positions(wave):
-		_spawn(spawn_x)
+	for spawn in level.wave_spawns(wave):
+		_spawn(spawn.origin, spawn.view)
 
 func _sync_scene() -> void:
+	if tone_player.playing and (muted or state in ["menu", "dead"] or phase == 7):
+		tone_player.stop()
+	tone_player.stream_paused = state != "play"
 	level.present(self)
 	ui.present(self)
