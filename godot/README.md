@@ -4,7 +4,9 @@
 
 ## 运行与导出
 
-- Godot 编辑器导入本目录工程，按 F5 运行。
+同事在自己电脑上安装、导入并运行的步骤见 [本地 Godot 运行](../docs/local-godot.md)。
+
+- Godot 4.7.2 导入本目录的 `project.godot`，按 F5 运行。编辑器运行不需要 Web 导出模板。
 - 本机已有导出文件时，在仓库根目录执行 `python3 tools/serve_demo.py`，或双击 `play-web.command`。
 - 命令行导出：`godot --headless --path godot --export-release Web ../builds/web/index.html`，需要对应版本的 Web 导出模板。
 - Web 输出约 40 MB（主要为 Godot WASM）；首次加载需等待。通过 HTTP 访问，不能直接双击 HTML。当前本地地址为 `http://127.0.0.1:8765/`。

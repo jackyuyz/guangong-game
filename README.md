@@ -19,7 +19,7 @@
 
 这是验证画面与手感的原型：现有像素人物搭配东岭关完整背景，已接入基于现有素材生成的走路/攻击帧，部分姿态复用图集帧；尚无多语言、叙事配音或其他四关。完整背景尚未拆成可横向展开的场景层，教学目前只要求执行闪避，尚未加入示范突刺。
 
-Godot 编辑器导入 `godot/project.godot`，按 F5 运行。Web 使用 `godot/export_presets.cfg` 的单线程 Web 预设导出到 `builds/web/index.html`。详情见 [工程说明](godot/README.md)。
+在本机用 Godot 打开工程并试玩，见 [本地 Godot 运行](docs/local-godot.md)：安装 4.7.2，导入 `godot/project.godot`，按 F5。Web 使用 `godot/export_presets.cfg` 的单线程 Web 预设导出到 `builds/web/index.html`。详情见 [工程说明](godot/README.md)。
 
 ## 仓库结构
 
@@ -36,6 +36,7 @@ guangong-game/
 - 看关卡玩法：[设计文档说明](docs/design/README.md)。第一关细节最完整，其他四关仍需细化。
 - 找图片：[素材说明](assets/art/README.md)和[素材索引](assets/art/catalog.json)。
 - 浏览画风：[五关总览](docs/art/five-passes-overview.png)。
+- 在自己电脑上跑起来：[本地 Godot 运行](docs/local-godot.md)。
 - 开始做游戏：[Godot 工程创建说明](godot/README.md)。
 
 ## Godot 和网页的关系
