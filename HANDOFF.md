@@ -41,4 +41,4 @@ python3 tools/serve_demo.py
 - 原始关卡依据见 [东岭关设计](docs/design/chapter-01-godot-spec.md)，扩展行为见 [战斗扩展](docs/design/combat-extensions.md)。先做真人难度、动作可读性和兼容性验收，再决定下一轮内容。
 - 关羽、守军和孔秀用 1774×887 的 4×2 图集，最近邻采样。走路用四帧、攻击用三帧，其他姿态复用图集帧。脚底按帧对齐，背景是随相机平移的单张概念图。素材和字体来源见 [素材说明](godot/assets/SOURCES.md)。新增汉字后检查并更新字体子集。
 - 教学闪避目前只要求触发动作。城门开启用目标文字、守军退让和对白表达。正式文本组内容、配音、题库、多语言、其他四关和文化网站尚未交付。
-- 11 月 16 日的 Claude Opus 5.5 high 扩展实现与只读审查都已交付。审查在 `builds/claude/review.json`，只读审查早于本轮修复。生成图集和早期接线背景见 Git 中的上一版交接。仓库约定见 [AGENT.MD](AGENT.MD)。
+- 11 月 16 日的 Claude Opus 5.5 high 扩展实现与只读审查都已交付。审查在 `builds/claude/review.json`，只读审查早于本轮修复。生成图集和早期接线背景见 Git 中的上一版交接。仓库约定见 [AGENTS.md](AGENTS.md)，改动记录见 [task.md](task.md)。

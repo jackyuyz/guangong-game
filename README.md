@@ -7,7 +7,7 @@
 
 ## 当前状态
 
-东岭关试玩版已完成本地 Web 导出，并在 Chrome 从开场打到结算。后续开发请阅读 [Agent 工作约定](AGENT.MD) 和 [交接记录](HANDOFF.md)。
+东岭关试玩版已完成本地 Web 导出，并在 Chrome 从开场打到结算。后续开发请阅读 [Agent 说明](AGENTS.md) 和 [交接记录](HANDOFF.md)。
 
 ## 试玩第一版
 
