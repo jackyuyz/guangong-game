@@ -12,6 +12,15 @@ func check(condition: bool, description: String) -> void:
 		push_error("FAIL: " + description)
 		failures += 1
 
+func mouse_button(at: Vector2, down: bool) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if down else 0
+	event.pressed = down
+	event.position = at
+	event.global_position = at
+	root.push_input(event, true)
+
 func run() -> void:
 	var game = load("res://scenes/main.tscn").instantiate()
 	check(game.has_node("Level/Ground/Player/Visual/Sprite"), "player sprite exists before scene enters tree")
@@ -26,6 +35,14 @@ func run() -> void:
 	check(sprite.sprite_frames != null and sprite.sprite_frames.get_frame_count("walk") == 4 and sprite.sprite_frames.get_frame_count("attack") == 3, "player artwork previews without running scripts")
 	check(game.get_node("Level/Backdrop").texture != null, "background artwork previews without running scripts")
 	check(game.get_node("UI/Root/HUD").visible, "game HUD previews in editor")
+	var cursor_grip: Node2D = game.get_node("UI/BladeCursor/Grip")
+	var cursor_blade: Sprite2D = cursor_grip.get_node("Blade")
+	var cursor_arc: Line2D = game.get_node("UI/BladeCursor/Arc")
+	var cursor_rest_rotation := cursor_blade.rotation
+	var tip_in_blade := Vector2(83.5, 8.5) + cursor_blade.offset
+	var resting_tip := cursor_grip.transform * (cursor_blade.transform * tip_in_blade)
+	check(not cursor_blade.flip_h and is_equal_approx(cursor_rest_rotation, -PI / 2.0) and resting_tip.is_zero_approx() and cursor_blade.is_pixel_opaque(tip_in_blade), "left-facing blade tip aligns with the mouse at rest")
+	check(cursor_blade.scale.is_equal_approx(Vector2(0.65, 0.65)), "blade cursor uses the enlarged scale")
 	# Author edits before ready must become the starting positions/layout at runtime.
 	game.get_node("Level/Ground").position.y = 20
 	game.get_node("Level/Ground/Player").position.x = 355
@@ -43,9 +60,29 @@ func run() -> void:
 	game.muted = true
 	game._sync_scene()
 	check(game.get_node("UI/Root/MainMenu").visible, "runtime starts with menu")
-	game.get_node("UI/Root/MainMenu/Start").pressed.emit()
+	var start_button: Button = game.get_node("UI/Root/MainMenu/Start")
+	var start_position := start_button.get_global_rect().get_center()
+	var backdrop_position := Vector2(850, 240)
+	mouse_button(backdrop_position, true)
+	mouse_button(backdrop_position, false)
+	check(game.state == "menu" and is_zero_approx(cursor_grip.rotation), "background click does not animate the blade or start the game")
+	mouse_button(start_position, true)
+	var cursor_swing: Tween = game.get_node("UI/BladeCursor")._swing
+	check(game.state == "menu" and cursor_swing != null, "left button press starts the slash before native button release")
+	cursor_swing.pause()
+	var grip_position := cursor_grip.position
+	cursor_swing.custom_step(0.035)
+	var raised_tip := cursor_grip.transform * (cursor_blade.transform * tip_in_blade)
+	check(raised_tip.y < resting_tip.y - 5.0, "windup lifts the blade head")
+	cursor_swing.custom_step(0.065)
+	var lowered_tip := cursor_grip.transform * (cursor_blade.transform * tip_in_blade)
+	check(cursor_grip.position.is_equal_approx(grip_position) and lowered_tip.y > resting_tip.y + 20.0 and lowered_tip.x < resting_tip.x, "downstroke moves the head down and left around a fixed handle grip")
+	check(cursor_arc.get_point_count() == 9 and (cursor_arc.position + cursor_arc.get_point_position(8)).is_equal_approx(lowered_tip), "slash trail follows the moving blade tip")
+	mouse_button(start_position, false)
 	game._sync_scene()
 	check(game.state == "dialogue" and game.x == 355 and game.player_y == 460, "native start button uses authored player spawn")
+	cursor_swing.custom_step(0.11)
+	check(is_zero_approx(cursor_grip.rotation) and is_zero_approx(cursor_arc.self_modulate.a), "blade and arc settle after a click across a screen transition")
 	game.get_node("UI/Root/Dialogue/Skip").pressed.emit()
 	game._sync_scene()
 	check(game.state == "play", "native skip button advances dialogue")
@@ -118,6 +155,9 @@ func run() -> void:
 	game.show_culture = true
 	game._sync_scene()
 	check(game.get_node("UI/Root/Culture").visible, "culture is a native modal")
+	mouse_button(start_position, true)
+	mouse_button(start_position, false)
+	check(game.state == "menu" and game.show_culture and is_zero_approx(cursor_grip.rotation), "culture modal blocks clicks and slash feedback on the underlying start button")
 	game.get_node("UI/Root/Culture/Close").pressed.emit()
 	check(not game.show_culture, "culture close button returns to underlying screen")
 	game.queue_free()

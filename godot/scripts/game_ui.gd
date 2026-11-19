@@ -6,6 +6,7 @@ const OBJECTIVES = ["前往旗标", "练习挥刀", "练习闪避", "击退第�
 func _ready() -> void:
 	for button in $Root.find_children("*", "Button", true, false):
 		button.pressed.connect(_emit_action.bind(str(button.get_meta("action"))))
+		button.gui_input.connect($BladeCursor.on_button_input.bind(button))
 
 func _emit_action(action: String) -> void:
 	action_requested.emit(action)
