@@ -41,6 +41,7 @@ guangong-game/
 - 找图片：[素材说明](assets/art/README.md)和[素材索引](assets/art/catalog.json)。
 - 浏览画风：[五关总览](docs/art/five-passes-overview.png)。
 - 在自己电脑上跑起来：[本地 Godot 运行](docs/local-godot.md)。
+- 组员发布网页：[部署操作手册](docs/vercel-deploy.md)，包含首次配置、每次更新及 404 恢复。
 - 开始做游戏：[Godot 工程创建说明](godot/README.md)。
 
 ## Godot 和网页的关系
@@ -57,5 +58,5 @@ Godot 工程放在本仓库的 `godot/` 目录，无需另外创建仓库。
 
 重新导出可双击 `export-web.command`，或运行 `python3 tools/export_web.py`。
 工具覆盖固定的 `builds/web/` 并准备 `builds/vercel/` 正式发布目录，不自动上传。
-Vercel 登录、关联项目及手动更新步骤见 [导出与 Vercel 发布](docs/vercel-deploy.md)。
+Vercel 登录、关联项目及手动更新步骤见 [组员部署操作手册](docs/vercel-deploy.md)。
 Git 推送仅同步源码；根 `vercel.json` 关闭 Git 自动部署，网页仍按上述流程手动发布。
