@@ -1,0 +1,7 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "/Users/yuyuanzhengjack/.codex/visualizations/2026/11/18/01a1ef8d-02f7-7213-8d96-1388e2885ef6/home-menu-concepts/home-menu-04.png",
+  "original": "/Users/yuyuanzhengjack/.codex/generated_images/01a20983-8aea-7a11-8275-f839333c038d/exec-3ad6bd45-d2b2-4e9e-be72-086170a5dcad.png",
+  "prompt": "Use case: background-extraction / logo-brand. Reference image is the selected game homepage. Extract and faithfully reproduce ONLY the large horizontal two-character Chinese brush-calligraphy title 关公 from the upper center of this reference, as one transparent PNG game-title logo. Preserve the original exact readable characters 关公, warm ivory pale gold color, extremely confident dramatic dry brush silhouette, bristle streaks and flying-white texture, left character 关 and right character 公, loose martial-epic handmade strokes. Match the original calligraphy as closely as possible; do not reinterpret as typeset modern Chinese. Output a tightly composed approximately 2.8:1 landscape transparent canvas with about 8% clear safe margin, title fills almost all available width. Genuine alpha transparency behind and inside the brush gaps. No subtitle, no tagline, no menu text, no numbers, no seal, no underline, no scenery, no horse, no person, no mountains, no dark rectangle, no black or white backdrop, no checkerboard, no shadow. Isolated warm-ivory/gold lettering only, ready for compositing into the Godot game. High-resolution crisp stroke edges.",
+  "transparent_background": true
+}

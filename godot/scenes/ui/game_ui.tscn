@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/game_ui.gd" id="e1"]
 
@@ -9,6 +9,10 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/prologue.tscn" id="prologue"]
 
 [ext_resource type="PackedScene" path="res://scenes/ui/journey_map.tscn" id="journey_map"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/keyboard_guide.tscn" id="keyboard_guide"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/main_menu.tscn" id="main_menu"]
 
 [sub_resource type="StyleBoxFlat" id="s1"]
 bg_color = Color(0.045, 0.085, 0.075, 0.94)
@@ -356,137 +360,8 @@ theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
 theme_override_constants/outline_size = 3
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
 
-[node name="MainMenu" type="Control" parent="Root"]
-layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 960.0
-offset_bottom = 540.0
-mouse_filter = 2
+[node name="MainMenu" parent="Root" instance=ExtResource("main_menu")]
 visible = false
-
-[node name="Dimmer" type="ColorRect" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 960.0
-offset_bottom = 540.0
-mouse_filter = 0
-color = Color(0.025, 0.055, 0.05, 0.54)
-
-[node name="Card" type="Panel" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 50.0
-offset_top = 85.0
-offset_right = 460.0
-offset_bottom = 458.0
-mouse_filter = 2
-
-[node name="Title" type="Label" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 105.0
-offset_right = 456.0
-offset_bottom = 210.0
-mouse_filter = 2
-text = "关 公"
-theme_override_font_sizes/font_size = 80
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-
-[node name="Subtitle" type="Label" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 205.0
-offset_right = 455.0
-offset_bottom = 241.0
-mouse_filter = 2
-text = "过五关 · 斩六将"
-theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
-
-[node name="Rule" type="ColorRect" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 255.0
-offset_right = 415.0
-offset_bottom = 256.0
-mouse_filter = 2
-color = Color(0.875, 0.737, 0.463, 0.35)
-
-[node name="Tagline" type="Label" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 272.0
-offset_right = 415.0
-offset_bottom = 301.0
-mouse_filter = 2
-text = "一骑辞曹，千里寻兄。"
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.72, 0.71, 0.635, 1)
-
-[node name="Start" type="Button" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 321.0
-offset_right = 415.0
-offset_bottom = 369.0
-mouse_filter = 0
-text = "启程    →"
-focus_mode = 0
-theme_override_font_sizes/font_size = 18
-metadata/action = "start"
-tooltip_text = "ENTER 启程或继续旅程"
-
-theme_override_colors/font_focus_color = Color(0.067, 0.11, 0.106, 1)
-
-[node name="Culture" type="Button" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 385.0
-offset_right = 243.0
-offset_bottom = 427.0
-mouse_filter = 0
-text = "故事与文化"
-focus_mode = 0
-theme_override_font_sizes/font_size = 14
-metadata/action = "culture"
-theme_override_styles/normal = SubResource("s4")
-theme_override_styles/hover = SubResource("s5")
-theme_override_styles/pressed = SubResource("s5")
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_hover_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_pressed_color = Color(0.953, 0.91, 0.804, 1)
-
-[node name="Mute" type="Button" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 255.0
-offset_top = 385.0
-offset_right = 415.0
-offset_bottom = 427.0
-mouse_filter = 0
-text = "设置与操作"
-focus_mode = 0
-theme_override_font_sizes/font_size = 14
-metadata/action = "settings"
-theme_override_styles/normal = SubResource("s4")
-theme_override_styles/hover = SubResource("s5")
-theme_override_styles/pressed = SubResource("s5")
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_hover_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_pressed_color = Color(0.953, 0.91, 0.804, 1)
-
-[node name="Record" type="Label" parent="Root/MainMenu"]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 464.0
-offset_right = 460.0
-offset_bottom = 511.0
-mouse_filter = 2
-text = ""
-theme_override_font_sizes/font_size = 12
-theme_override_colors/font_color = Color(0.72, 0.71, 0.635, 1)
-visible = false
-autowrap_mode = 3
 
 [node name="Dialogue" type="Control" parent="Root"]
 layout_mode = 0
@@ -1220,17 +1095,12 @@ theme_override_styles/pressed = SubResource("s5")
 theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_hover_color = Color(1, 0.95, 0.85, 1)
 
-[node name="Body" type="Label" parent="Root/Utility"]
-layout_mode = 0
-offset_left = 270.0
-offset_top = 163.0
-offset_right = 690.0
-offset_bottom = 401.0
-mouse_filter = 2
-text = "行走   A / D 或 ← / →\n挥刀   J，连按三段\n闪避   SPACE\n格挡 / 弹反   K     偃月斩   L\n茶摊互动   E     声音   M\n暂停 / 返回   ESC 或 P     操作指南   F1\n\n旅图：← → 选关，TAB 切换，ENTER 确认"
+[node name="Body" parent="Root/Utility" instance=ExtResource("keyboard_guide")]
 visible = false
-theme_override_font_sizes/font_size = 16
-theme_override_constants/line_spacing = 5
+offset_left = 120.0
+offset_top = 65.0
+offset_right = 840.0
+offset_bottom = 485.0
 
 [node name="SaveNotice" type="Label" parent="Root/Utility"]
 layout_mode = 0

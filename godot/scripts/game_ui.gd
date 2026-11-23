@@ -17,8 +17,25 @@ func focus_utility() -> void:
 	target.grab_focus()
 
 func _input(event: InputEvent) -> void:
-	if not $Root/Utility.visible or not event is InputEventKey or not event.pressed: return
+	if not event is InputEventKey or not event.pressed: return
 	var code = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+	if not $Root/Utility.visible:
+		if not $Root/MainMenu.visible or not $Root/MainMenu.active: return
+		var entries: Array = [$Root/MainMenu/Start, $Root/MainMenu/Culture, $Root/MainMenu/Mute]
+		if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
+			var current = entries.find(get_viewport().gui_get_focus_owner())
+			var direction = -1 if event.shift_pressed or code == KEY_UP else 1
+			entries[posmod(current + direction, entries.size())].grab_focus()
+			get_viewport().set_input_as_handled()
+		elif code in [KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+			get_viewport().set_input_as_handled()
+			if event.echo: return
+			var current = entries.find(get_viewport().gui_get_focus_owner())
+			var button: Button = entries[maxi(current, 0)]
+			button.button_down.emit()
+			button.pressed.emit()
+			button.button_up.emit()
+		return
 	if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
 		var controls: Array = [$Root/Utility/Switch, $Root/Utility/Close] if $Root/Utility/Body.visible else [$Root/Utility/Settings/Mute, $Root/Utility/Settings/Motion, $Root/Utility/Settings/Help, $Root/Utility/Close]
 		var current = controls.find(get_viewport().gui_get_focus_owner())
@@ -71,12 +88,19 @@ func present(game: Node) -> void:
 	var helping: bool = game.utility_panel == "help"
 	$Root/Utility/Title.text = "操作指南" if helping else "设置"
 	$Root/Utility/Body.visible = helping
+	$Root/Utility/Body.set_demo_state(helping and not game.utility_panel.is_empty(), game.reduced_motion, game.window_active, game.progress.error_text)
+	$Root/Utility/Card.visible = not helping
+	$Root/Utility/Title.visible = not helping
+	$Root/Utility/Rule.visible = not helping
 	$Root/Utility/Settings.visible = not helping
 	$Root/Utility/Switch.visible = helping
 	$Root/Utility/Settings/Mute.text = sound
 	$Root/Utility/Settings/Motion.text = "减少动态：开" if game.reduced_motion else "减少动态：关"
 	$Root/Utility/SaveNotice.text = game.progress.error_text
-	$Root/MainMenu/Start.text = "启程  →" if game.progress.intro_state() == "unseen" else "继续旅程  →"
+	$Root/Utility/SaveNotice.visible = not helping and not game.progress.error_text.is_empty()
+	$Root/MainMenu/Start.text = "启程" if game.progress.intro_state() == "unseen" else "继续旅程"
+	$Root/MainMenu/Start.add_theme_font_size_override("font_size", 64 if game.progress.intro_state() == "unseen" else 38)
+	$Root/MainMenu.present_state(game.state == "menu" and not game.show_culture and game.utility_panel.is_empty(), game.muted, game.reduced_motion, game.window_active)
 	$Root/Pause/Menu.text = "返回主菜单" if game.resume_state == "prologue" else "返回旅图"
 	$Root/Pause/Menu.set_meta("action", "menu_confirm" if game.resume_state == "prologue" else "map_confirm")
 	$Root/Confirm/Menu.text = "返回旅图" if game._confirm_to_map else "返回菜单"

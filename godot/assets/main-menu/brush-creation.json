@@ -1,0 +1,7 @@
+{
+  "prompt": "Use case: UI asset extraction. Reference image: use only the antique-gold dry-brush swash underneath the Chinese primary menu entry as the material and shape reference. Create one isolated antique gold painterly brush SWASH, long horizontal thin tapered stroke, on a genuinely transparent alpha background. No text, no symbols, no letters, no UI, no scenery. Intended use: Godot game menu highlight, also a thin selected underline. Canvas target about 1000x180, or equivalent very wide landscape ratio about 5:1. The brush occupies central 80% width and 30-50% height, ample transparent padding. One flowing, single confident stroke with irregular bristle ends, uneven dry-brush openings, subtly luminous warm matte old gold texture and cream-gold ridges. Natural horizontal gesture slightly sweeping upward at the right tip. No neon, no outer glow, no frame, no rectangle, no black/white/checkerboard background. Preserve true transparency. Premium Three Kingdoms ink-painting aesthetic coherent with the provided game reference. The output must contain only one gold brushstroke and empty transparent space.",
+  "reference": "/Users/yuyuanzhengjack/.codex/visualizations/2026/11/18/01a1ef8d-02f7-7213-8d96-1388e2885ef6/home-menu-concepts/home-menu-04.png",
+  "tool": "builtin image_gen.imagegen",
+  "transparent_background": true,
+  "original": "/Users/yuyuanzhengjack/.codex/generated_images/01a20983-b5b6-7ab2-aa38-7fbc6feeb6e9/exec-09bef476-900d-4b9b-a9d3-5036fa4881cd.png"
+}

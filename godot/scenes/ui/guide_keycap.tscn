@@ -1,0 +1,99 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="font"]
+
+[sub_resource type="StyleBoxFlat" id="base"]
+bg_color = Color(0.025, 0.048, 0.04, 1)
+border_width_bottom = 2
+border_color = Color(0.36, 0.27, 0.12, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+shadow_color = Color(0, 0, 0, 0.38)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="raised"]
+bg_color = Color(0.105, 0.18, 0.145, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.63, 0.53, 0.32, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="pressed"]
+bg_color = Color(0.88, 0.72, 0.4, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.88, 0.59, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="Animation" id="press"]
+resource_name = "press"
+length = 0.64
+tracks/0/type = "value"
+tracks/0/path = NodePath("Face:position")
+tracks/0/interp = 1
+tracks/0/keys = {"times": PackedFloat32Array(0, 0.10, 0.36, 0.56), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0, -4), Vector2(0, 0), Vector2(0, 0), Vector2(0, -4)]}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Face:theme_override_styles/panel")
+tracks/1/interp = 1
+tracks/1/keys = {"times": PackedFloat32Array(0, 0.08, 0.44), "transitions": PackedFloat32Array(1, 1, 1), "update": 1, "values": [SubResource("raised"), SubResource("pressed"), SubResource("raised")]}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Face/Legend:theme_override_colors/font_color")
+tracks/2/interp = 1
+tracks/2/keys = {"times": PackedFloat32Array(0, 0.08, 0.44), "transitions": PackedFloat32Array(1, 1, 1), "update": 1, "values": [Color(0.96, 0.91, 0.76, 1), Color(0.07, 0.12, 0.095, 1), Color(0.96, 0.91, 0.76, 1)]}
+
+[sub_resource type="AnimationLibrary" id="library"]
+_data = {&"press": SubResource("press")}
+
+[node name="Keycap" type="Control"]
+offset_right = 38.0
+offset_bottom = 34.0
+mouse_filter = 2
+
+[node name="Base" type="Panel" parent="."]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("base")
+
+[node name="Face" type="Panel" parent="."]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("raised")
+
+[node name="Legend" type="Label" parent="Face"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+text = "A"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.96, 0.91, 0.76, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+callback_mode_process = 2
+libraries = {&"": SubResource("library")}
