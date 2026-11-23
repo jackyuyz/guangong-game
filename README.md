@@ -7,11 +7,11 @@
 
 ## 当前状态
 
-东岭关试玩版已完成本地 Web 导出，并在 Chrome 从开场打到结算。后续开发请阅读 [Agent 说明](AGENTS.md) 和 [交接记录](HANDOFF.md)。
+东岭关试玩版已完成本地 Web 导出，并已发布到 [Vercel 正式网站](https://guangong-game.vercel.app)。之前本机 Chrome 已从开场打到结算；此次发布按用户决定不做线上交互试玩。后续开发请阅读 [Agent 说明](AGENTS.md) 和 [交接记录](HANDOFF.md)。
 
 ## 试玩第一版
 
-本机已导出时，双击根目录的 `play-web.command`，或运行 `python3 tools/serve_demo.py`，打开 <http://127.0.0.1:8765/>。保持服务终端运行；这是本地试玩地址，尚未公开发布。
+本机已导出时，双击根目录的 `play-web.command`，或运行 `python3 tools/serve_demo.py`，打开 <http://127.0.0.1:8765/>。保持服务终端运行；这是本地试玩地址，公开版本使用上方 Vercel 链接。
 
 使用 **A/D 或左右键**移动，**J** 挥刀（连按最多三段），**Space** 闪避，**K** 格挡/弹反，**L** 义气偃月斩，**E** 茶摊互动，**Enter** 推进对白，**Esc/P** 暂停，**M** 切换声音。
 
@@ -54,3 +54,8 @@ Godot 工程放在本仓库的 `godot/` 目录，无需另外创建仓库。
 素材路径和索引保持原样，便于追溯来源。
 
 网页导出文件放在 `builds/web/`，已加入 Git 忽略列表。文化网站尚未创建。
+
+重新导出可双击 `export-web.command`，或运行 `python3 tools/export_web.py`。
+工具覆盖固定的 `builds/web/` 并准备 `builds/vercel/` 正式发布目录，不自动上传。
+Vercel 登录、关联项目及手动更新步骤见 [导出与 Vercel 发布](docs/vercel-deploy.md)。
+Git 推送仅同步源码；根 `vercel.json` 关闭 Git 自动部署，网页仍按上述流程手动发布。
