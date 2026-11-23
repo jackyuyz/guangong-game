@@ -6,14 +6,14 @@ const OBJECTIVES = ["前往旗标", "练习挥刀", "练习闪避", "击退第�
 func _ready() -> void:
 	for button in $Root.find_children("*", "Button", true, false):
 		if button.has_meta("action"):
-			button.pressed.connect(_emit_action.bind(str(button.get_meta("action"))))
+			button.pressed.connect(_emit_button.bind(button))
 		button.gui_input.connect($BladeCursor.on_button_input.bind(button))
 
-func _emit_action(action: String) -> void:
-	action_requested.emit(action)
+func _emit_button(button: Button) -> void:
+	action_requested.emit(str(button.get_meta("action")))
 
 func present(game: Node) -> void:
-	$Root/HUD.visible = game.state not in ["menu", "prologue"] and not (game.state in ["pause", "confirm"] and game.resume_state == "prologue")
+	$Root/HUD.visible = game.state not in ["menu", "prologue", "map"] and not (game.state in ["pause", "confirm"] and game.resume_state == "prologue")
 	$Root/MainMenu.visible = game.state == "menu"
 	$Root/Dialogue.visible = game.state == "dialogue"
 	$Root/Pause.visible = game.state == "pause"
@@ -38,7 +38,16 @@ func present(game: Node) -> void:
 	var sound = "声音：关" if game.muted else "声音：开"
 	$Root/MainMenu/Mute.text = sound
 	$Root/Pause/Mute.text = sound
+	$Root/MainMenu/Start.text = "启程  →" if game.progress.intro_state() == "unseen" else "继续旅程  →"
+	$Root/Pause/Menu.text = "返回主菜单" if game.resume_state == "prologue" else "返回旅图"
+	$Root/Pause/Menu.set_meta("action", "menu_confirm" if game.resume_state == "prologue" else "map_confirm")
+	$Root/Confirm/Menu.text = "返回旅图" if game._confirm_to_map else "返回菜单"
+	$Root/Confirm/Menu.set_meta("action", "map_exit" if game._confirm_to_map else "menu")
+	$Root/Confirm/Description.text = "退出前情并返回主菜单，已有进度会保留。" if not game._confirm_to_map else "本次关内进度将丢失；通关记录与最佳成绩会保留。"
+	$Root/Confirm/Cancel.text = "返回失败界面" if game._confirm_origin == "dead" else "继续游戏"
+	$Root/Victory/Saved.text = game.progress.error_text if not game.progress.error_text.is_empty() else "东岭关已通过 · 洛阳未解锁"
 	$Root/MainMenu/Record.text = "最佳纪录  %d" % game.best if game.cleared else "护送二位夫人，闯过东岭关。"
+	if not game.progress.error_text.is_empty(): $Root/MainMenu/Record.text = game.progress.error_text
 	if game.state == "dialogue" and not game.dialogue.is_empty():
 		var line: Array = game.dialogue[game.dialogue_index]
 		$Root/Dialogue/Speaker.text = str(line[0])

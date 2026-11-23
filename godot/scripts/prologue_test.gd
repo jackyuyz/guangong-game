@@ -34,7 +34,7 @@ func click(at: Vector2) -> void:
 		root.push_input(e, true)
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
-	game.save_path = "/tmp/guangong-prologue-test.cfg"
+	game.save_path = "/tmp/guangong-prologue-%d.cfg" % Time.get_ticks_usec()
 	game.get_node("UI/Root/Prologue").set_script(AudioGate)
 	root.add_child(game)
 	game.set_process(false)
@@ -81,6 +81,7 @@ func run() -> void:
 	p._process(2)
 	check(game.state == "pause" and p.elapsed == time and p.animation.current_animation_position == anim_time and p.voice.stream_paused and p.ambience.stream_paused and p.effect.stream_paused, "focus loss freezes animation and all three audio players")
 	game._action("resume")
+	game._notification(NOTIFICATION_APPLICATION_FOCUS_IN)
 	p._process(.2)
 	check(game.state == "prologue" and p.elapsed > time and not p.voice.stream_paused, "resume continues the same panel and voice")
 	p._show_scene(4)
@@ -114,7 +115,10 @@ func run() -> void:
 	await next_frame()
 	p.advance()
 	p.completed.emit()
-	check(game.state == "play" and game.phase == 0 and game.message.contains("寻刘备") and not p.active and not p.voice.playing, "completion is idempotent and enters tutorial with escort objective")
+	check(game.state == "map" and game.progress.intro_state() == "completed" and not p.active and not p.voice.playing, "completion is idempotent and enters map with remembered intro")
+	game.journey.set_reduced_motion(true)
+	await next_frame()
+	game._enter_chapter("dongling")
 	key(KEY_J)
 	check(game.attack_time == 0 and game.await_input_release, "tutorial blocks held transition input until release")
 	var held = InputEventKey.new()
@@ -133,12 +137,13 @@ func run() -> void:
 	key(KEY_J)
 	check(game.attack_time > 0, "combat becomes available after inputs release")
 	for i in 6:
+		game.progress.config.set_value("journey", "intro_state", "unseen")
 		game._start()
 		game._sync_scene()
 		p._show_scene(i)
 		await next_frame()
 		p.finish()
-		check(game.state == "play" and game.phase == 0 and not p.active, "skip enters tutorial from panel %d" % i)
+		check(game.state == "map" and game.progress.intro_state() == "skipped" and not p.active, "skip enters map from panel %d" % i)
 	# Replay must preserve run state and persistent bytes from either entry screen.
 	for origin in ["menu", "victory"]:
 		game.state = origin
@@ -154,18 +159,21 @@ func run() -> void:
 		await next_frame()
 		p.finish()
 		check(game.state == origin and game.show_culture and game.hp == 3 and game.best == 987 and game.checkpoint.hp == 4 and before == FileAccess.get_file_as_bytes(game.save_path), "replay returns without altering run or save: " + origin)
+	game.progress.config.set_value("journey", "intro_state", "unseen")
 	game._start()
 	game._action("pause_click")
 	game._action("menu_confirm")
 	game._action("menu")
 	check(not p.active and not p.voice.playing and game.state == "menu", "return to menu cancels all prologue playback")
 	game._start()
-	check(p.index == 0 and p.elapsed == 0, "new departure resets the prologue to its beginning")
+	check(p.index == 0 and p.elapsed == 0, "unfinished intro restarts at beginning")
 	game._retry()
 	check(game.state == "play" and not p.active, "failed-run retry bypasses prologue")
 	p.available = false
 	game._start()
 	check(game.state == "dialogue" and game.dialogue == game.story.opening and not p.active, "resource failure uses original short opening once")
+	game._finish_dialogue()
+	check(game.state == "map", "fallback opening also returns to map before chapter selection")
 	game.queue_free()
 	await create_timer(.2).timeout
 	print("PROLOGUE CHECKS COMPLETE; failures=", failures)

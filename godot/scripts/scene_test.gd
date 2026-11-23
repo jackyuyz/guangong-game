@@ -54,7 +54,7 @@ func run() -> void:
 	var second_guard = game.get_node("Level/Ground/Guards/WaveTwo/Guard2")
 	second_guard.scale = Vector2(1.2, 1.2)
 	game.get_node("UI/Root/HUD/Health").position = Vector2(25, 22)
-	game.save_path = "/tmp/guangong-scene-test-progress.cfg"
+	game.save_path = "/tmp/guangong-scene-%d.cfg" % Time.get_ticks_usec()
 	root.add_child(game)
 	game.set_process(false)
 	game.muted = true
@@ -87,7 +87,12 @@ func run() -> void:
 	await process_frame
 	game.get_node("UI/Root/Prologue/Skip").pressed.emit()
 	game._sync_scene()
-	check(game.state == "play", "native skip button enters tutorial")
+	check(game.state == "map", "native skip button opens journey map")
+	game.journey.set_reduced_motion(true)
+	await process_frame
+	await process_frame
+	game.journey.get_node("ScrollClip/Details/Start").pressed.emit()
+	check(game.state == "play", "native map button enters selected chapter")
 	game.x = 460
 	game._update_play(0.01)
 	check(game.phase == 0, "flag trigger moves with the authored flag")

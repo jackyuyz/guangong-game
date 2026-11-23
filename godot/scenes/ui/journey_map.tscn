@@ -1,0 +1,903 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://scripts/journey_map.gd" id="script"]
+
+[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="font"]
+
+[ext_resource type="Texture2D" path="res://assets/journey-map/five-passes-scroll.png" id="map"]
+
+[ext_resource type="Texture2D" path="res://assets/guan-yu.png" id="guan"]
+
+[ext_resource type="Texture2D" path="res://assets/carriage.png" id="carriage"]
+
+[ext_resource type="AudioStream" path="res://assets/prologue/audio/paper.wav" id="paper"]
+
+[sub_resource type="StyleBoxFlat" id="clear"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="hover"]
+bg_color = Color(1, 0.93, 0.68, 0.22)
+border_width_bottom = 2
+border_color = Color(0.44, 0.3, 0.13, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.39, 0.12, 0.9)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="button"]
+bg_color = Color(0.065, 0.135, 0.112, 0.97)
+border_width_bottom = 2
+border_color = Color(0.69, 0.52, 0.25, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="button_hover"]
+bg_color = Color(0.15, 0.23, 0.17, 1)
+border_width_bottom = 2
+border_color = Color(0.89, 0.71, 0.37, 1)
+
+[sub_resource type="StyleBoxFlat" id="disabled"]
+bg_color = Color(0.27, 0.27, 0.2, 0.55)
+border_width_bottom = 1
+border_color = Color(0.48, 0.39, 0.24, 0.4)
+
+[sub_resource type="StyleBoxFlat" id="stamp"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.63, 0.14, 0.08, 0.9)
+
+[sub_resource type="Animation" id="breathing"]
+resource_name = "breathing"
+length = 2.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("ScrollClip/ReadyFlag:modulate")
+tracks/0/interp = 1
+tracks/0/enabled = true
+tracks/0/keys = {"times": PackedFloat32Array(0, 1.4, 2.8), "transitions": PackedFloat32Array(1, 1, 1), "update": 0, "values": [Color(1, 1, 1, 0.84), Color(1, 1, 1, 1), Color(1, 1, 1, 0.84)]}
+
+[sub_resource type="AnimationLibrary" id="life_library"]
+_data = {&"breathing": SubResource("breathing")}
+
+[sub_resource type="Animation" id="unroll"]
+resource_name = "unroll"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath("ScrollClip:size")
+tracks/0/interp = 1
+tracks/0/enabled = true
+tracks/0/keys = {"times": PackedFloat32Array(0, 0.8), "transitions": PackedFloat32Array(0.5, 1), "update": 0, "values": [Vector2(0, 540), Vector2(960, 540)]}
+
+[sub_resource type="AnimationLibrary" id="library"]
+_data = {&"unroll": SubResource("unroll")}
+
+
+[node name="JourneyMap" type="Control"]
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 0
+texture_filter = 1
+script = ExtResource("script")
+
+[node name="Desk" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+color = Color(0.025, 0.075, 0.065, 1)
+
+[node name="ScrollClip" type="Control" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+clip_contents = true
+
+[node name="Illustration" type="TextureRect" parent="ScrollClip"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+texture = ExtResource("map")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TravelLine" type="Line2D" parent="ScrollClip"]
+visible = false
+points = PackedVector2Array(85, 389, 107, 368, 126, 353, 151, 338, 175, 323, 193, 310, 206, 292)
+width = 2.6
+default_color = Color(0.98, 0.7, 0.27, 0.9)
+antialiased = true
+
+[node name="TravelStart" type="Marker2D" parent="ScrollClip"]
+position = Vector2(85, 389)
+
+[node name="TravelEnd" type="Marker2D" parent="ScrollClip"]
+position = Vector2(206, 292)
+
+[node name="Caravan" type="Node2D" parent="ScrollClip"]
+position = Vector2(85, 389)
+modulate = Color(0.78, 0.71, 0.52, 1)
+
+[node name="Shadow" type="Polygon2D" parent="ScrollClip/Caravan"]
+polygon = PackedVector2Array(23.000, 0.000, 22.114, 1.035, 19.517, 2.000, 15.385, 2.828, 10.000, 3.464, 3.729, 3.864, -3.000, 4.000, -9.729, 3.864, -16.000, 3.464, -21.385, 2.828, -25.517, 2.000, -28.114, 1.035, -29.000, 0.000, -28.114, -1.035, -25.517, -2.000, -21.385, -2.828, -16.000, -3.464, -9.729, -3.864, -3.000, -4.000, 3.729, -3.864, 10.000, -3.464, 15.385, -2.828, 19.517, -2.000, 22.114, -1.035)
+color = Color(0.2, 0.16, 0.09, 0.3)
+
+[node name="Carriage" type="Sprite2D" parent="ScrollClip/Caravan"]
+position = Vector2(-15, -12)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("carriage")
+
+[node name="Guan" type="Sprite2D" parent="ScrollClip/Caravan"]
+position = Vector2(10, -13)
+scale = Vector2(0.34, 0.34)
+texture = ExtResource("guan")
+
+[node name="FlagStart" type="Marker2D" parent="ScrollClip"]
+position = Vector2(193, 344)
+
+[node name="FlagEnd" type="Marker2D" parent="ScrollClip"]
+position = Vector2(206, 292)
+
+[node name="ReadyFlag" type="Node2D" parent="ScrollClip"]
+position = Vector2(193, 344)
+
+[node name="Ground" type="Polygon2D" parent="ScrollClip/ReadyFlag"]
+polygon = PackedVector2Array(-6, 0, -3, -2, 4, -2, 8, 0, 4, 2, -3, 2)
+color = Color(0.22, 0.16, 0.08, 0.4)
+
+[node name="PoleShadow" type="Line2D" parent="ScrollClip/ReadyFlag"]
+points = PackedVector2Array(1, 0, 1, -45)
+width = 3.5
+default_color = Color(0.22, 0.13, 0.06, 0.85)
+
+[node name="Pole" type="Line2D" parent="ScrollClip/ReadyFlag"]
+points = PackedVector2Array(0, 0, 0, -45)
+width = 1.5
+default_color = Color(0.84, 0.65, 0.29, 1)
+
+[node name="GoldEdge" type="Polygon2D" parent="ScrollClip/ReadyFlag"]
+polygon = PackedVector2Array(2, -43, 29, -43, 29, -19, 16, -8, 2, -19)
+color = Color(0.94, 0.72, 0.3, 1)
+
+[node name="Flag" type="Polygon2D" parent="ScrollClip/ReadyFlag"]
+polygon = PackedVector2Array(4, -41, 27, -41, 27, -20, 16, -11, 4, -20)
+color = Color(0.69, 0.13, 0.075, 1)
+
+[node name="Fold" type="Polygon2D" parent="ScrollClip/ReadyFlag"]
+polygon = PackedVector2Array(4, -41, 9, -41, 9, -18, 4, -20)
+color = Color(0.46, 0.075, 0.045, 1)
+
+[node name="Point" type="Line2D" parent="ScrollClip/ReadyFlag"]
+points = PackedVector2Array(11, -29, 16, -24, 21, -29)
+width = 1.5
+default_color = Color(1, 0.83, 0.43, 1)
+
+[node name="Finial" type="Polygon2D" parent="ScrollClip/ReadyFlag"]
+polygon = PackedVector2Array(0, -49, 3, -46, 0, -43, -3, -46)
+color = Color(0.94, 0.72, 0.3, 1)
+
+[node name="Stops" type="Node2D" parent="ScrollClip"]
+
+
+[node name="Pass1" type="Button" parent="ScrollClip/Stops"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 300.0
+offset_right = 210.0
+offset_bottom = 398.0
+mouse_filter = 0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("clear")
+theme_override_styles/pressed = SubResource("clear")
+theme_override_styles/focus = SubResource("clear")
+
+[node name="Selection" type="Node2D" parent="ScrollClip/Stops/Pass1"]
+visible = false
+
+[node name="Ink" type="Polygon2D" parent="ScrollClip/Stops/Pass1/Selection"]
+polygon = PackedVector2Array(12, 88, 28, 86.5, 54, 87, 81, 86.5, 99, 88, 88, 90.5, 60, 91, 31, 90.5, 16, 91)
+color = Color(0.37, 0.24, 0.08, 0.7)
+
+[node name="Gold" type="Polygon2D" parent="ScrollClip/Stops/Pass1/Selection"]
+polygon = PackedVector2Array(13, 87, 30, 85.5, 55, 86, 81, 85.5, 98, 87, 88, 89, 60, 89.5, 31, 89, 16, 90)
+color = Color(0.93, 0.68, 0.22, 1)
+
+[node name="Highlight" type="Line2D" parent="ScrollClip/Stops/Pass1/Selection"]
+points = PackedVector2Array(26, 87, 52, 87, 76, 86.5, 89, 87)
+width = 0.8
+default_color = Color(1, 0.86, 0.45, 0.85)
+
+[node name="Name" type="Label" parent="ScrollClip/Stops/Pass1"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 52.0
+offset_right = 120.0
+offset_bottom = 84.0
+mouse_filter = 2
+text = "东岭关"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.075, 0.12, 0.085, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(0.99, 0.88, 0.65, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="State" type="Label" parent="ScrollClip/Stops/Pass1"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 90.0
+offset_right = 110.0
+offset_bottom = 112.0
+mouse_filter = 2
+text = "待挑战"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.19, 0.16, 0.09, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(1, 0.9, 0.68, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="Seal" type="Label" parent="ScrollClip/Stops/Pass1"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 9.0
+offset_right = 106.0
+offset_bottom = 39.0
+mouse_filter = 2
+text = "通"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.63, 0.14, 0.08, 1)
+visible = false
+rotation = -0.17
+theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(0.63, 0.14, 0.08, 1)
+
+[node name="Border" type="Panel" parent="ScrollClip/Stops/Pass1/Seal"]
+offset_top = -1.0
+offset_right = 28.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("stamp")
+
+[node name="Pass2" type="Button" parent="ScrollClip/Stops"]
+layout_mode = 0
+offset_left = 205.0
+offset_top = 200.0
+offset_right = 315.0
+offset_bottom = 298.0
+mouse_filter = 0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("clear")
+theme_override_styles/pressed = SubResource("clear")
+theme_override_styles/focus = SubResource("clear")
+
+[node name="Selection" type="Node2D" parent="ScrollClip/Stops/Pass2"]
+visible = false
+
+[node name="Ink" type="Polygon2D" parent="ScrollClip/Stops/Pass2/Selection"]
+polygon = PackedVector2Array(12, 88, 28, 86.5, 54, 87, 81, 86.5, 99, 88, 88, 90.5, 60, 91, 31, 90.5, 16, 91)
+color = Color(0.37, 0.24, 0.08, 0.7)
+
+[node name="Gold" type="Polygon2D" parent="ScrollClip/Stops/Pass2/Selection"]
+polygon = PackedVector2Array(13, 87, 30, 85.5, 55, 86, 81, 85.5, 98, 87, 88, 89, 60, 89.5, 31, 89, 16, 90)
+color = Color(0.93, 0.68, 0.22, 1)
+
+[node name="Highlight" type="Line2D" parent="ScrollClip/Stops/Pass2/Selection"]
+points = PackedVector2Array(26, 87, 52, 87, 76, 86.5, 89, 87)
+width = 0.8
+default_color = Color(1, 0.86, 0.45, 0.85)
+
+[node name="Name" type="Label" parent="ScrollClip/Stops/Pass2"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 52.0
+offset_right = 120.0
+offset_bottom = 84.0
+mouse_filter = 2
+text = "洛阳"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.075, 0.12, 0.085, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(0.99, 0.88, 0.65, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="State" type="Label" parent="ScrollClip/Stops/Pass2"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 90.0
+offset_right = 110.0
+offset_bottom = 112.0
+mouse_filter = 2
+text = "未解锁"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.19, 0.16, 0.09, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(1, 0.9, 0.68, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="Seal" type="Label" parent="ScrollClip/Stops/Pass2"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 9.0
+offset_right = 106.0
+offset_bottom = 39.0
+mouse_filter = 2
+text = "通"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.63, 0.14, 0.08, 1)
+visible = false
+rotation = -0.17
+theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(0.63, 0.14, 0.08, 1)
+
+[node name="Pass3" type="Button" parent="ScrollClip/Stops"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 313.0
+offset_right = 430.0
+offset_bottom = 411.0
+mouse_filter = 0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("clear")
+theme_override_styles/pressed = SubResource("clear")
+theme_override_styles/focus = SubResource("clear")
+
+[node name="Selection" type="Node2D" parent="ScrollClip/Stops/Pass3"]
+visible = false
+
+[node name="Ink" type="Polygon2D" parent="ScrollClip/Stops/Pass3/Selection"]
+polygon = PackedVector2Array(12, 88, 28, 86.5, 54, 87, 81, 86.5, 99, 88, 88, 90.5, 60, 91, 31, 90.5, 16, 91)
+color = Color(0.37, 0.24, 0.08, 0.7)
+
+[node name="Gold" type="Polygon2D" parent="ScrollClip/Stops/Pass3/Selection"]
+polygon = PackedVector2Array(13, 87, 30, 85.5, 55, 86, 81, 85.5, 98, 87, 88, 89, 60, 89.5, 31, 89, 16, 90)
+color = Color(0.93, 0.68, 0.22, 1)
+
+[node name="Highlight" type="Line2D" parent="ScrollClip/Stops/Pass3/Selection"]
+points = PackedVector2Array(26, 87, 52, 87, 76, 86.5, 89, 87)
+width = 0.8
+default_color = Color(1, 0.86, 0.45, 0.85)
+
+[node name="Name" type="Label" parent="ScrollClip/Stops/Pass3"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 52.0
+offset_right = 120.0
+offset_bottom = 84.0
+mouse_filter = 2
+text = "汜水关"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.075, 0.12, 0.085, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(0.99, 0.88, 0.65, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="State" type="Label" parent="ScrollClip/Stops/Pass3"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 90.0
+offset_right = 110.0
+offset_bottom = 112.0
+mouse_filter = 2
+text = "未解锁"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.19, 0.16, 0.09, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(1, 0.9, 0.68, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="Seal" type="Label" parent="ScrollClip/Stops/Pass3"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 9.0
+offset_right = 106.0
+offset_bottom = 39.0
+mouse_filter = 2
+text = "通"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.63, 0.14, 0.08, 1)
+visible = false
+rotation = -0.17
+theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(0.63, 0.14, 0.08, 1)
+
+[node name="Pass4" type="Button" parent="ScrollClip/Stops"]
+layout_mode = 0
+offset_left = 418.0
+offset_top = 200.0
+offset_right = 528.0
+offset_bottom = 298.0
+mouse_filter = 0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("clear")
+theme_override_styles/pressed = SubResource("clear")
+theme_override_styles/focus = SubResource("clear")
+
+[node name="Selection" type="Node2D" parent="ScrollClip/Stops/Pass4"]
+visible = false
+
+[node name="Ink" type="Polygon2D" parent="ScrollClip/Stops/Pass4/Selection"]
+polygon = PackedVector2Array(12, 88, 28, 86.5, 54, 87, 81, 86.5, 99, 88, 88, 90.5, 60, 91, 31, 90.5, 16, 91)
+color = Color(0.37, 0.24, 0.08, 0.7)
+
+[node name="Gold" type="Polygon2D" parent="ScrollClip/Stops/Pass4/Selection"]
+polygon = PackedVector2Array(13, 87, 30, 85.5, 55, 86, 81, 85.5, 98, 87, 88, 89, 60, 89.5, 31, 89, 16, 90)
+color = Color(0.93, 0.68, 0.22, 1)
+
+[node name="Highlight" type="Line2D" parent="ScrollClip/Stops/Pass4/Selection"]
+points = PackedVector2Array(26, 87, 52, 87, 76, 86.5, 89, 87)
+width = 0.8
+default_color = Color(1, 0.86, 0.45, 0.85)
+
+[node name="Name" type="Label" parent="ScrollClip/Stops/Pass4"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 52.0
+offset_right = 120.0
+offset_bottom = 84.0
+mouse_filter = 2
+text = "荥阳"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.075, 0.12, 0.085, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(0.99, 0.88, 0.65, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="State" type="Label" parent="ScrollClip/Stops/Pass4"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 90.0
+offset_right = 110.0
+offset_bottom = 112.0
+mouse_filter = 2
+text = "未解锁"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.19, 0.16, 0.09, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(1, 0.9, 0.68, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="Seal" type="Label" parent="ScrollClip/Stops/Pass4"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 9.0
+offset_right = 106.0
+offset_bottom = 39.0
+mouse_filter = 2
+text = "通"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.63, 0.14, 0.08, 1)
+visible = false
+rotation = -0.17
+theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(0.63, 0.14, 0.08, 1)
+
+[node name="Pass5" type="Button" parent="ScrollClip/Stops"]
+layout_mode = 0
+offset_left = 554.0
+offset_top = 322.0
+offset_right = 664.0
+offset_bottom = 420.0
+mouse_filter = 0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("clear")
+theme_override_styles/pressed = SubResource("clear")
+theme_override_styles/focus = SubResource("clear")
+
+[node name="Selection" type="Node2D" parent="ScrollClip/Stops/Pass5"]
+visible = false
+
+[node name="Ink" type="Polygon2D" parent="ScrollClip/Stops/Pass5/Selection"]
+polygon = PackedVector2Array(12, 88, 28, 86.5, 54, 87, 81, 86.5, 99, 88, 88, 90.5, 60, 91, 31, 90.5, 16, 91)
+color = Color(0.37, 0.24, 0.08, 0.7)
+
+[node name="Gold" type="Polygon2D" parent="ScrollClip/Stops/Pass5/Selection"]
+polygon = PackedVector2Array(13, 87, 30, 85.5, 55, 86, 81, 85.5, 98, 87, 88, 89, 60, 89.5, 31, 89, 16, 90)
+color = Color(0.93, 0.68, 0.22, 1)
+
+[node name="Highlight" type="Line2D" parent="ScrollClip/Stops/Pass5/Selection"]
+points = PackedVector2Array(26, 87, 52, 87, 76, 86.5, 89, 87)
+width = 0.8
+default_color = Color(1, 0.86, 0.45, 0.85)
+
+[node name="Name" type="Label" parent="ScrollClip/Stops/Pass5"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 52.0
+offset_right = 120.0
+offset_bottom = 84.0
+mouse_filter = 2
+text = "黄河渡口"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.075, 0.12, 0.085, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(0.99, 0.88, 0.65, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="State" type="Label" parent="ScrollClip/Stops/Pass5"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 90.0
+offset_right = 110.0
+offset_bottom = 112.0
+mouse_filter = 2
+text = "未解锁"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.19, 0.16, 0.09, 1)
+horizontal_alignment = 1
+theme_override_colors/font_shadow_color = Color(1, 0.9, 0.68, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(1, 0.94, 0.77, 1)
+
+[node name="Seal" type="Label" parent="ScrollClip/Stops/Pass5"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 9.0
+offset_right = 106.0
+offset_bottom = 39.0
+mouse_filter = 2
+text = "通"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.63, 0.14, 0.08, 1)
+visible = false
+rotation = -0.17
+theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(0.63, 0.14, 0.08, 1)
+
+[node name="Details" type="Control" parent="ScrollClip"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+
+
+[node name="Number" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 133.0
+offset_right = 891.0
+offset_bottom = 161.0
+mouse_filter = 2
+text = "第一关 / 关前受阻"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
+
+
+[node name="Title" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 708.0
+offset_top = 167.0
+offset_right = 898.0
+offset_bottom = 213.0
+mouse_filter = 2
+text = "东岭关"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.16, 0.22, 0.16, 1)
+
+
+[node name="Rule" type="ColorRect" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 225.0
+offset_right = 881.0
+offset_bottom = 226.0
+mouse_filter = 2
+color = Color(0.44, 0.32, 0.13, 0.5)
+
+[node name="Status" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 239.0
+offset_right = 891.0
+offset_bottom = 266.0
+mouse_filter = 2
+text = "待挑战"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.46, 0.23, 0.09, 1)
+
+
+[node name="Description" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 276.0
+offset_right = 885.0
+offset_bottom = 334.0
+mouse_filter = 2
+text = "护送甘夫人、糜夫人，闯过第一道关口。"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
+autowrap_mode = 3
+
+[node name="Record" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 339.0
+offset_right = 891.0
+offset_bottom = 364.0
+mouse_filter = 2
+text = "尚无通关记录"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
+
+
+[node name="Reason" type="Label" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 711.0
+offset_top = 369.0
+offset_right = 889.0
+offset_bottom = 403.0
+mouse_filter = 2
+text = "沿途关隘，逐一前行。"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
+autowrap_mode = 3
+
+[node name="Start" type="Button" parent="ScrollClip/Details"]
+layout_mode = 0
+offset_left = 708.0
+offset_top = 408.0
+offset_right = 888.0
+offset_bottom = 444.0
+mouse_filter = 0
+focus_mode = 2
+text = "开始挑战"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("button")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 15.0
+offset_right = 603.0
+offset_bottom = 53.0
+mouse_filter = 2
+text = "千里寻兄 · 五关旅图"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+
+
+[node name="NextStop" type="Label" parent="."]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 52.0
+offset_right = 675.0
+offset_bottom = 76.0
+mouse_filter = 2
+text = "护送二位夫人，过关寻刘备"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.73, 0.73, 0.58, 1)
+
+
+[node name="Progress" type="Label" parent="."]
+layout_mode = 0
+offset_left = 697.0
+offset_top = 30.0
+offset_right = 915.0
+offset_bottom = 60.0
+mouse_filter = 2
+text = "已通过 0 / 5 关"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.89, 0.74, 0.43, 1)
+horizontal_alignment = 2
+
+[node name="Back" type="Button" parent="."]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 487.0
+offset_right = 165.0
+offset_bottom = 522.0
+mouse_filter = 0
+focus_mode = 2
+text = "返回主菜单"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("button")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+metadata/action = "map_back"
+
+
+[node name="Review" type="Button" parent="."]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 487.0
+offset_right = 303.0
+offset_bottom = 522.0
+mouse_filter = 0
+focus_mode = 2
+text = "回顾前情"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("button")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+metadata/action = "map_replay"
+
+
+[node name="Mute" type="Button" parent="."]
+layout_mode = 0
+offset_left = 318.0
+offset_top = 487.0
+offset_right = 433.0
+offset_bottom = 522.0
+mouse_filter = 0
+focus_mode = 2
+text = "声音：开"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("button")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+metadata/action = "mute"
+
+
+[node name="Motion" type="Button" parent="."]
+layout_mode = 0
+offset_left = 448.0
+offset_top = 487.0
+offset_right = 594.0
+offset_bottom = 522.0
+mouse_filter = 0
+focus_mode = 2
+text = "减少动态：关"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("button")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+metadata/action = "motion"
+
+
+[node name="Hint" type="Label" parent="."]
+layout_mode = 0
+offset_left = 625.0
+offset_top = 489.0
+offset_right = 917.0
+offset_bottom = 517.0
+mouse_filter = 2
+text = "← → 选关 · TAB 切换 · ENTER 确认"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.74, 0.74, 0.6, 1)
+horizontal_alignment = 2
+
+[node name="SaveNotice" type="Label" parent="."]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 461.0
+offset_right = 693.0
+offset_bottom = 484.0
+mouse_filter = 2
+text = ""
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.71, 0.45, 1)
+
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+callback_mode_process = 2
+libraries = {&"": SubResource("library")}
+
+[node name="Paper" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("paper")
+volume_db = -22.0
+playback_type = 1
+
+[node name="Life" type="AnimationPlayer" parent="."]
+callback_mode_process = 2
+libraries = {&"": SubResource("life_library")}

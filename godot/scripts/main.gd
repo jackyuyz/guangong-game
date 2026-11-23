@@ -14,6 +14,13 @@ var ext = preload("res://scripts/combat_extensions.gd").new()
 @onready var level = $Level
 @onready var ui = $UI
 @onready var prologue = $UI/Root/Prologue
+@onready var journey = $UI/Root/JourneyMap
+var progress = preload("res://scripts/progress_store.gd").new()
+var reduced_motion = false
+var window_active = true
+var _first_clear_pending = false
+var _confirm_origin = "pause"
+var _confirm_to_map = false
 var prologue_return_state = ""
 var await_input_release = false
 var _web_focus_callback: JavaScriptObject
@@ -65,11 +72,16 @@ var tone_player: AudioStreamPlayer
 
 func _ready() -> void:
 	story = JSON.parse_string(FileAccess.get_file_as_string("res://data/story.json"))
-	var save = ConfigFile.new()
-	if save.load(save_path) == OK:
-		best = int(save.get_value(SCORE_VERSION, "best", 0))
-		cleared = bool(save.get_value(SCORE_VERSION, "cleared", false))
-		muted = bool(save.get_value("settings", "muted", false))
+	progress.load_file(save_path)
+	best = progress.best_score()
+	cleared = progress.is_cleared("dongling")
+	muted = progress.muted()
+	reduced_motion = progress.reduced_motion()
+	journey.progress = progress
+	journey.set_reduced_motion(reduced_motion)
+	journey.chapter_requested.connect(_enter_chapter)
+	if progress.needs_migration:
+		progress.save_file()
 	tone_player = $Sound
 	ui.action_requested.connect(_action)
 	prologue.completed.connect(_finish_prologue)
@@ -86,14 +98,21 @@ func _ready() -> void:
 	_sync_scene()
 
 func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_WM_WINDOW_FOCUS_IN]:
+		window_active = true
+		if is_instance_valid(journey): journey.set_suspended(state != "map")
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and not OS.has_feature("web")):
 		_pause_for_focus_loss()
 
 func _on_web_focus_change(_arguments: Array) -> void:
+	window_active = not _web_document.hidden and _web_document.hasFocus()
+	journey.set_suspended(state != "map" or not window_active)
 	if _web_document.hidden or not _web_document.hasFocus():
 		_pause_for_focus_loss()
 
 func _pause_for_focus_loss() -> void:
+	window_active = false
+	if is_instance_valid(journey): journey.set_suspended(true)
 	if state in ["play", "dialogue", "prologue"]:
 		resume_state = state
 		state = "pause"
@@ -119,7 +138,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if show_culture and state in ["menu", "victory"]:
 			show_culture = false
 		elif state == "confirm":
-			state = "pause"
+			state = _confirm_origin
+		elif state == "map":
+			state = "menu"
 		elif state == "pause":
 			state = resume_state
 		elif state in ["play", "dialogue", "prologue"]:
@@ -139,7 +160,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif state == "dead":
 			_retry()
 		elif state == "victory":
-			show_culture = not show_culture
+			_return_to_map()
 		return
 	if state != "play" or await_input_release:
 		return
@@ -161,7 +182,30 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _action(action: String) -> void:
 	match action:
-		"start": _start()
+		"map_back":
+			if state == "map": state = "menu"
+		"map_replay":
+			if state == "map":
+				journey.remember_focus()
+				prologue_return_state = "map"
+				if prologue.begin(true, "map"): state = "prologue"
+		"map_return":
+			if state == "victory": _return_to_map()
+		"map_confirm":
+			if state in ["pause", "dead"]:
+				_confirm_origin = state
+				_confirm_to_map = true
+				state = "confirm"
+		"map_exit":
+			if state == "confirm" and _confirm_to_map:
+				_reset_run()
+				_return_to_map()
+		"motion":
+			reduced_motion = not reduced_motion
+			journey.set_reduced_motion(reduced_motion)
+			_save()
+		"start":
+			if state in ["menu", "victory"]: _start()
 		"culture": show_culture = not show_culture
 		"prologue_sound":
 			if prologue.waiting_for_audio:
@@ -191,7 +235,10 @@ func _action(action: String) -> void:
 		"restart":
 			checkpoint.clear()
 			_retry()
-		"menu_confirm": state = "confirm"
+		"menu_confirm":
+			_confirm_origin = state
+			_confirm_to_map = false
+			state = "confirm"
 		"menu":
 			prologue.stop()
 			prologue_return_state = ""
@@ -201,37 +248,63 @@ func _action(action: String) -> void:
 			camera_x = level.world_left
 			state = "menu"
 			show_culture = false
-		"cancel": state = "pause"
+		"cancel": state = _confirm_origin
 		"mute":
 			muted = not muted
 			_save()
 	_sync_scene()
 
 func _start() -> void:
+	show_culture = false
+	prologue_return_state = ""
+	if progress.intro_state() == "unseen":
+		prologue.set_muted(muted)
+		if prologue.begin(false, "first"):
+			state = "prologue"
+		else:
+			# Fallback still ends at the map; it never bypasses selection.
+			_begin_dialogue(story.opening, "map_intro")
+	else:
+		_return_to_map()
+	_sync_scene()
+
+func _return_to_map(preserve: bool = false) -> void:
+	prologue.stop()
+	show_culture = false
+	state = "map"
+	journey.open(preserve, _first_clear_pending)
+	_first_clear_pending = false
+	_sync_scene()
+
+func _enter_chapter(id: String) -> void:
+	if state != "map" or journey.suspended or not journey.ready_to_start or journey._release_pending or not journey.can_enter(id) or id != "dongling":
+		return
 	_reset_run()
 	phase = 0
 	_place_player(level.player_origin)
+	camera_x = level.world_left
 	set_meta("dummy_hits", 0)
 	tutorial_hits = 0
 	show_culture = false
 	prologue_return_state = ""
-	prologue.set_muted(muted)
-	if prologue.begin():
-		state = "prologue"
-	else:
-		_begin_dialogue(story.opening, "play")
+	state = "play"
+	await_input_release = true
+	_banner("护送二位夫人，过关寻刘备。向右前行，抵达旗标")
+	_sync_scene()
 
 func _finish_prologue() -> void:
-	if state != "prologue":
-		return
-	if not prologue_return_state.is_empty():
-		state = prologue_return_state
-		prologue_return_state = ""
+	if state != "prologue": return
+	var origin = prologue_return_state
+	prologue_return_state = ""
+	if origin == "map":
+		_return_to_map(true)
+	elif not origin.is_empty():
+		state = origin
 		show_culture = true
 	else:
-		state = "play"
-		await_input_release = true
-		_banner("护送二位夫人，过关寻刘备。向右前行，抵达旗标")
+		progress.set_intro("skipped" if prologue.was_skipped else "completed")
+		_save()
+		_return_to_map()
 	_sync_scene()
 
 func _inputs_held() -> bool:
@@ -278,6 +351,11 @@ func _next_dialogue() -> void:
 		_finish_dialogue()
 
 func _finish_dialogue() -> void:
+	if dialogue_after == "map_intro":
+		progress.set_intro("skipped")
+		_save()
+		_return_to_map()
+		return
 	state = dialogue_after
 	if phase == 5:
 		_enter_boss()
@@ -496,16 +574,15 @@ func _win() -> void:
 	_reset_effects()
 	score = 600 + int(240.0 * hp / 6.0) + int(160.0 * clampf(1.0 - maxf(0, combat_seconds - 180) / 360.0, 0, 1))
 	best = maxi(best, score)
+	_first_clear_pending = not progress.is_cleared("dongling")
 	cleared = true
+	progress.mark_cleared("dongling", score)
 	_save()
 	_begin_dialogue(story.ending, "victory")
 
 func _save() -> void:
-	var config = ConfigFile.new()
-	config.set_value(SCORE_VERSION, "best", best)
-	config.set_value(SCORE_VERSION, "cleared", cleared)
-	config.set_value("settings", "muted", muted)
-	config.save(save_path)
+	progress.save_preferences(muted, reduced_motion, best)
+	if is_instance_valid(journey) and journey.visible: journey.present()
 
 func _banner(text: String) -> void:
 	message = text
@@ -537,6 +614,9 @@ func _spawn_wave(wave: int) -> void:
 		_spawn(spawn.origin, spawn.view)
 
 func _sync_scene() -> void:
+	journey.visible = state == "map"
+	journey.set_suspended(state != "map" or not window_active)
+	journey.set_muted(muted)
 	prologue.set_suspended(state != "prologue")
 	prologue.set_muted(muted)
 	if tone_player.playing and (muted or state in ["menu", "dead"] or phase == 7):

@@ -21,7 +21,7 @@ func check(condition: bool, label: String) -> void:
 
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
-	game.save_path = "/tmp/guangong-test-progress.cfg"
+	game.save_path = "/tmp/guangong-smoke-%d.cfg" % Time.get_ticks_usec()
 	root.add_child(game)
 	game.set_process(false)
 	# Isolate tests from normal play saves.
@@ -30,6 +30,10 @@ func run() -> void:
 	check(game.state == "prologue", "six-panel opening")
 	await create_timer(0.1).timeout
 	game.prologue._complete()
+	game.journey.set_reduced_motion(true)
+	await process_frame
+	await process_frame
+	game._enter_chapter("dongling")
 	game._process(0)
 	game.x = 450
 	game._update_play(0.01)
@@ -109,6 +113,7 @@ func run() -> void:
 	game._notification(NOTIFICATION_APPLICATION_FOCUS_OUT)
 	check(game.state == "pause", "focus loss auto pauses")
 	game._action("resume")
+	game._notification(NOTIFICATION_APPLICATION_FOCUS_IN)
 	game.enemies[0].hp = 1
 	game.x = game.enemies[0].x - 85
 	game.facing = 1
@@ -122,10 +127,11 @@ func run() -> void:
 	var save = ConfigFile.new()
 	check(save.load(game.save_path) == OK and save.get_value(game.SCORE_VERSION, "cleared", false), "persistent completion")
 	game._start()
-	check(game.get_meta("dummy_hits") == 0 and game.checkpoint.is_empty(), "new run clears tutorial and checkpoint")
-	await create_timer(0.1).timeout
-	game.prologue._complete()
+	await process_frame
+	await process_frame
+	game._enter_chapter("dongling")
 	game._process(0)
+	check(game.get_meta("dummy_hits") == 0 and game.checkpoint.is_empty(), "new run clears tutorial and checkpoint")
 	game._enter_boss()
 	game.enemies[0].hp = 3
 	game.x = game.enemies[0].x - 100

@@ -2,7 +2,21 @@
 
 ## 当前版本
 
-工程：`godot/project.godot`，Godot 4.7.2 Compatibility。第一关东岭关及原有战斗、检查点保持可玩。本轮实现六幕动态连环画「千里寻兄」，约 51 秒，使用用户认可的中文老先生说书音色。本轮更改整理为本地 main 提交，未推送或公开发布。
+工程：`godot/project.godot`，Godot 4.7.2 Compatibility。第一关东岭关及原有战斗、检查点保持可玩。已实现全游戏六幕动态连环画「千里寻兄」，约 51 秒，使用用户认可的中文老先生说书音色；已有实现纳入 main。本轮已接入五关卷轴地图、选关与前情回顾；地图、进度保存和后续视觉修订随此提交纳入本地 main，尚未推送远端；已做本机导出与隔离试玩。
+
+## 五关卷轴旅图已接入
+
+最新文字修订：地图节点、右侧状态、禁用出发按钮、结算与下一站提示已将「筹备中」统一替换为「未解锁」；内容开放条件保留。五处关名从 18px 放大到 22px，深墨色字配 4px 暖米色描边，状态字与选中金色笔触相应下移。45 项地图隔离回归通过，已检查编辑器与实际原生渲染并重新导出 Web。
+
+上一轮视觉修订：标题与副标题右移 40 个设计像素，副标题上提 4；朱红镶金军旗表示实际旅程位置，浏览其他关卡不移动，通关后移至关后旅路且保留显示。选中关名下显示不规则金色笔触，五站点击、悬停和键盘焦点不再出现矩形框。均为可编辑原生节点，底图与源素材不变。此次 45 项地图隔离检查、编辑器重载、未通关／浏览／通关后原生渲染与本机 Web 导出通过；不将上轮 235 项全量检查记作此次重跑。
+
+- `journey_map.tscn` / `journey_map.gd` 使用完整山水卷轴、五个可编辑按钮、右侧题记、进度、纸张展开、旗帜呼吸、队伍位置和首次通关描线盖章。素材与完整提示记录在 `godot/assets/journey-map/`，来源为内置 image_gen；旧源图保留。
+- 首次启程先播放原六幕，看完或主动跳过后进入地图；之后「继续旅程」直接进地图。地图「回顾前情」保存选择与焦点，结束或提前返回恢复；文化卡重看仍返回原来源。前情故障的精简对白也先回地图，不直接进战斗。
+- 五站可预览，仅东岭关能明确点击「开始挑战／再次挑战」进入教学。其他四关尚未开放，界面统一显示「未解锁」；洛阳满足剧情前置后仍不能进入。完成数显示 0/5 或 1/5，重玩不撤销通关或覆盖更高成绩，不重播全游戏开篇。
+- 暂停／失败界面可确认返回旅图；取消恢复原界面，确认丢弃本局临时状态。结算主按钮返回旅图，首次通关触发路线与印章。孔秀检查点仍仅本局有效，刷新不恢复半场战斗。
+- `progress_store.gd` 统一维护 ConfigFile，保留已有字段与旧评分版本。旧第一关通关、最佳成绩和静音可迁移，旧通关记录以 `legacy` 跳过自动前情；仅有设置不能冒充已观看。声音、减少动态与新进度不相互覆盖，保存失败显示提示，未知存档版本不覆盖原文件。
+- 六组自动检查通过：smoke 26、scene 42、extensions 54、prologue 47、journey 45、progress 21，共 235 项。新增检查覆盖四关受限、模拟开放后的顺序、地图回顾恢复、旧记录迁移、重玩保分、失效保存和确认退出；使用临时隔离存档。
+- 已检查地图 Godot 2D 节点与实际原生渲染。应用内浏览器独立端口 18930 检查首次前情／跳过、地图选点、完整回顾到末幕及原选择恢复、刷新后继续旅程、出发到教学、暂停与确认返回；未使用玩家原有浏览器来源作测试。新地图的 Safari 专项与长时间课堂试玩仍待验收。
 
 ## 最新修订：首幕重复开头
 
@@ -18,7 +32,7 @@
 - 开篇直接显示声音开关、静音提示及“重听本幕”。重听自动开启声音并从当前幕开头重新播放。共享静音偏好仍保存；上一幕、自动／手动、继续、跳过和文化卡重看保持可用。
 - `web/game.html` 是基于本机官方 Godot 4.7.2 单线程模板的自定义 HTML shell；观察游戏 AudioContext，真实点击或按键时尝试 resume。音频尚未运行且未静音时，冻结镜头、时间轴和声音，显示“开启声音／静音观看”。明确选择静音才允许无声自动播放；DOM 声音按钮转移焦点不会误触发游戏暂停，真正窗口失焦和隐藏页面仍暂停。
 - Web shell 的 `?audio_debug=1` 仅用于本机测量输出信号，读取 output 元素 `audio-check` 的 data-context / data-rms / data-peak；正常 URL 不创建分析器。它不申请麦克风、不录音、不传输数据。临时受阻测试页面只存在于忽略目录 `builds/web/audio-blocked.html`，不属于源码或正常入口。
-- `main.gd` 继续冻结前情中的世界、隐藏 HUD；完成或跳过后进入教学并等待旧输入释放。重看返回文化卡，重试绕过开篇，中途回菜单停止播放，资源故障使用原精简对白。
+- `main.gd` 继续冻结前情中的世界、隐藏 HUD；首次完成或跳过后进入地图，明确选择关卡后才初始化教学，并等待旧输入释放。重看返回文化卡，重试绕过开篇，中途回菜单停止播放，资源故障使用原精简对白。
 - 配音开发工具仅从根 `.env` 读取凭据，voice ID 为参数；游戏只读本地成品，不调用 API。六幕音色与台词记录仍见 `assets/prologue/voice-manifest.json`。新增中文字形已补入 Noto Sans SC 子集，沿用 OFL。
 
 ## 验证
@@ -41,11 +55,13 @@
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/scene_test.gd
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/extensions_test.gd
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/prologue_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/journey_map_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/progress_store_test.gd
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --export-release Web ../builds/web/index.html
 python3 tools/serve_demo.py
 ```
 
-常规本地 Web 地址为 `http://127.0.0.1:8765/`，原预览服务使用 18928 端口，本轮隔离验收使用 18929 端口。重新改代码后，原生停止并重启；Web 需要重新导出并刷新。对应版本的官方单线程 Web 模板已安装。
+常规本地 Web 地址为 `http://127.0.0.1:8765/`，原预览服务使用 18928 端口，前情隔离验收使用 18929 端口，地图验收与试玩使用 18930 端口。重新改代码后，原生停止并重启；Web 需要重新导出并刷新。对应版本的官方单线程 Web 模板已安装。
 
 ## 后续范围
 

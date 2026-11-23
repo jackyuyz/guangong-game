@@ -8,6 +8,8 @@ var scenes: Array = []
 var available = false
 var active = false
 var replay = false
+var entry = "culture"
+var was_skipped = false
 var auto_play = true
 var suspended = false
 var waiting_for_audio = false
@@ -63,11 +65,13 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	stop()
 
-func begin(is_replay: bool = false) -> bool:
+func begin(is_replay: bool = false, source: String = "culture") -> bool:
 	stop()
 	if not available:
 		return false
 	replay = is_replay
+	entry = source
+	was_skipped = false
 	auto_play = true
 	suspended = false
 	active = true
@@ -124,6 +128,7 @@ func replay_current() -> void:
 
 func finish() -> void:
 	if _accept_input():
+		was_skipped = true
 		_complete()
 
 func _complete() -> void:
@@ -199,7 +204,8 @@ func _show_scene(next_index: int, blend: bool = true) -> void:
 func _refresh_controls() -> void:
 	$Previous.disabled = index == 0
 	$Auto.text = "暂停播放" if auto_play else "自动播放"
-	$Next.text = ("返回" if replay else "启程") if index == scenes.size() - 1 else "继续  ENTER"
+	$Next.text = ("返回旅图" if entry == "map" else ("返回" if replay else "展开旅图")) if index == scenes.size() - 1 else "继续  ENTER"
+	$Skip.text = "返回旅图" if entry == "map" else "跳过前情"
 	$Count.text = "%02d / 06" % (index + 1)
 	$Sound.text = "开启声音" if waiting_for_audio else ("声音：关" if _muted else "声音：开")
 	$AudioHint.text = "声音尚未开启" if waiting_for_audio else ("当前静音" if _muted else "")

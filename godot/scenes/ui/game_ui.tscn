@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/game_ui.gd" id="e1"]
 
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" path="res://assets/green-dragon-blade.png" id="e4"]
 
 [ext_resource type="PackedScene" path="res://scenes/ui/prologue.tscn" id="prologue"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/journey_map.tscn" id="journey_map"]
 
 [sub_resource type="StyleBoxFlat" id="s1"]
 bg_color = Color(0.045, 0.085, 0.075, 0.94)
@@ -219,6 +221,9 @@ theme_override_styles/pressed = SubResource("s5")
 theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_hover_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_pressed_color = Color(0.953, 0.91, 0.804, 1)
+
+[node name="JourneyMap" parent="Root" instance=ExtResource("journey_map")]
+visible = false
 
 [node name="Prologue" parent="Root" instance=ExtResource("prologue")]
 visible = false
@@ -913,10 +918,10 @@ offset_top = 343.0
 offset_right = 650.0
 offset_bottom = 379.0
 mouse_filter = 0
-text = "返回菜单"
+text = "返回旅图"
 focus_mode = 0
 theme_override_font_sizes/font_size = 12
-metadata/action = "menu"
+metadata/action = "map_confirm"
 theme_override_styles/normal = SubResource("s4")
 theme_override_styles/hover = SubResource("s5")
 theme_override_styles/pressed = SubResource("s5")
@@ -1029,10 +1034,10 @@ offset_top = 318.0
 offset_right = 675.0
 offset_bottom = 358.0
 mouse_filter = 0
-text = "故事回顾"
+text = "返回旅图"
 focus_mode = 0
 theme_override_font_sizes/font_size = 16
-metadata/action = "culture"
+metadata/action = "map_return"
 
 [node name="Restart" type="Button" parent="Root/Victory"]
 layout_mode = 0
@@ -1041,10 +1046,10 @@ offset_top = 372.0
 offset_right = 470.0
 offset_bottom = 408.0
 mouse_filter = 0
-text = "再走一回"
+text = "故事回顾"
 focus_mode = 0
 theme_override_font_sizes/font_size = 12
-metadata/action = "start"
+metadata/action = "culture"
 theme_override_styles/normal = SubResource("s4")
 theme_override_styles/hover = SubResource("s5")
 theme_override_styles/pressed = SubResource("s5")
@@ -1059,7 +1064,7 @@ offset_top = 372.0
 offset_right = 675.0
 offset_bottom = 408.0
 mouse_filter = 0
-text = "返回菜单"
+text = "返回主菜单"
 focus_mode = 0
 theme_override_font_sizes/font_size = 12
 metadata/action = "menu"
