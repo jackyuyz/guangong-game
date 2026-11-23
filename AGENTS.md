@@ -28,6 +28,7 @@
 
 ## 画面与操作
 
+- Avoid unnecessary secondary labels and descriptions. Let the layout do the explaining.
 - 让画面和操作顺序说明流程，减少次要标签和重复描述。
 - 优先呈现血量、义气和当前最需要的操作。暂停、失败、缺字和输入无效时用清楚的文字表达。
 
