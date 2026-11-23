@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-22",
+  "sample_approved": true,
+  "clips": [
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [warmly] 话说，徐州兵败，关羽与结义兄长刘备失散。",
+      "text_sha256": "48a64247987d3252786d443b5800fa05aff63bda86396a7a5b20156daf21ed66",
+      "duration_seconds": 5.06,
+      "audio_file": "01-separation.mp3",
+      "source_generation_duration_seconds": 6.16,
+      "audio_sha256": "8c9526803e37f9ae00237a0c49233c8698a65470f7940ff624aa1598f359ac78",
+      "postprocess": {
+        "date": "2026-11-22",
+        "operation": "remove duplicated first 话说 from original take",
+        "trim_start_seconds": 1.1,
+        "fade_in_seconds": 0.005,
+        "source_audio_sha256": "134e453ef6a2c269cead179c5728c1f5c82abe769ae98ecea06304355226f47b",
+        "tool": "ffmpeg atrim + asetpts + afade; libmp3lame 128k 44100 Hz mono",
+        "verification": "Offline mlx-whisper/base detects two occurrences before edit and one after; recognized remainder unchanged",
+        "retained_pcm_correlation": 0.999978
+      }
+    },
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [warmly] 为护住刘备的甘夫人、糜夫人，关羽暂留曹营。 他早有约定，一得兄长消息，便要辞去。",
+      "text_sha256": "cfc8222c946e45c68bfd0638c40972ac2ec7681abadcc2afd48ce903f9c6f153",
+      "duration_seconds": 8.32,
+      "audio_file": "02-promise.mp3"
+    },
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [warmly] 一封来信，证实刘备尚在人世，正在河北。",
+      "text_sha256": "7d9452af0d4563ad3a10f1ea785f157d6ad4c65695ad4d6258f6d9d5cbd7da8e",
+      "duration_seconds": 4.48,
+      "audio_file": "03-letter.mp3"
+    },
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [seriously] 曹操待他甚厚，仍留不住归心。 关羽封存赏赐、挂印留书，辞别而行。",
+      "text_sha256": "173f0f256df617ad3584556db3b9e388fd4be81d9933409d83c4306eafd27952",
+      "duration_seconds": 8.16,
+      "audio_file": "04-farewell.mp3"
+    },
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [firmly] 二位嫂嫂放心，关某定护你们，与兄长重逢。",
+      "text_sha256": "357266c47adb6451d15a154ba5824b88b928633be1ddd65d6c8992032f1e38b9",
+      "duration_seconds": 4.4,
+      "audio_file": "05-escort.mp3"
+    },
+    {
+      "provider": "ElevenLabs",
+      "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+      "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+      "model_id": "eleven_v4",
+      "language": "zh",
+      "output_format": "mp3_44100_128",
+      "text": "[elderly voice] [seriously] 曹操虽已允行，沿途关口仍须文书。 未领文书的一行，来到东岭关。",
+      "text_sha256": "88f6bd074aa83e1074a45381a4cd3013a50bdfe7698cf0a5b6402aaf62d792d5",
+      "duration_seconds": 8.08,
+      "audio_file": "06-dongling.mp3"
+    }
+  ]
+}

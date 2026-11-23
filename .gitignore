@@ -3,9 +3,15 @@
 .idea/
 .vscode/
 
+# Local speech production credentials
+/.env
+
 # Godot generated imports and editor cache; keep source .uid files
 .godot/
 
 # Local exports
 /builds/
 /godot/builds/
+
+# Python development cache
+__pycache__/

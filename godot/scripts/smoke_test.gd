@@ -27,8 +27,10 @@ func run() -> void:
 	# Isolate tests from normal play saves.
 	game.muted = true
 	game._start()
-	check(game.state == "dialogue", "opening dialogue")
-	game._finish_dialogue()
+	check(game.state == "prologue", "six-panel opening")
+	await create_timer(0.1).timeout
+	game.prologue._complete()
+	game._process(0)
 	game.x = 450
 	game._update_play(0.01)
 	check(game.phase == 1, "movement tutorial")
@@ -121,6 +123,9 @@ func run() -> void:
 	check(save.load(game.save_path) == OK and save.get_value(game.SCORE_VERSION, "cleared", false), "persistent completion")
 	game._start()
 	check(game.get_meta("dummy_hits") == 0 and game.checkpoint.is_empty(), "new run clears tutorial and checkpoint")
+	await create_timer(0.1).timeout
+	game.prologue._complete()
+	game._process(0)
 	game._enter_boss()
 	game.enemies[0].hp = 3
 	game.x = game.enemies[0].x - 100
@@ -130,5 +135,5 @@ func run() -> void:
 	check(game.state == "dialogue" and game.ext.heavy_time == 0 and game.level.player.sprite.animation == &"idle", "lethal heavy strike clears its pose and arc before the ending")
 	print("SMOKE CHECKS COMPLETE")
 	game.queue_free()
-	await process_frame
+	await create_timer(0.15).timeout
 	quit(1 if failures else 0)

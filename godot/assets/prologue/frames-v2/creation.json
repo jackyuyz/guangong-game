@@ -1,0 +1,71 @@
+{
+  "created": "2026-11-22",
+  "mode": "builtin image_gen",
+  "purpose": "Integrated six-panel prologue, v2; no changes to source art",
+  "prompts": [
+    {
+      "id": "01-separation",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. Environment is the first reference, Guan Yu identity the second. Retain the war-torn forked mountain road and smoky distant city. Guan Yu stands naturally in the near left road, seen three-quarter from behind, looking across a mist-filled ravine toward a small distant blue-robed brother's silhouette receding along the other path. The men are within the scene at believable different distances, not equally sized lineup portraits. Windblown banners and long low shadows. Cool dawn, a visual separation between the two paths."
+    },
+    {
+      "id": "02-promise",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. First reference is Cao's Han residence environment, remaining references are identities. A single natural scene seen obliquely across the courtyard into the lit residence. Lady Gan and Lady Mi are small full-height adults safely INSIDE the room, behind the wooden threshold and beside the real low table, quietly facing each other. Guan Yu stands OUTSIDE the doorway, watching the approach with his glaive resting upright. A visible threshold, pillars partly occluding the room, warm lamplight touching garments and cool blue light on his green armor. People occupy at most half the image height, not giant foreground cutouts. Render warm grounded contact shadows under feet. No floating name tags."
+    },
+    {
+      "id": "03-letter",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. Reframe the same residence into an intimate oblique close shot inside its room. Guan Yu sits at the low wooden writing table at right, red face and black beard in three-quarter view, green sleeves. His two hands physically hold and open a modest folded paper letter just ABOVE the tabletop; his elbow rests on the table, paper bends and its lower edge rests on wood. A bronze oil lamp at left illuminates fingers, letter and wood grain; inkstone and brush sit naturally on the desk. The LETTER is the focus, at a believable hand-held size, never a gigantic front-facing scroll. No roller scroll at all. Pale blank or indistinct paper with no legible text. Same warm amber and slate light as preceding panel."
+    },
+    {
+      "id": "04-farewell",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. Reframe the same residence at dawn. Foreground left: an actual low wooden desk in perspective, a sealed small green fabric bundle of gifts resting ON its tabletop, a folded farewell letter tucked under a bronze seal. A second small bronze official seal hangs by red silk from a wooden peg on the near pillar, with believable gravity, cast shadow and size. Midground right: Guan Yu seen from behind steps through the open courtyard gate into cool dawn. Desk and pillar partially frame him, lamplight remains in the room. Props are small physical scene details, not large icons, not hovering. No giant gold ingot, no scroll banner, no readable text."
+    },
+    {
+      "id": "05-escort",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. The environment reference supplies a wooded road, mountain palette and ancient architecture; show the escort ON A QUIET MOUNTAIN ROAD, before the pass. Guan Yu walks alongside a single covered wooden carriage, turning his head back kindly toward the passengers. Gan in pale green and Mi in purple are visible TOGETHER only inside the carriage opening, no duplicate standing women outside. A red-brown horse harnessed to the shafts actually pulls the carriage; believable contact with the road, wheel shadows and harness geometry. A small dust trail catches warm early sun. Unified pixel art on figures, horse, carriage, rocks and foliage; no giant near-camera sprites."
+    },
+    {
+      "id": "06-dongling",
+      "prompt": "Use case: compositing. Edit the environment reference into one complete illustrated motion-comic frame for a Chinese Guan Yu game. Repaint the ENTIRE image in a unified refined pixel-art / dithered storybook style, with coherent pixel-sized color clusters in scenery AND people. Preserve the character identities from the sprite references (Guan Yu: red face, long black beard, green robe/armor, green headcloth; Lady Gan: pale green and ivory; Lady Mi: rose-purple and cream). Do not paste sprites or isolated prop icons over a realistic background. All figures and props must share perspective, ground contact, shadows, occlusion and the same scene lighting. Restrained jade/slate/ochre palette. Ultra-wide 2.5:1 landscape composition, ideally 1600x640. Frame the entire important action inside the middle 75% height; quiet dark top-left space for a small game title, no baked-in text or UI, no labels, no borders, no watermark. Keep the closed Dongling pass gate architecture and mountain foliage from the environment reference, but integrate the arriving travelers into ONE unified pixel-art illustration. Three-quarter rear view of Guan Yu and the covered carriage on the road at lower-left, naturally small compared with the high timber-and-stone gate in mid-right. Two women in green and purple sit together inside the carriage. Guan Yu faces the CLOSED gate. Gate has intact doors, red banners, low wooden barriers and warm lanterns; far mountain mist. Dawn gold light along the road. Real wheel/foot contact shadows, matching perspective, natural spacing. No free-floating paper, scroll or icons; the absent travel document is explained by game captions, not a hovering symbol."
+    }
+  ],
+  "refinements": [
+    {
+      "id": "04-farewell-final",
+      "path": "/Users/yuyuanzhengjack/.codex/generated_images/01a1ef8d-02f7-7213-8d96-1388e2885ef6/exec-adac5ae7-ed3c-4cff-8594-6cc2c943543b.png",
+      "prompt": "Use case: precise-object-edit. Edit this existing ultra-wide pixel-art motion-comic frame. Preserve the entire architecture, desk, bundle, letter, illumination, palette, aspect ratio and Guan Yu walking out of the gate at right. Remove BOTH women from the room completely, leaving the empty chairs, room and desk physically intact. This scene is about leaving official gifts behind; it must not look as though Guan Yu abandons the two ladies. Change the dangling round ornament on the near central wooden pillar into a SMALL SQUARE BRONZE OFFICIAL SEAL hanging naturally from its red silk cord, with gravity and a subtle cast shadow. Keep its size modest, about a human palm. Keep the sealed green gift bundle and folded farewell letter ON the desk, not floating. Do not add any people, text, UI, icons, symbols or new ornaments. Preserve the unified subtle pixel-dithered storybook medium."
+    },
+    {
+      "id": "05-escort-final",
+      "path": "/Users/yuyuanzhengjack/.codex/generated_images/01a1ef8d-02f7-7213-8d96-1388e2885ef6/exec-2684c5e1-e577-4de4-a71c-c0021006d281.png",
+      "prompt": "Use case: precise-object-edit. Edit only the background in this existing ultra-wide pixel-art illustration. Preserve EXACTLY the foreground Guan Yu looking back, the horse with harness, carriage, two women inside, their scale and poses, wheel shadows, dust, road and all foreground lighting. Replace the CLOSED GATEHOUSE and its fortified wall, red banners and barriers in the upper-right background with a continuous QUIET WOODED MOUNTAIN ROAD and layered distant foothills and gold-green trees. This is an escort on the journey BEFORE arriving at the pass; the gatehouse should not be present yet. Keep the same dawn light, jade/ochre palette, subtle dithered pixel-art storybook texture and 2.5:1 frame. No additional people, text, UI, freestanding icons, or different art style."
+    }
+  ],
+  "outputs": [
+    {
+      "id": "01-separation",
+      "source": "exec-b310abc9-df35-4e23-b28d-cf29c468e4c5.png"
+    },
+    {
+      "id": "02-promise",
+      "source": "exec-651cb145-6148-41c0-ae3d-474e3657b3da.png"
+    },
+    {
+      "id": "03-letter",
+      "source": "exec-51d9a1ff-69dc-47e0-ae2a-66962bfad6f1.png"
+    },
+    {
+      "id": "04-farewell",
+      "source": "exec-9cf1c4be-2de5-4dd8-9b47-8ad051cc306f.png",
+      "draft": "exec-adac5ae7-ed3c-4cff-8594-6cc2c943543b.png"
+    },
+    {
+      "id": "05-escort",
+      "source": "exec-8fb45101-21c9-4e10-aa32-a015cbb3cce2.png",
+      "draft": "exec-2684c5e1-e577-4de4-a71c-c0021006d281.png"
+    },
+    {
+      "id": "06-dongling",
+      "source": "exec-7cc4cac6-666b-47c2-822d-5deaa5b2aa90.png"
+    }
+  ]
+}

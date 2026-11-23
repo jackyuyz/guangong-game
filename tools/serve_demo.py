@@ -10,10 +10,17 @@ ROOT = Path(__file__).resolve().parents[1]
 URL = "http://127.0.0.1:8765/"
 
 
+class DemoHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        # A local preview must load the newly exported PCK after a page refresh.
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
+
 def main():
     if not (ROOT / "builds/web/index.html").exists():
         raise SystemExit("请先用 Godot 的 Web 预设导出 builds/web/index.html。")
-    handler = partial(SimpleHTTPRequestHandler, directory=str(ROOT / "builds/web"))
+    handler = partial(DemoHandler, directory=str(ROOT / "builds/web"))
     try:
         server = ThreadingHTTPServer(("127.0.0.1", 8765), handler)
     except OSError:

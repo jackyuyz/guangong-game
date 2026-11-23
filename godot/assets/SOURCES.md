@@ -20,3 +20,7 @@
 `demo-font.ttf` 是 Noto Sans SC Regular 的字符子集，来源于 [Google Fonts](https://github.com/google/fonts/tree/main/ofl/notosanssc)，遵循同目录 `FONT-LICENSE.txt` 中的 SIL Open Font License。修改/添加中文文本后需重新生成字符子集。
 
 音效由程序生成短音，未使用外部音频。故事文本见 `data/story.json`，均为原型草稿，尚无配音或文本组审定版本。
+
+## 千里寻兄开篇
+
+六幕当前使用统一透视光照的完整像素连环画（`prologue/frames-v2/`）与 ElevenLabs 中文旁白，见 [开篇来源](prologue/SOURCES.md)。首版背景、道具和人物素材保留为迭代记录，源素材库保持不变。

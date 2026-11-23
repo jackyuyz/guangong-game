@@ -10,13 +10,13 @@
 - 本机已有导出文件时，在仓库根目录执行 `python3 tools/serve_demo.py`，或双击 `play-web.command`。
 - 命令行导出：`godot --headless --path godot --export-release Web ../builds/web/index.html`，需要对应版本的 Web 导出模板。
 - Web 输出约 40 MB（主要为 Godot WASM）；首次加载需等待。通过 HTTP 访问，不能直接双击 HTML。当前本地地址为 `http://127.0.0.1:8765/`。
-- 在仓库根目录运行 `godot --headless --path godot --script scripts/smoke_test.gd`，同样运行 `scene_test.gd` 和 `extensions_test.gd`。测试使用临时存档。
+- 在仓库根目录运行 `godot --headless --path godot --script scripts/smoke_test.gd`，同样运行 `scene_test.gd`、`extensions_test.gd` 和 `prologue_test.gd`。测试使用临时存档。
 
 ## 现在能玩什么
 
-开场、三步操作教学、两波守军、孔秀两阶段战斗、Boss 检查点、清兵/孔秀重试、暂停/失焦暂停、格挡与弹反（K）、偃月斩（L）、茶摊歇脚（E）、合成音效、文化回顾、评分与本机保存。按键说明也在游戏底栏。
+六幕中文说书开篇（约 51 秒，上一幕／暂停／继续／跳过／声音／重听本幕，文化卡可重看）、三步操作教学、两波守军、孔秀两阶段战斗、Boss 检查点、清兵/孔秀重试、暂停/失焦暂停、格挡与弹反（K）、偃月斩（L）、茶摊歇脚（E）、合成音效、文化回顾、评分与本机保存。按键说明也在游戏底栏。
 
-素材来源记录在 [assets/SOURCES.md](assets/SOURCES.md)，故事草稿独立放在 `data/story.json`。源素材库未修改。
+素材来源记录在 [assets/SOURCES.md](assets/SOURCES.md)，关卡故事草稿独立放在 `data/story.json`；开篇字幕、时长和音频在 `data/prologue.json`，六幕布局与轨道在 `scenes/ui/prologue.tscn`。运行构图在 `assets/prologue/frames-v2/`；原图与提示词有来源记录，源素材库未修改。Web 使用 `web/game.html` 处理音频开启；受阻时先等待，用户可开启声音或选择静音观看。
 
 ## 编辑关卡
 
@@ -29,10 +29,10 @@
 - 关羽、守军和孔秀已有逐帧走路和攻击，待机、架刀、受击等姿态复用图集帧。偃月斩复用攻击帧并使用独立刀光。
 - 背景使用无角色概念场景的轻微平移；地面纹理截取同图，尚无完整 3400px 分层地图。
 - 闪避教学仅要求执行动作，尚无示范突刺；无教学跳过/重播入口。
-- 目前仅简体中文和草稿字幕，无两套配音、英文/繁体/拼音与正式文本组内容。
+- 目前仅简体中文与项目改编字幕；开篇使用同一 ElevenLabs 中文说书声，尚无战斗对白配音、英文／繁体／拼音与正式文本组内容。
 - 声音开关可保存；没有独立音量滑块。保存通关及同版本最佳分数，尚无最佳时间记录。
 - 过关以守军淡出/退让和结尾对白表示，尚无城门开启动画。
-- Chrome 已完成键鼠通关，验证茶摊、重击、暂停和结算。Safari 和手机尚未完整试玩。
+- Chrome 已完成键鼠通关，验证茶摊、重击、暂停和结算。首版 Safari 检查过开篇与教程衔接；本轮应用内浏览器检查新版音频输出、解锁、静音观看和教程衔接，Safari 完整战斗和手机尚未试玩。
 - 战斗难度、招式可读性和完成时长需要真人试玩继续调整。
 
 [返回首页](../README.md) · [完整关卡设计](../docs/design/chapter-01-godot-spec.md)

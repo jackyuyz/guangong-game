@@ -1,0 +1,61 @@
+{
+  "title": "千里寻兄",
+  "adaptation_notice": "改编自《三国演义》",
+  "scenes": [
+    {
+      "id": "separation",
+      "node": "Separation",
+      "title": "乱世失散",
+      "caption": "话说，徐州兵败，关羽与结义兄长刘备失散。",
+      "duration": 7.0,
+      "audio": "res://assets/prologue/audio/zh-CN/01-separation.mp3",
+      "context": "刘备 · 关羽的结义兄长"
+    },
+    {
+      "id": "promise",
+      "node": "Promise",
+      "title": "暂留与约定",
+      "caption": "为护住刘备的甘夫人、糜夫人，关羽暂留曹营。\n他早有约定，一得兄长消息，便要辞去。",
+      "duration": 10.0,
+      "audio": "res://assets/prologue/audio/zh-CN/02-promise.mp3",
+      "context": "甘夫人（青衣）与糜夫人（紫衣） · 刘备的两位夫人"
+    },
+    {
+      "id": "letter",
+      "node": "Letter",
+      "title": "兄长尚在",
+      "caption": "一封来信，证实刘备尚在人世，正在河北。",
+      "duration": 7.0,
+      "audio": "res://assets/prologue/audio/zh-CN/03-letter.mp3",
+      "context": "刘备来信 · 河北"
+    },
+    {
+      "id": "farewell",
+      "node": "Farewell",
+      "title": "挂印辞曹",
+      "caption": "曹操待他甚厚，仍留不住归心。\n关羽封存赏赐、挂印留书，辞别而行。",
+      "duration": 9.0,
+      "audio": "res://assets/prologue/audio/zh-CN/04-farewell.mp3",
+      "context": "封存赏赐 · 挂印留书"
+    },
+    {
+      "id": "escort",
+      "node": "Escort",
+      "title": "护送同行",
+      "caption": "二位嫂嫂放心，关某定护你们，与兄长重逢。",
+      "speaker": "关羽",
+      "duration": 8.0,
+      "audio": "res://assets/prologue/audio/zh-CN/05-escort.mp3",
+      "context": "护送甘夫人、糜夫人"
+    },
+    {
+      "id": "dongling",
+      "node": "Dongling",
+      "title": "东岭关前",
+      "caption": "曹操虽已允行，沿途关口仍须文书。\n未领文书的一行，来到东岭关。",
+      "duration": 10.0,
+      "audio": "res://assets/prologue/audio/zh-CN/06-dongling.mp3",
+      "context": "第一关 · 东岭关"
+    }
+  ]
+}
