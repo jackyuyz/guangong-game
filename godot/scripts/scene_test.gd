@@ -80,12 +80,14 @@ func run() -> void:
 	check(cursor_arc.get_point_count() == 9 and (cursor_arc.position + cursor_arc.get_point_position(8)).is_equal_approx(lowered_tip), "slash trail follows the moving blade tip")
 	mouse_button(start_position, false)
 	game._sync_scene()
-	check(game.state == "dialogue" and game.x == 355 and game.player_y == 460, "native start button uses authored player spawn")
+	check(game.state == "prologue" and game.x == 355 and game.player_y == 460, "native start button uses authored player spawn")
 	cursor_swing.custom_step(0.11)
 	check(is_zero_approx(cursor_grip.rotation) and is_zero_approx(cursor_arc.self_modulate.a), "blade and arc settle after a click across a screen transition")
-	game.get_node("UI/Root/Dialogue/Skip").pressed.emit()
+	await process_frame
+	await process_frame
+	game.get_node("UI/Root/Prologue/Skip").pressed.emit()
 	game._sync_scene()
-	check(game.state == "play", "native skip button advances dialogue")
+	check(game.state == "play", "native skip button enters tutorial")
 	game.x = 460
 	game._update_play(0.01)
 	check(game.phase == 0, "flag trigger moves with the authored flag")

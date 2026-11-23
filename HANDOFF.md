@@ -1,46 +1,52 @@
-# 关公游戏交接 · 2026-11-18
+# 关公游戏交接 · 2026-11-22
 
-## 当前状态
+## 当前版本
 
-东岭关是可玩的课程 demo。Godot 4.7.2 工程位于 `godot/project.godot`，主场景是 `godot/scenes/main.tscn`，使用 GDScript 和 Compatibility 渲染器。新版已本地导出并在 Chrome 从开场打到结算。Web 成品在忽略目录 `builds/web/`，仅供本机试玩。最新改动在本地工作区，尚未提交。
+工程：`godot/project.godot`，Godot 4.7.2 Compatibility。第一关东岭关及原有战斗、检查点保持可玩。本轮实现六幕动态连环画「千里寻兄」，约 51 秒，使用用户认可的中文老先生说书音色。本轮更改整理为本地 main 提交，未推送或公开发布。
 
-## 本轮完成
+## 最新修订：首幕重复开头
 
-- 地面、站位和互动节点归到关卡的 `Ground` 下。可移动旗标、训练靶、茶摊和关门标记来调整玩法位置。调地面高度时，角色、道具、触发点及命中特效随之对齐。移动范围取自地面边缘和 `ArenaLeft` 标记；重试位置取自 `WaveRetrySpawn` 和 `BossPlayerSpawn`。
-- 两波守军的战斗数据与各自场景实例绑定。击倒一名守军后，其他守军保留各自的外观、变换和动画。
-- 暂停、失焦、对白和失败期间停止战斗，动画可在暂停后从原帧续播。暂停时音效也停止播放并可续播。命中顿帧暂停角色动画。
-- K 弹反把硬直施加给实际出招者。L 成功出招会取消 J 剩下的判定，播放独立重击动作和刀光，短暂锁定其他战斗动作；致命重击进入结尾时清除动作与刀光。第二阵清完后可用 E 在茶摊补血和补满义气，Boss 重试恢复入场时的义气。
-- 茶摊绘制在角色后方，震屏移到相机，退让守军转身并隐藏血条。修正返回菜单时的场景复位、文化卡和退出确认的键盘处理，并将对白及重试按钮中的缺字回车符换成 `ENTER`。
+- 用户认可当前画面与配音，并指出首幕有两遍“话说”。本地 mlx-whisper/base 确认原录音重复，使用 ffmpeg 从两遍之间的静音处去掉前 1.10 秒，加入 5 ms 淡入；保留第二遍和整句，未重新生成或上传音频。
+- 首幕成品从 6.16 秒改为 5.06 秒；第一幕仍停留 7 秒，六幕流程仍约 51 秒。原录音保留于忽略目录 `builds/audio/prologue/zh-CN/first-scene-edit/`，剪点与哈希记录在 voice manifest，素材说明和 spec 已同步。
+- 离线识别剪前两遍、剪后一遍，识别的其余正文不变；保留部分的解码波形相关系数为 0.999978。Godot 重新导入、46 项开篇回归与 Web 导出通过；本轮没有修改播放逻辑或画面，不重跑战斗检查。页面需刷新载入新音频。
+
+## 开篇实现
+
+- 根据用户反馈“没有音频、独立道具太生硬”，本轮修订声音启动与画面融合。当前 `scenes/ui/prologue.tscn` 使用六张完整像素连环画：人物、信纸、桌案、灯盏、印信、车马与环境统一透视、光照及接触阴影。运行图在 `assets/prologue/frames-v2/`，旧版图片和素材库源文件保留；生成与编辑提示见 `creation.json`，来源见上级 `SOURCES.md`。
+- 六幕时长仍为 7 / 10 / 7 / 9 / 8 / 10 秒，总计 51 秒。AnimationPlayer 按真实秒数手动推进，每幕整图推近 1.5%，翻幕交叉淡出 0.45 秒；手动翻幕直接显示完整画面。没有独立人物行走、转身、卷轴展开动画，不沿用首版的此类描述。
+- `scripts/prologue.gd` 预加载六段 MP3，三个 AudioStreamPlayer 明确使用 Stream 播放；旁白 +2 dB，环境 -27 dB，拟音 -23 dB。原 MP3 峰值检查表明增益后仍有余量。本轮沿用现有录音，没有调用 ElevenLabs 重新生成。
+- 开篇直接显示声音开关、静音提示及“重听本幕”。重听自动开启声音并从当前幕开头重新播放。共享静音偏好仍保存；上一幕、自动／手动、继续、跳过和文化卡重看保持可用。
+- `web/game.html` 是基于本机官方 Godot 4.7.2 单线程模板的自定义 HTML shell；观察游戏 AudioContext，真实点击或按键时尝试 resume。音频尚未运行且未静音时，冻结镜头、时间轴和声音，显示“开启声音／静音观看”。明确选择静音才允许无声自动播放；DOM 声音按钮转移焦点不会误触发游戏暂停，真正窗口失焦和隐藏页面仍暂停。
+- Web shell 的 `?audio_debug=1` 仅用于本机测量输出信号，读取 output 元素 `audio-check` 的 data-context / data-rms / data-peak；正常 URL 不创建分析器。它不申请麦克风、不录音、不传输数据。临时受阻测试页面只存在于忽略目录 `builds/web/audio-blocked.html`，不属于源码或正常入口。
+- `main.gd` 继续冻结前情中的世界、隐藏 HUD；完成或跳过后进入教学并等待旧输入释放。重看返回文化卡，重试绕过开篇，中途回菜单停止播放，资源故障使用原精简对白。
+- 配音开发工具仅从根 `.env` 读取凭据，voice ID 为参数；游戏只读本地成品，不调用 API。六幕音色与台词记录仍见 `assets/prologue/voice-manifest.json`。新增中文字形已补入 Noto Sans SC 子集，沿用 OFL。
 
 ## 验证
 
-- Godot 4.7.2 导入和 Web 导出完成，日志无错误或警告。三组无头测试共 **112 项**通过（玩法 26、场景 32、扩展 54）。`git diff --check` 通过。
-- 实际打开了 Godot 的主场景和东岭关场景的 2D 视图。主场景可见背景、角色和 HUD。单独打开关卡后，选中 `Ground` 并确认 Inspector 显示该节点。
-- Chrome 用键鼠完成教程、两波守军、茶摊、孔秀两个阶段、文化卡和结算。单独走了一次 Boss 失败与检查点重试，恢复血量、战斗计时和满义气，结算显示 800 分、重试 1 次。最新重新导出的版本再次通关，结算 880 分、18 秒战斗、剩 3 格血、重试 0 次。浏览器试玩使用 8766 端口隔离存档，正常试玩端口为 8765。
-- 精准弹反与偃月斩致命一击的表现复位有自动检查。Chrome 中已操作 K 并看到架刀状态。逐帧武器裁切、完美弹反手感、Safari 和移动端仍待进一步验收。
-- 测试与浏览器试玩使用隔离存档。不要用真实玩家的 `user://progress.cfg` 验证。
+- 本轮 Godot 4.7.2 导入、Web 导出成功，无脚本错误。smoke 26、scene 41、extensions 54、prologue 46，共 167 项检查通过。测试使用 `/tmp` 隔离存档，未用玩家真实存档作测试。
+- 新增回归覆盖 Stream 播放、声音按钮状态、静音时重听自动开启、受阻时全体音频与时间轴暂停、静音观看放行和音频就绪续播。原有手动阅读、失焦、翻幕输入、六幕跳过、末幕停留、文化重看、教程输入释放与故障后备仍通过。
+- 逐幕检查六张实际 Godot 渲染画面，检查新版 Godot 编辑器 2D 节点；字幕与原合成正文未变，新运行文字无缺字。
+- 应用内浏览器独立端口 18929 验证当前新 Web 包：真实点击启动后 AudioContext 为 running、输出 RMS 峰值约 0.2086；静音时能量约 0.000008，手动暂停后为 0，重听后再次产生输出。没有解码或脚本错误。该测量证明程序音频输出，不能代替用户设备扬声器的人工听音。
+- 用本地专用测试页阻止 AudioContext resume，确认等待超过一幕时长仍停在首幕，点击“开启声音”后恢复到 running 并测得 RMS 约 0.0818；另一轮点击“静音观看”可在 suspended 状态播完至末幕并进入教程。测试页修改只影响测试夹具，正常 HTML 不阻止 resume。
+- 首版曾做 Chrome／Safari 播放、暂停、静音、文化卡与教程检查；本轮重点验收用户使用的应用内浏览器。Safari 新版音频 shell、完整战斗与长时间运行仍待专项复测；之前 Safari 旧缓存刷新曾有内存重载提示，独立端口短测未复现。
+- 用户已认可首段试音，完整六幕人名发音人工审听、三位陌生试玩者复述及正式文本组审定仍未进行，不记为验收通过。
 
 ## 本机运行
 
-同事照着安装并在编辑器里试玩的步骤在 [本地 Godot 运行](docs/local-godot.md)。下面是本机核对用的命令。
-
-在仓库根目录执行：
+在开发仓库导入 `godot/project.godot`，按 F5；主菜单点「启程」看前情，或从「故事与文化」重看。编辑分镜打开 `godot/scenes/ui/prologue.tscn`，字幕与时长在 `godot/data/prologue.json`。
 
 ```sh
-GODOT="$HOME/Applications/Godot.app/Contents/MacOS/Godot"
-"$GODOT" --headless --path godot --editor --import --quit
-"$GODOT" --headless --path godot --script scripts/smoke_test.gd
-"$GODOT" --headless --path godot --script scripts/scene_test.gd
-"$GODOT" --headless --path godot --script scripts/extensions_test.gd
-"$GODOT" --headless --path godot --export-release Web ../builds/web/index.html
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --editor --import --quit
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/smoke_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/scene_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/extensions_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script scripts/prologue_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --export-release Web ../builds/web/index.html
 python3 tools/serve_demo.py
 ```
 
-双击 `play-web.command` 也可用本机包启动 [网页版](http://127.0.0.1:8765/)。重新改动源码后先重新导出。
+常规本地 Web 地址为 `http://127.0.0.1:8765/`，原预览服务使用 18928 端口，本轮隔离验收使用 18929 端口。重新改代码后，原生停止并重启；Web 需要重新导出并刷新。对应版本的官方单线程 Web 模板已安装。
 
-## 后续工作与资料
+## 后续范围
 
-- 原始关卡依据见 [东岭关设计](docs/design/chapter-01-godot-spec.md)，扩展行为见 [战斗扩展](docs/design/combat-extensions.md)。先做真人难度、动作可读性和兼容性验收，再决定下一轮内容。
-- 关羽、守军和孔秀用 1774×887 的 4×2 图集，最近邻采样。走路用四帧、攻击用三帧，其他姿态复用图集帧。脚底按帧对齐，背景是随相机平移的单张概念图。素材和字体来源见 [素材说明](godot/assets/SOURCES.md)。新增汉字后检查并更新字体子集。
-- 教学闪避目前只要求触发动作。城门开启用目标文字、守军退让和对白表达。正式文本组内容、配音、题库、多语言、其他四关和文化网站尚未交付。
-- 11 月 16 日的 Claude Opus 5.5 high 扩展实现与只读审查都已交付。审查在 `builds/claude/review.json`，只读审查早于本轮修复。生成图集和早期接线背景见 Git 中的上一版交接。仓库约定见 [AGENTS.md](AGENTS.md)，改动记录见 [task.md](task.md)。
+原有格挡、义气、茶摊、两波守军和孔秀战斗说明见设计文档与历史 task.md。本轮没有增加闪避示范、K/L 教学或城门开启等后续建议，也未制作其他四关、多语言和战斗对白配音。先收集前情的人名发音、叙事理解与节奏反馈，再定下一轮。

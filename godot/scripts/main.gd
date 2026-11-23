@@ -13,6 +13,12 @@ var ext = preload("res://scripts/combat_extensions.gd").new()
 
 @onready var level = $Level
 @onready var ui = $UI
+@onready var prologue = $UI/Root/Prologue
+var prologue_return_state = ""
+var await_input_release = false
+var _web_focus_callback: JavaScriptObject
+var _web_document: JavaScriptObject
+var _web_window: JavaScriptObject
 var story: Dictionary
 var state = "menu"
 var resume_state = "play"
@@ -66,16 +72,39 @@ func _ready() -> void:
 		muted = bool(save.get_value("settings", "muted", false))
 	tone_player = $Sound
 	ui.action_requested.connect(_action)
+	prologue.completed.connect(_finish_prologue)
+	prologue.silence_requested.connect(_action.bind("prologue_silent"))
+	prologue.narration_requested.connect(_action.bind("prologue_relisten"))
+	if OS.has_feature("web"):
+		_web_document = JavaScriptBridge.get_interface("document")
+		_web_window = JavaScriptBridge.get_interface("window")
+		_web_focus_callback = JavaScriptBridge.create_callback(_on_web_focus_change)
+		_web_document.addEventListener("visibilitychange", _web_focus_callback)
+		_web_window.addEventListener("blur", _web_focus_callback)
 	_place_player(level.player_origin)
 	camera_x = level.world_left
 	_sync_scene()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and state in ["play", "dialogue"]:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and not OS.has_feature("web")):
+		_pause_for_focus_loss()
+
+func _on_web_focus_change(_arguments: Array) -> void:
+	if _web_document.hidden or not _web_document.hasFocus():
+		_pause_for_focus_loss()
+
+func _pause_for_focus_loss() -> void:
+	if state in ["play", "dialogue", "prologue"]:
 		resume_state = state
 		state = "pause"
+		if is_instance_valid(prologue):
+			prologue.set_suspended(true)
+			_sync_scene()
 
 func _exit_tree() -> void:
+	if _web_focus_callback != null:
+		_web_document.removeEventListener("visibilitychange", _web_focus_callback)
+		_web_window.removeEventListener("blur", _web_focus_callback)
 	if tone_player != null:
 		tone_player.stop()
 
@@ -93,9 +122,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			state = "pause"
 		elif state == "pause":
 			state = resume_state
-		elif state in ["play", "dialogue"]:
+		elif state in ["play", "dialogue", "prologue"]:
 			resume_state = state
 			state = "pause"
+		_sync_scene()
 		return
 	if key == KEY_ENTER:
 		if show_culture and state in ["menu", "victory"]:
@@ -104,12 +134,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			_start()
 		elif state == "dialogue":
 			_next_dialogue()
+		elif state == "prologue":
+			prologue.advance()
 		elif state == "dead":
 			_retry()
 		elif state == "victory":
 			show_culture = not show_culture
 		return
-	if state != "play":
+	if state != "play" or await_input_release:
 		return
 	if ext.handle_key(self, key):
 		return
@@ -131,6 +163,24 @@ func _action(action: String) -> void:
 	match action:
 		"start": _start()
 		"culture": show_culture = not show_culture
+		"prologue_sound":
+			if prologue.waiting_for_audio:
+				prologue.request_audio()
+			else:
+				muted = not muted
+				_save()
+		"prologue_silent":
+			muted = true
+			_save()
+		"prologue_relisten":
+			muted = false
+			_save()
+		"prologue_replay":
+			if show_culture and state in ["menu", "victory"]:
+				prologue_return_state = state
+				if prologue.begin(true):
+					state = "prologue"
+					show_culture = false
 		"next": _next_dialogue()
 		"skip": _finish_dialogue()
 		"resume": state = resume_state
@@ -143,6 +193,8 @@ func _action(action: String) -> void:
 			_retry()
 		"menu_confirm": state = "confirm"
 		"menu":
+			prologue.stop()
+			prologue_return_state = ""
 			_reset_run()
 			phase = 0
 			_place_player(level.player_origin)
@@ -153,6 +205,7 @@ func _action(action: String) -> void:
 		"mute":
 			muted = not muted
 			_save()
+	_sync_scene()
 
 func _start() -> void:
 	_reset_run()
@@ -161,9 +214,34 @@ func _start() -> void:
 	set_meta("dummy_hits", 0)
 	tutorial_hits = 0
 	show_culture = false
-	_begin_dialogue(story.opening, "play")
+	prologue_return_state = ""
+	prologue.set_muted(muted)
+	if prologue.begin():
+		state = "prologue"
+	else:
+		_begin_dialogue(story.opening, "play")
+
+func _finish_prologue() -> void:
+	if state != "prologue":
+		return
+	if not prologue_return_state.is_empty():
+		state = prologue_return_state
+		prologue_return_state = ""
+		show_culture = true
+	else:
+		state = "play"
+		await_input_release = true
+		_banner("护送二位夫人，过关寻刘备。向右前行，抵达旗标")
+	_sync_scene()
+
+func _inputs_held() -> bool:
+	for key in [KEY_A, KEY_D, KEY_LEFT, KEY_RIGHT, KEY_ENTER, KEY_J, KEY_K, KEY_L, KEY_E, KEY_SPACE]:
+		if Input.is_physical_key_pressed(key):
+			return true
+	return Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 
 func _reset_run() -> void:
+	await_input_release = false
 	hp = 6
 	facing = 1
 	combat_seconds = 0
@@ -228,6 +306,8 @@ func _enter_boss() -> void:
 	_banner("孔秀 · 东岭关守将  /  看清蓄力，闪避后反击")
 
 func _retry() -> void:
+	prologue.stop()
+	await_input_release = false
 	retries += 1
 	ext.reset()
 	_reset_effects()
@@ -250,9 +330,11 @@ func _retry() -> void:
 	ext.update(self, 0.0)
 
 func _process(dt: float) -> void:
+	if await_input_release and not _inputs_held():
+		await_input_release = false
 	if state == "menu" or (state == "play" and hit_stop <= 0):
 		clock += dt
-	if state == "play":
+	if state == "play" and not await_input_release:
 		if hit_stop > 0:
 			hit_stop -= dt
 		else:
@@ -455,6 +537,8 @@ func _spawn_wave(wave: int) -> void:
 		_spawn(spawn.origin, spawn.view)
 
 func _sync_scene() -> void:
+	prologue.set_suspended(state != "prologue")
+	prologue.set_muted(muted)
 	if tone_player.playing and (muted or state in ["menu", "dead"] or phase == 7):
 		tone_player.stop()
 	tone_player.stream_paused = state != "play"

@@ -2,6 +2,8 @@
 
 [第一关 Godot 规格](chapter-01-godot-spec.md) 是第一关当前的开发依据，包含 Boss 检查点、文化内容对接和验收条件。
 
+[第一关前情提要](chapter-01-prologue-spec.md) 按已确认的 45–55 秒动态连环画与 ElevenLabs 中文老先生说书方向设计，包含文学依据、分镜字幕、播放交互、本地凭据、素材需求和 Godot 接入方案。分镜字幕为草稿，动画和配音待实现。
+
 [GuanGong_WebGame_SPEC_v1.1.md](GuanGong_WebGame_SPEC_v1.1.md) 是原有完整方案，保留原文供查阅。与新规格冲突时，第一关以新规格为准。
 
 ## 阅读顺序

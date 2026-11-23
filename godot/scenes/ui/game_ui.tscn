@@ -1,10 +1,12 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/game_ui.gd" id="e1"]
 
 [ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="e2"]
 [ext_resource type="Script" path="res://scripts/blade_cursor.gd" id="e3"]
 [ext_resource type="Texture2D" path="res://assets/green-dragon-blade.png" id="e4"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/prologue.tscn" id="prologue"]
 
 [sub_resource type="StyleBoxFlat" id="s1"]
 bg_color = Color(0.045, 0.085, 0.075, 0.94)
@@ -217,6 +219,9 @@ theme_override_styles/pressed = SubResource("s5")
 theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_hover_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_pressed_color = Color(0.953, 0.91, 0.804, 1)
+
+[node name="Prologue" parent="Root" instance=ExtResource("prologue")]
+visible = false
 
 [node name="Pause" type="Button" parent="Root/HUD"]
 layout_mode = 0
@@ -1136,6 +1141,17 @@ mouse_filter = 2
 text = "文学改编 / 文化回顾"
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.72, 0.71, 0.635, 1)
+
+[node name="Replay" type="Button" parent="Root/Culture"]
+layout_mode = 0
+offset_left = 490.0
+offset_top = 418.0
+offset_right = 630.0
+offset_bottom = 452.0
+focus_mode = 0
+text = "重看前情"
+theme_override_font_sizes/font_size = 14
+metadata/action = "prologue_replay"
 
 [node name="Close" type="Button" parent="Root/Culture"]
 layout_mode = 0
