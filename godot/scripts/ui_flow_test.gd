@@ -29,19 +29,19 @@ func run() -> void:
  ui.get_node("Root/MainMenu/Mute").grab_focus()
  game._action("settings")
  check(game.utility_panel=="settings" and ui.get_node("Root/Utility").visible, "menu settings opens without starting a journey")
- check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Settings/Mute"), "settings focus enters its first control")
+ check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Settings").selected_sound(), "settings focus enters its first control")
  var navigation=InputEventKey.new()
  navigation.keycode=KEY_TAB
  navigation.physical_keycode=KEY_TAB
  navigation.pressed=true
  navigation.shift_pressed=true
  ui._input(navigation)
- check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Close"), "backward Tab wraps inside settings instead of reaching covered controls")
+ check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Settings/Close"), "backward Tab wraps inside settings instead of reaching covered controls")
  navigation.shift_pressed=false
  navigation.keycode=KEY_DOWN
  navigation.physical_keycode=KEY_DOWN
  ui._input(navigation)
- check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Settings/Mute"), "arrow navigation stays inside settings")
+ check(get_root().gui_get_focus_owner()==ui.get_node("Root/Utility/Settings").selected_sound(), "arrow navigation stays inside settings")
  game._action("start")
  key(KEY_ENTER)
  check(game.state=="menu" and game.progress.intro_state()=="unseen", "settings blocks start button actions and Enter behind modal")

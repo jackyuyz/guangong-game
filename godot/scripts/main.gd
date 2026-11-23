@@ -192,7 +192,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		_tone(120, 0.09, 0.06)
 
 func _action(action: String) -> void:
-	if not utility_panel.is_empty() and action not in ["settings", "help", "utility_close", "mute", "motion"]:
+	if not utility_panel.is_empty() and action not in ["settings", "help", "utility_close", "mute", "motion", "sound_on", "sound_off", "motion_on", "motion_off"]:
+		return
+	if action in ["sound_on", "sound_off", "motion_on", "motion_off"]:
+		if utility_panel != "settings": return
+		if action.begins_with("sound_"):
+			var next_muted = action == "sound_off"
+			if muted == next_muted: return
+			muted = next_muted
+		else:
+			var next_reduced = action == "motion_on"
+			if reduced_motion == next_reduced: return
+			reduced_motion = next_reduced
+			journey.set_reduced_motion(reduced_motion)
+		_save()
+		_sync_scene()
 		return
 	match action:
 		"settings", "help":

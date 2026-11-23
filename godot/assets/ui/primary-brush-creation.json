@@ -1,0 +1,8 @@
+{
+  "created": "2026-11-23",
+  "tool": "built-in image_gen.imagegen",
+  "transparent_background": true,
+  "reference": "docs/art/wuxia-settings-concept.png",
+  "original_output": "/Users/yuyuanzhengjack/.codex/generated_images/01a209c6-d7b3-7642-a850-483a206db3fe/exec-eb6c3b26-02c7-43ae-8aab-af628996f5bb.png",
+  "prompt": "Use case: precise-object-edit. Input image is reference for a single game UI asset, specifically the antique gold broad brush swash behind 完成 in its lower-right panel. Extract / faithfully recreate ONLY this gold brush swash, with ALL letters entirely absent, no traces of black strokes or text. Produce one isolated flat front-facing broad horizontal brushstroke button backing with a real transparent background. Target compact landscape canvas around 1200x300, 4:1 aspect. Brush occupies approximately90% of canvas width and75% of canvas height with all feathered ends safely inside. Aged warm gold #C7A15A with restrained pale gold grain, internally fairly opaque and continuous so dark Chinese labels can later sit on it, natural tapered dry-bristle irregular edges, subtle silk/metallic pigment texture. Match reference's calm understated Chinese wuxia style. No glow, neon, shadow, rectangular outline, frame, extra brushstrokes, decorations, characters, words, logos, scenery, panels, or fake checkerboard. True alpha outside brush."
+}

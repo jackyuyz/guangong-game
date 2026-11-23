@@ -80,3 +80,7 @@ func _refresh(button: Button, instant: bool = false, pressed: bool = false) -> v
 		tweens[button] = tween
 		tween.tween_property(wash, "modulate:a", wash_alpha, 0.12)
 		tween.tween_property(line, "modulate:a", line_alpha, 0.12)
+
+func set_controls_visible(showing: bool) -> void:
+	for path in ["Title", "Subtitle", "SubtitleStrokeLeft", "SubtitleStrokeRight", "Tagline", "Start", "Culture", "Mute"]:
+		get_node(path).visible = showing

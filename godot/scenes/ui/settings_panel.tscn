@@ -1,0 +1,367 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/settings_panel.gd" id="script"]
+[ext_resource type="Theme" path="res://themes/wuxia.tres" id="theme"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="reading"]
+[ext_resource type="Texture2D" path="res://assets/ui/wuxia-panel.png" id="panel"]
+[ext_resource type="Texture2D" path="res://assets/main-menu/menu-brush.png" id="line"]
+[ext_resource type="Texture2D" path="res://assets/ui/wuxia-primary-brush.png" id="primary"]
+[ext_resource type="AudioStream" path="res://assets/main-menu/hover.wav" id="hover"]
+[ext_resource type="AudioStream" path="res://assets/main-menu/confirm.wav" id="confirm"]
+
+[sub_resource type="AtlasTexture" id="panel_region"]
+atlas = ExtResource("panel")
+region = Rect2(14, 13, 1456, 1035)
+
+[sub_resource type="AtlasTexture" id="line_region"]
+atlas = ExtResource("line")
+region = Rect2(120, 270, 1940, 180)
+
+[sub_resource type="AtlasTexture" id="primary_region"]
+atlas = ExtResource("primary")
+region = Rect2(85, 100, 2000, 540)
+
+[sub_resource type="ButtonGroup" id="sound_group"]
+
+[sub_resource type="ButtonGroup" id="motion_group"]
+
+[node name="Settings" type="Control"]
+offset_right = 530.0
+offset_bottom = 384.0
+mouse_filter = 0
+script = ExtResource("script")
+theme = ExtResource("theme")
+
+[node name="Card" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 530.0
+offset_bottom = 384.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("panel_region")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 24.0
+offset_right = 490.0
+offset_bottom = 68.0
+mouse_filter = 2
+text = "设置"
+theme_override_font_sizes/font_size = 44
+vertical_alignment = 1
+
+[node name="Rule" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 86.0
+offset_right = 490.0
+offset_bottom = 90.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Sound" type="Control" parent="."]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 104.0
+offset_right = 492.0
+offset_bottom = 148.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Sound"]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 44.0
+mouse_filter = 2
+text = "声音"
+vertical_alignment = 1
+
+[node name="On" type="Button" parent="Sound"]
+layout_mode = 0
+offset_left = 300.0
+offset_right = 364.0
+offset_bottom = 44.0
+text = "开"
+toggle_mode = true
+button_group = SubResource("sound_group")
+button_pressed = true
+metadata/action = "sound_on"
+
+[node name="Off" type="Button" parent="Sound"]
+layout_mode = 0
+offset_left = 372.0
+offset_right = 436.0
+offset_bottom = 44.0
+text = "关"
+toggle_mode = true
+button_group = SubResource("sound_group")
+button_pressed = false
+metadata/action = "sound_off"
+
+[node name="Motion" type="Control" parent="."]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 160.0
+offset_right = 492.0
+offset_bottom = 204.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Motion"]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 44.0
+mouse_filter = 2
+text = "减少动态"
+vertical_alignment = 1
+
+[node name="On" type="Button" parent="Motion"]
+layout_mode = 0
+offset_left = 300.0
+offset_right = 364.0
+offset_bottom = 44.0
+text = "开"
+toggle_mode = true
+button_group = SubResource("motion_group")
+button_pressed = false
+metadata/action = "motion_on"
+
+[node name="Off" type="Button" parent="Motion"]
+layout_mode = 0
+offset_left = 372.0
+offset_right = 436.0
+offset_bottom = 44.0
+text = "关"
+toggle_mode = true
+button_group = SubResource("motion_group")
+button_pressed = true
+metadata/action = "motion_off"
+
+[node name="Help" type="Button" parent="."]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 216.0
+offset_right = 492.0
+offset_bottom = 260.0
+text = "操作指南"
+alignment = 0
+metadata/action = "help"
+theme_override_colors/font_color = Color(0.933, 0.886, 0.765, 1)
+
+[node name="Arrow" type="Label" parent="Help"]
+layout_mode = 0
+offset_left = 412.0
+offset_right = 440.0
+offset_bottom = 44.0
+mouse_filter = 2
+text = "›"
+theme_override_fonts/font = ExtResource("reading")
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Close" type="Button" parent="."]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 296.0
+offset_right = 488.0
+offset_bottom = 352.0
+text = "完成"
+metadata/action = "utility_close"
+theme_override_colors/font_color = Color(0.051, 0.106, 0.09, 1)
+theme_override_colors/font_hover_color = Color(0.051, 0.106, 0.09, 1)
+theme_override_colors/font_focus_color = Color(0.051, 0.106, 0.09, 1)
+theme_override_colors/font_pressed_color = Color(0.051, 0.106, 0.09, 1)
+
+theme_override_font_sizes/font_size = 34
+
+[node name="Fill" type="TextureRect" parent="Close"]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 208.0
+offset_bottom = 56.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("primary_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Sound/On"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Sound/On"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 37.0
+offset_right = 54.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Sound/Off"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Sound/Off"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 37.0
+offset_right = 54.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Motion/On"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Motion/On"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 37.0
+offset_right = 54.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Motion/Off"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Motion/Off"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 37.0
+offset_right = 54.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Help"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 8.0
+offset_right = 440.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Help"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 37.0
+offset_right = 430.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Wash" type="TextureRect" parent="Close"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 16.0
+offset_right = 208.0
+offset_bottom = 46.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Underline" type="TextureRect" parent="Close"]
+show_behind_parent = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 49.0
+offset_right = 198.0
+offset_bottom = 52.0
+mouse_filter = 2
+texture_filter = 2
+texture = SubResource("line_region")
+expand_mode = 1
+
+[node name="Notice" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 52.0
+offset_top = 280.0
+offset_right = 268.0
+offset_bottom = 372.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("reading")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.933, 0.886, 0.765, 1)
+autowrap_mode = 3
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("hover")
+volume_db = -12.0
+playback_type = 1
+
+[node name="ConfirmSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("confirm")
+volume_db = -10.0
+playback_type = 1

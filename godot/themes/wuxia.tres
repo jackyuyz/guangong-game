@@ -1,0 +1,20 @@
+[gd_resource type="Theme" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-brush-font.ttf" id="brush"]
+
+[sub_resource type="StyleBoxEmpty" id="empty"]
+
+[resource]
+default_font = ExtResource("brush")
+default_font_size = 28
+Button/styles/normal = SubResource("empty")
+Button/styles/hover = SubResource("empty")
+Button/styles/pressed = SubResource("empty")
+Button/styles/focus = SubResource("empty")
+Button/colors/font_color = Color(0.659, 0.682, 0.592, 1)
+Button/colors/font_hover_color = Color(0.91, 0.792, 0.514, 1)
+Button/colors/font_focus_color = Color(0.91, 0.792, 0.514, 1)
+Button/colors/font_pressed_color = Color(0.78, 0.631, 0.353, 1)
+Button/colors/font_hover_pressed_color = Color(0.91, 0.792, 0.514, 1)
+Button/constants/outline_size = 0
+Label/colors/font_color = Color(0.933, 0.886, 0.765, 1)

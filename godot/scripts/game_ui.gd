@@ -13,8 +13,8 @@ func restore_utility_focus() -> void:
 		_utility_focus.grab_focus()
 
 func focus_utility() -> void:
-	var target = $Root/Utility/Close if $Root/Utility/Body.visible else $Root/Utility/Settings/Mute
-	target.grab_focus()
+	if $Root/Utility/Body.visible: $Root/Utility/Close.grab_focus()
+	else: $Root/Utility/Settings.focus_initial()
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed: return
@@ -36,8 +36,11 @@ func _input(event: InputEvent) -> void:
 			button.pressed.emit()
 			button.button_up.emit()
 		return
+	if not $Root/Utility/Body.visible:
+		if $Root/Utility/Settings.handle_key(event): get_viewport().set_input_as_handled()
+		return
 	if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
-		var controls: Array = [$Root/Utility/Switch, $Root/Utility/Close] if $Root/Utility/Body.visible else [$Root/Utility/Settings/Mute, $Root/Utility/Settings/Motion, $Root/Utility/Settings/Help, $Root/Utility/Close]
+		var controls: Array = [$Root/Utility/Switch, $Root/Utility/Close]
 		var current = controls.find(get_viewport().gui_get_focus_owner())
 		controls[posmod(current + (-1 if event.shift_pressed or code == KEY_UP else 1), controls.size())].grab_focus()
 		get_viewport().set_input_as_handled()
@@ -83,21 +86,16 @@ func present(game: Node) -> void:
 		var boss: Dictionary = game.enemies[0]
 		$Root/HUD/BossHealth/Name.text = "孔秀" + ("  ·  奋战" if boss.hp <= 8 else "  ·  东岭守将")
 		$Root/HUD/BossHealth/HP.value = boss.hp
-	var sound = "声音：关" if game.muted else "声音：开"
 	$Root/Utility.visible = not game.utility_panel.is_empty()
 	var helping: bool = game.utility_panel == "help"
-	$Root/Utility/Title.text = "操作指南" if helping else "设置"
 	$Root/Utility/Body.visible = helping
-	$Root/Utility/Body.set_demo_state(helping and not game.utility_panel.is_empty(), game.reduced_motion, game.window_active, game.progress.error_text)
-	$Root/Utility/Card.visible = not helping
-	$Root/Utility/Title.visible = not helping
-	$Root/Utility/Rule.visible = not helping
+	$Root/Utility/Body.set_demo_state(helping, game.reduced_motion, game.window_active, game.progress.error_text)
 	$Root/Utility/Settings.visible = not helping
+	$Root/Utility/Settings.present_preferences(game.muted, game.reduced_motion, game.window_active, game.utility_panel == "settings", game.progress.error_text)
 	$Root/Utility/Switch.visible = helping
-	$Root/Utility/Settings/Mute.text = sound
-	$Root/Utility/Settings/Motion.text = "减少动态：开" if game.reduced_motion else "减少动态：关"
-	$Root/Utility/SaveNotice.text = game.progress.error_text
-	$Root/Utility/SaveNotice.visible = not helping and not game.progress.error_text.is_empty()
+	$Root/Utility/Close.visible = helping
+	$Root/Utility/Dimmer.color.a = 0.55 if not helping else 0.82
+	$Root/MainMenu.set_controls_visible(game.utility_panel != "settings")
 	$Root/MainMenu/Start.text = "启程" if game.progress.intro_state() == "unseen" else "继续旅程"
 	$Root/MainMenu/Start.add_theme_font_size_override("font_size", 64 if game.progress.intro_state() == "unseen" else 38)
 	$Root/MainMenu.present_state(game.state == "menu" and not game.show_culture and game.utility_panel.is_empty(), game.muted, game.reduced_motion, game.window_active)
@@ -110,7 +108,7 @@ func present(game: Node) -> void:
 	$Root/Victory/Saved.text = game.progress.error_text
 	$Root/Victory/Saved.visible = not game.progress.error_text.is_empty()
 	$Root/MainMenu/Record.text = game.progress.error_text
-	$Root/MainMenu/Record.visible = not game.progress.error_text.is_empty()
+	$Root/MainMenu/Record.visible = game.utility_panel.is_empty() and not game.progress.error_text.is_empty()
 	if game.state == "dialogue" and not game.dialogue.is_empty():
 		var line: Array = game.dialogue[game.dialogue_index]
 		$Root/Dialogue/Speaker.text = str(line[0])

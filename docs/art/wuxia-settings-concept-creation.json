@@ -1,0 +1,29 @@
+{
+  "created": "2026-11-23",
+  "status": "concept_only_not_implemented",
+  "tool": "built-in image_gen.imagegen",
+  "transparent_background": false,
+  "requested_dimensions": [
+    1920,
+    1080
+  ],
+  "original_output": "/Users/yuyuanzhengjack/.codex/generated_images/01a1ef8d-02f7-7213-8d96-1388e2885ef6/exec-b5e7b865-d327-4c45-9757-6a3f922f6421.png",
+  "output": "docs/art/wuxia-settings-concept.png",
+  "references": [
+    {
+      "path": "docs/art/wuxia-settings-before.png",
+      "role": "User-provided current settings screenshot; current functionality, not visual target"
+    },
+    {
+      "path": "godot/assets/main-menu/rider-dawn.png",
+      "role": "Existing actual game background; preserve identity and art direction"
+    }
+  ],
+  "spec": "docs/design/wuxia-design-language-spec.md",
+  "prompt": "Use case: ui-mockup.\nCreate ONE realistic production-quality settings-screen concept for the existing Chinese Guan Yu game, following a restrained, calm wuxia design language. Single game screen, target 1920 x 1080, natural 16:9 full-bleed landscape. No browser/device chrome, black letterbox bars, annotations, design board, extra states or multiple variants.\n\nINPUT ROLES:\nImage 1 is the CURRENT OLD settings screenshot: reference for existing functionality and context only. REPLACE its modern sans typography, three huge rectangular button boxes, white focus rectangle and oversized empty panel.\nImage 2 is the game's ACTUAL clean rider-at-dawn backdrop. Preserve this detailed pixel-painted Guan Yu on Red Hare at left, guandao, sunset, misty mountains, right-side timber gate, proportions and warm amber / deep jade palette. Use it full frame and darken it uniformly around the modal. No new characters or props. Do not show any other menu text behind the modal.\n\nDesign brief: Ink-green silk, aged gold brushstrokes, expressive but readable Chinese Kai/semicursive short headings, Song-style reading typography. Sophisticated understated wuxia, not gaudy imperial fantasy. Existing heroic art carries the grandeur; controls calm and clear. Clear hierarchy and purposeful spacing, no feature inventory. One primary action, exactly two setting rows and one guide navigation entry.\n\nExact composition in 1920x1080: one centered rectangular panel x400 y180 width1120 height720. It is ink-green #0D1B17, almost opaque (~96%), extremely subtle dark woven-silk grain (2–4% contrast), tiny restrained dull-brass corner strokes and a fine barely-visible contour, nearly square corners. No thick continuous gold frame, ornate carvings, glowing halo, fake scroll rods, layered cards or deep drop shadow. Backdrop dimmed ~50% yet recognizable outside panel.\nPanel content left at x480, right at x1440, 80px horizontal padding.\nHeader \"设置\" at x480 y228, genuine handsome Chinese brush-Kai strokes with bristle nuance, warm ivory/gold, approximately72px font; not a modern geometric sans font, not huge wild logo calligraphy. A single restrained gold dry-brush divider spans x480–1440 around y340.\nFirst row centered y432: label \"声音\" left aligned x480, calm readable Kai lettering approximately48px. At right the two discrete text options \"开\" and \"关\", centered near x1248 and x1376, separated by generous space. Selected is 开: warm gold lettering plus one short gold brush underline and an extremely subtle warm ink wash behind that option. Unselected 关 uses muted sage #A8AE97. NO pill switch, slider, capsule, square checkbox or enclosing segmented boxes.\nSecond row centered y560: left label \"减少动态\", same typography. At right the same 开 / 关 pair; here selected is 关 with gold text and short gold brush underline; 开 is muted sage. Selected status must be visually unambiguous, values aligned vertically between rows.\nThird row centered y688: \"操作指南\" left aligned, with a small elegant rightward chevron at far right. This is a quiet text navigation row, not a full-width filled rectangular button. Plenty of clean empty space, no explanation below.\nBottom-right single primary action \"完成\", centered near x1296 y816, natural antique-gold broad horizontal brush swash about288x88px, gently irregular feathered bristle ends, deep ink Kai lettering approximately48px. It should clearly read as a button but without a modern yellow rounded rectangle.\nUse no more than two typography families: authentic Chinese brush-Kai akin Ma Shan Zheng for these short UI labels, restrained readable Song serif for any small functional typography if needed. Do NOT add extra small typography in this normal state.\n\nALL visible text verbatim and only:\n设置\n声音\n开  关\n减少动态\n开  关\n操作指南\n完成\nNo subtitle, explanatory prose, English, version number, '已保存', reset/apply/cancel buttons, close-X or unnecessary secondary labels.\nKeep text crisp, comfortable and precisely aligned; visual state shown is sound ON, reduced motion OFF. No cursor needed. Do not reuse the old screenshot's white keyboard-focus box or blank stacked green button bars. Produce a polished finished art-directed game UI mockup, not a wireframe or CSS screenshot.",
+  "actual_dimensions": [
+    1672,
+    941
+  ],
+  "sha256": "7d92547f4a441f755ebd793adde14a9894981d4f42a2166c92742ce60230c35c"
+}

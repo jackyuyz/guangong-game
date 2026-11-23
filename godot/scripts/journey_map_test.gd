@@ -67,7 +67,7 @@ func run() -> void:
 	reread.load(save)
 	check(reread.get_value("journey", "intro_state") == "completed" and reread.get_value("custom", "note") == "keep", "sound saves retain journey and unknown fields")
 	game._action("motion")
-	check(game.reduced_motion and map.ready_to_start and game.ui.get_node("Root/Utility/Settings/Motion").text == "减少动态：开", "reduced motion setting immediately finishes entrance")
+	check(game.reduced_motion and map.ready_to_start and game.ui.get_node("Root/Utility/Settings/Motion/On").button_pressed, "reduced motion setting immediately finishes entrance")
 	map._process(0)
 	game._unhandled_input(event)
 	check(game.attack_time == 0 and game.combat_seconds == 0, "map never advances combat")

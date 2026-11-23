@@ -1,0 +1,8 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "reference": "docs/art/wuxia-settings-concept.png",
+  "prompt": "Use case: precise-object-edit / UI asset extraction. Reference is a Chinese wuxia game's selected settings-screen design. Extract or recreate ONLY the rectangular dark green woven-silk PANEL BACKGROUND visible in the center. Produce a reusable flat front-facing 2D UI asset, landscape approximately 560:400 aspect ratio. Tightly fit the entire panel to image edges with at most 1–2% transparent exterior margin. Panel itself almost opaque ink-green #0D1B17 with extremely subtle dark woven silk texture, 2–4% variation; avoid visible mottled blobs or bright areas. Preserve understated thin muted brass perimeter contour and four small short aged-gold L-shaped corner strokes inset about 2% from edges, as in reference. Nearly square corners, no deep shadow or glow. Interior completely empty and uniformly usable for future UI text.\nREMOVE ALL Chinese characters, ALL labels, ALL divider lines, ALL gold brush buttons, ALL underline strokes, the arrow, the Guan Yu rider, horse, gate, mountains and every outside scene. Only the empty silk panel background, no UI controls, no text, no watermark. Genuine transparent exterior. This is a panel material asset, not a finished screen or a design board. Keep it calm and restrained, gold corner marks small and fine, not ornate imperial decoration.",
+  "original_output": "/Users/yuyuanzhengjack/.codex/generated_images/01a209c6-b6aa-7d83-bb58-65da5a6dbbe3/exec-4ef55970-0ec5-453a-806d-4fa28e57a2c9.png",
+  "output": "godot/assets/ui/wuxia-panel.png",
+  "transparent_background": true
+}
