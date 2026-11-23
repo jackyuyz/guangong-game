@@ -35,8 +35,9 @@ func wave_spawns(wave: int) -> Array:
 	return authored_waves[wave]
 
 func present(game: Node) -> void:
+	$Ground.visible = game.state not in ["menu", "map", "prologue"] and not (game.state in ["pause", "confirm"] and game.resume_state == "prologue")
 	$Camera.position.x = game.camera_x + 480
-	$Camera.offset.x = camera_offset.x + sin(game.clock * 65) * game.shake
+	$Camera.offset.x = camera_offset.x + (0.0 if game.reduced_motion else sin(game.clock * 65) * game.shake)
 	$Backdrop.position.x = backdrop_origin.x + (game.camera_x - world_left) * 0.92
 	$Ground/Training/Flag.visible = game.phase <= 1
 	$Ground/Training/Dummy.visible = game.phase <= 2

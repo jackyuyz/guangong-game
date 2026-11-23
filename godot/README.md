@@ -36,3 +36,5 @@
 - 战斗难度、招式可读性和完成时长需要真人试玩继续调整。
 
 [返回首页](../README.md) · [完整关卡设计](../docs/design/chapter-01-godot-spec.md)
+
+界面当前采用按需展开：主菜单、地图与暂停页共用设置／操作指南，前情“更多”中重听本幕，结算可展开战绩。详见 [界面层级规格](../docs/design/interface-hierarchy-spec.md)。

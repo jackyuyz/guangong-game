@@ -18,6 +18,7 @@ var ext = preload("res://scripts/combat_extensions.gd").new()
 var progress = preload("res://scripts/progress_store.gd").new()
 var reduced_motion = false
 var window_active = true
+var utility_panel = ""
 var _first_clear_pending = false
 var _confirm_origin = "pause"
 var _confirm_to_map = false
@@ -100,13 +101,13 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_WM_WINDOW_FOCUS_IN]:
 		window_active = true
-		if is_instance_valid(journey): journey.set_suspended(state != "map")
+		if is_instance_valid(journey): journey.set_suspended(state != "map" or not utility_panel.is_empty())
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and not OS.has_feature("web")):
 		_pause_for_focus_loss()
 
 func _on_web_focus_change(_arguments: Array) -> void:
 	window_active = not _web_document.hidden and _web_document.hasFocus()
-	journey.set_suspended(state != "map" or not window_active)
+	journey.set_suspended(state != "map" or not window_active or not utility_panel.is_empty())
 	if _web_document.hidden or not _web_document.hasFocus():
 		_pause_for_focus_loss()
 
@@ -131,6 +132,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
 	var key = event.physical_keycode
+	if not utility_panel.is_empty():
+		if key in [KEY_ESCAPE, KEY_P]:
+			_action("utility_close")
+		elif key == KEY_M:
+			_action("mute")
+		get_viewport().set_input_as_handled()
+		return
+	if key == KEY_F1:
+		_action("help")
+		return
 	if key == KEY_M:
 		muted = not muted
 		_save()
@@ -181,7 +192,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		_tone(120, 0.09, 0.06)
 
 func _action(action: String) -> void:
+	if not utility_panel.is_empty() and action not in ["settings", "help", "utility_close", "mute", "motion"]:
+		return
 	match action:
+		"settings", "help":
+			if state not in ["menu", "map", "pause", "play"]: return
+			if utility_panel.is_empty(): ui.remember_utility_focus()
+			if state == "play":
+				resume_state = state
+				state = "pause"
+			utility_panel = action
+			_sync_scene()
+			ui.focus_utility()
+			return
+		"utility_close":
+			utility_panel = ""
+			if state == "map": journey._release_pending = true
+			_sync_scene()
+			ui.restore_utility_focus()
+			return
+		"victory_details":
+			if state == "victory": ui.stats_expanded = not ui.stats_expanded
 		"map_back":
 			if state == "map": state = "menu"
 		"map_replay":
@@ -277,7 +308,7 @@ func _return_to_map(preserve: bool = false) -> void:
 	_sync_scene()
 
 func _enter_chapter(id: String) -> void:
-	if state != "map" or journey.suspended or not journey.ready_to_start or journey._release_pending or not journey.can_enter(id) or id != "dongling":
+	if state != "map" or not utility_panel.is_empty() or journey.suspended or not journey.ready_to_start or journey._release_pending or not journey.can_enter(id) or id != "dongling":
 		return
 	_reset_run()
 	phase = 0
@@ -615,8 +646,9 @@ func _spawn_wave(wave: int) -> void:
 
 func _sync_scene() -> void:
 	journey.visible = state == "map"
-	journey.set_suspended(state != "map" or not window_active)
+	journey.set_suspended(state != "map" or not window_active or not utility_panel.is_empty())
 	journey.set_muted(muted)
+	prologue.reduced_motion = reduced_motion
 	prologue.set_suspended(state != "prologue")
 	prologue.set_muted(muted)
 	if tone_player.playing and (muted or state in ["menu", "dead"] or phase == 7):

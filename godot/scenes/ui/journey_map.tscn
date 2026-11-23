@@ -630,11 +630,10 @@ offset_top = 133.0
 offset_right = 891.0
 offset_bottom = 161.0
 mouse_filter = 2
-text = "第一关 / 关前受阻"
+text = "第一关"
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
-
 
 [node name="Title" type="Label" parent="ScrollClip/Details"]
 layout_mode = 0
@@ -658,25 +657,13 @@ offset_bottom = 226.0
 mouse_filter = 2
 color = Color(0.44, 0.32, 0.13, 0.5)
 
-[node name="Status" type="Label" parent="ScrollClip/Details"]
-layout_mode = 0
-offset_left = 711.0
-offset_top = 239.0
-offset_right = 891.0
-offset_bottom = 266.0
-mouse_filter = 2
-text = "待挑战"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 17
-theme_override_colors/font_color = Color(0.46, 0.23, 0.09, 1)
-
 
 [node name="Description" type="Label" parent="ScrollClip/Details"]
 layout_mode = 0
 offset_left = 711.0
-offset_top = 276.0
+offset_top = 242.0
 offset_right = 885.0
-offset_bottom = 334.0
+offset_bottom = 308.0
 mouse_filter = 2
 text = "护送甘夫人、糜夫人，闯过第一道关口。"
 theme_override_fonts/font = ExtResource("font")
@@ -687,24 +674,24 @@ autowrap_mode = 3
 [node name="Record" type="Label" parent="ScrollClip/Details"]
 layout_mode = 0
 offset_left = 711.0
-offset_top = 339.0
+offset_top = 320.0
 offset_right = 891.0
-offset_bottom = 364.0
+offset_bottom = 350.0
 mouse_filter = 2
-text = "尚无通关记录"
+text = ""
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
-
+visible = false
 
 [node name="Reason" type="Label" parent="ScrollClip/Details"]
 layout_mode = 0
 offset_left = 711.0
-offset_top = 369.0
+offset_top = 348.0
 offset_right = 889.0
-offset_bottom = 403.0
+offset_bottom = 404.0
 mouse_filter = 2
-text = "沿途关隘，逐一前行。"
+text = ""
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.23, 0.19, 0.115, 1)
@@ -745,18 +732,6 @@ theme_override_font_sizes/font_size = 27
 theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
 
 
-[node name="NextStop" type="Label" parent="."]
-layout_mode = 0
-offset_left = 85.0
-offset_top = 52.0
-offset_right = 675.0
-offset_bottom = 76.0
-mouse_filter = 2
-text = "护送二位夫人，过关寻刘备"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.73, 0.73, 0.58, 1)
-
 
 [node name="Progress" type="Label" parent="."]
 layout_mode = 0
@@ -786,13 +761,12 @@ theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
 theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
-theme_override_styles/normal = SubResource("button")
+theme_override_styles/normal = SubResource("clear")
 theme_override_styles/hover = SubResource("button_hover")
 theme_override_styles/pressed = SubResource("button_hover")
 theme_override_styles/disabled = SubResource("disabled")
 theme_override_styles/focus = SubResource("focus")
 metadata/action = "map_back"
-
 
 [node name="Review" type="Button" parent="."]
 layout_mode = 0
@@ -809,65 +783,40 @@ theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
 theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
-theme_override_styles/normal = SubResource("button")
+theme_override_styles/normal = SubResource("clear")
 theme_override_styles/hover = SubResource("button_hover")
 theme_override_styles/pressed = SubResource("button_hover")
 theme_override_styles/disabled = SubResource("disabled")
 theme_override_styles/focus = SubResource("focus")
 metadata/action = "map_replay"
 
-
 [node name="Mute" type="Button" parent="."]
 layout_mode = 0
-offset_left = 318.0
+offset_left = 820.0
 offset_top = 487.0
-offset_right = 433.0
+offset_right = 917.0
 offset_bottom = 522.0
 mouse_filter = 0
 focus_mode = 2
-text = "声音：开"
+text = "设置"
 theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
 theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
 theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
-theme_override_styles/normal = SubResource("button")
+theme_override_styles/normal = SubResource("clear")
 theme_override_styles/hover = SubResource("button_hover")
 theme_override_styles/pressed = SubResource("button_hover")
 theme_override_styles/disabled = SubResource("disabled")
 theme_override_styles/focus = SubResource("focus")
-metadata/action = "mute"
-
-
-[node name="Motion" type="Button" parent="."]
-layout_mode = 0
-offset_left = 448.0
-offset_top = 487.0
-offset_right = 594.0
-offset_bottom = 522.0
-mouse_filter = 0
-focus_mode = 2
-text = "减少动态：关"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
-theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
-theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
-theme_override_styles/normal = SubResource("button")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_hover")
-theme_override_styles/disabled = SubResource("disabled")
-theme_override_styles/focus = SubResource("focus")
-metadata/action = "motion"
-
+metadata/action = "settings"
 
 [node name="Hint" type="Label" parent="."]
 layout_mode = 0
-offset_left = 625.0
+offset_left = 375.0
 offset_top = 489.0
-offset_right = 917.0
+offset_right = 693.0
 offset_bottom = 517.0
 mouse_filter = 2
 text = "← → 选关 · TAB 切换 · ENTER 确认"
@@ -875,6 +824,7 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.74, 0.74, 0.6, 1)
 horizontal_alignment = 2
+visible = false
 
 [node name="SaveNotice" type="Label" parent="."]
 layout_mode = 0
@@ -901,3 +851,25 @@ playback_type = 1
 [node name="Life" type="AnimationPlayer" parent="."]
 callback_mode_process = 2
 libraries = {&"": SubResource("life_library")}
+
+[node name="Help" type="Button" parent="."]
+layout_mode = 0
+offset_left = 710.0
+offset_top = 487.0
+offset_right = 810.0
+offset_bottom = 522.0
+mouse_filter = 0
+focus_mode = 2
+text = "操作指南"
+theme_override_fonts/font = ExtResource("font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95, 0.9, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_focus_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_disabled_color = Color(0.85, 0.8, 0.67, 0.9)
+theme_override_styles/normal = SubResource("clear")
+theme_override_styles/hover = SubResource("button_hover")
+theme_override_styles/pressed = SubResource("button_hover")
+theme_override_styles/disabled = SubResource("disabled")
+theme_override_styles/focus = SubResource("focus")
+metadata/action = "help"

@@ -11,6 +11,8 @@ var replay = false
 var entry = "culture"
 var was_skipped = false
 var auto_play = true
+var more_open = false
+var reduced_motion = false
 var suspended = false
 var waiting_for_audio = false
 var index = 0
@@ -60,6 +62,7 @@ func _ready() -> void:
 	$Next.pressed.connect(advance)
 	$Skip.pressed.connect(finish)
 	$ReplayVoice.pressed.connect(replay_current)
+	$More.pressed.connect(toggle_more)
 	stop()
 
 func _exit_tree() -> void:
@@ -82,6 +85,10 @@ func begin(is_replay: bool = false, source: String = "culture") -> bool:
 	return true
 
 func stop() -> void:
+	more_open = false
+	if is_instance_valid(voice):
+		$MorePanel.hide()
+		$ReplayVoice.hide()
 	active = false
 	visible = false
 	waiting_for_audio = false
@@ -122,9 +129,37 @@ func toggle_auto() -> void:
 
 func replay_current() -> void:
 	if _accept_input():
+		_set_more(false)
 		narration_requested.emit()
 		auto_play = true
 		_show_scene(index, false)
+
+func _set_more(value: bool) -> void:
+	more_open = value
+	$MorePanel.visible = value
+	$ReplayVoice.visible = value
+	_refresh_audio()
+	if active:
+		if value: $ReplayVoice.grab_focus()
+		else: $More.grab_focus()
+
+func toggle_more() -> void:
+	if _accept_input(): _set_more(not more_open)
+
+func _input(event: InputEvent) -> void:
+	if not active or suspended or not more_open: return
+	if event is InputEventKey and event.pressed:
+		if event.physical_keycode == KEY_ESCAPE or event.keycode == KEY_ESCAPE:
+			_set_more(false)
+			get_viewport().set_input_as_handled()
+		elif event.physical_keycode == KEY_TAB or event.keycode == KEY_TAB:
+			if $ReplayVoice.has_focus(): $More.grab_focus()
+			else: $ReplayVoice.grab_focus()
+			get_viewport().set_input_as_handled()
+	if event is InputEventMouseButton and event.pressed:
+		if not $MorePanel.get_global_rect().has_point(event.position) and not $More.get_global_rect().has_point(event.position):
+			_set_more(false)
+			get_viewport().set_input_as_handled()
 
 func finish() -> void:
 	if _accept_input():
@@ -164,12 +199,12 @@ func _audio_context_ready() -> bool:
 
 func _refresh_audio() -> void:
 	waiting_for_audio = active and not _muted and not _audio_context_ready()
-	var paused = suspended or not auto_play or waiting_for_audio
+	var paused = suspended or more_open or not auto_play or waiting_for_audio
 	for player in [voice, ambience, effect]:
 		if player.stream_paused != paused:
 			player.stream_paused = paused
 	if _audio_bridge != null:
-		_audio_bridge.setActive(active and auto_play and not suspended, _muted)
+		_audio_bridge.setActive(active and auto_play and not suspended and not more_open, _muted)
 
 func _show_scene(next_index: int, blend: bool = true) -> void:
 	var old_art: Node2D = get_node("Panels/" + scenes[index].node + "/Art")
@@ -178,7 +213,7 @@ func _show_scene(next_index: int, blend: bool = true) -> void:
 	$Transition.scale = old_art.scale
 	_blend_elapsed = 0.0
 	$Transition.modulate.a = 1.0
-	$Transition.visible = blend and auto_play
+	$Transition.visible = blend and auto_play and not reduced_motion
 	index = next_index
 	elapsed = 0.0
 	for panel in $Panels.get_children():
@@ -186,9 +221,7 @@ func _show_scene(next_index: int, blend: bool = true) -> void:
 	$Title.text = scenes[index].title
 	$Context.text = scenes[index].get("context", "")
 	$Caption.text = scenes[index].caption
-	$Speaker.text = scenes[index].get("speaker", "中文说书")
-	$Adaptation.visible = index == 0
-	$Mission.visible = index == 5
+	$Series.visible = index == 0
 	voice.stop()
 	voice.stream = _voices[index]
 	voice.play()
@@ -203,7 +236,7 @@ func _show_scene(next_index: int, blend: bool = true) -> void:
 
 func _refresh_controls() -> void:
 	$Previous.disabled = index == 0
-	$Auto.text = "暂停播放" if auto_play else "自动播放"
+	$Auto.text = "暂停播放" if auto_play else "继续播放"
 	$Next.text = ("返回旅图" if entry == "map" else ("返回" if replay else "展开旅图")) if index == scenes.size() - 1 else "继续  ENTER"
 	$Skip.text = "返回旅图" if entry == "map" else "跳过前情"
 	$Count.text = "%02d / 06" % (index + 1)
@@ -220,11 +253,12 @@ func _process(dt: float) -> void:
 	_refresh_audio()
 	if waiting_for_audio != was_waiting:
 		_refresh_controls()
-	if suspended or not auto_play or waiting_for_audio:
+	if suspended or more_open or not auto_play or waiting_for_audio:
 		return
 	var step = minf(dt, float(scenes[index].duration) - elapsed)
 	elapsed += step
-	animation.advance(step)
+	if not reduced_motion: animation.advance(step)
+	else: $Transition.hide()
 	_blend_elapsed = minf(_blend_elapsed + step, BLEND_SECONDS)
 	$Transition.modulate.a = 1.0 - _blend_elapsed / BLEND_SECONDS
 	if _blend_elapsed >= BLEND_SECONDS:

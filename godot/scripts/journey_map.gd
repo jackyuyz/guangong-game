@@ -7,6 +7,7 @@ var selected = 0
 var reduced_motion = false
 var suspended = false
 var ready_to_start = false
+var _keyboard_navigation = false
 var _opened = false
 var _opening = false
 var _time = 0.0
@@ -102,7 +103,6 @@ func set_suspended(value: bool) -> void:
 
 func set_muted(value: bool) -> void:
 	$Paper.volume_db = -80 if value else -22
-	$Mute.text = "声音：关" if value else "声音：开"
 
 func select_chapter(i: int, focus: bool = true) -> void:
 	if chapters.is_empty(): return
@@ -121,7 +121,7 @@ func present() -> void:
 	if progress == null or chapters.size() != nodes.size(): return
 	$Progress.text = "已通过 %d / 5 关" % progress.completed_count()
 	$SaveNotice.text = progress.error_text
-	$Motion.text = "减少动态：开" if reduced_motion else "减少动态：关"
+	$Hint.visible = _keyboard_navigation
 	var chapter = chapters[selected]
 	var cleared = progress.is_cleared(chapter.id)
 	var unlocked = progress.is_unlocked(chapter.id)
@@ -132,29 +132,27 @@ func present() -> void:
 		nodes[i].get_node("State").text = "已通关" if complete else ("未解锁" if not chapters[i].released else ("待挑战" if can_enter(chapters[i].id) else "未解锁"))
 		nodes[i].get_node("Selection").visible = i == selected
 		nodes[i].get_node("Seal").visible = complete
-	$ScrollClip/Details/Number.text = "第 %s 关  /  %s" % [["一", "二", "三", "四", "五"][selected], chapter.theme]
+	$ScrollClip/Details/Number.text = "第%s关" % ["一", "二", "三", "四", "五"][selected]
 	$ScrollClip/Details/Title.text = chapter.name
-	$ScrollClip/Details/Status.text = "已通关" if cleared else ("未解锁" if not chapter.released else ("待挑战" if playable else "未解锁"))
 	$ScrollClip/Details/Description.text = chapter.description
-	$ScrollClip/Details/Record.text = "最佳分数  %d" % progress.best_score() if cleared and chapter.id == "dongling" else "尚无通关记录"
-	var reason = "沿途关隘，逐一前行。"
+	$ScrollClip/Details/Record.visible = cleared and chapter.id == "dongling"
+	$ScrollClip/Details/Record.text = "最佳 %d" % progress.best_score()
+	var reason = ""
 	if not chapter.released:
-		reason = "已满足前置条件，敬候开放。" if unlocked else "通关前一关后，待开放即可挑战。"
+		reason = "前置已完成，此关尚未开放。" if unlocked else "先通过%s，此关尚未开放。" % chapters[maxi(0, selected - 1)].name
 	elif not unlocked:
 		reason = "通关%s后开启。" % chapters[maxi(0, selected - 1)].name
 	elif not playable:
 		reason = "入口资源暂不可用，请稍后再试。"
-	elif cleared:
-		reason = "通关记录已保存，可再次挑战。"
 	$ScrollClip/Details/Reason.text = reason
 	$ScrollClip/Details/Start.text = ("再次挑战" if cleared else "开始挑战") if playable else ("未解锁" if not chapter.released or not unlocked else "暂不可用")
 	$ScrollClip/Details/Start.disabled = not playable or not ready_to_start
+	$ScrollClip/Details/Start.visible = playable or (chapter.released and unlocked)
 	var complete_first = progress.is_cleared("dongling")
 	$ScrollClip/Caravan.position = $ScrollClip/TravelEnd.position if complete_first else $ScrollClip/TravelStart.position
 	$ScrollClip/ReadyFlag.position = $ScrollClip/FlagEnd.position if complete_first else $ScrollClip/FlagStart.position
 	$ScrollClip/ReadyFlag.visible = true
 	$ScrollClip/TravelLine.visible = complete_first
-	$NextStop.text = "下一站 · 洛阳未解锁" if complete_first else "护送二位夫人，过关寻刘备"
 	if _celebration_pending and ready_to_start:
 		_celebration_pending = false
 		if not reduced_motion and complete_first:
@@ -168,7 +166,13 @@ func present() -> void:
 			_celebration.parallel().tween_property($ScrollClip/Stops/Pass1/Seal, "scale", Vector2.ONE, .6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _input(event: InputEvent) -> void:
-	if not visible or suspended or not event is InputEventKey or not event.pressed or event.echo: return
+	if not visible or suspended: return
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		_keyboard_navigation = false
+		$Hint.hide()
+	if not event is InputEventKey or not event.pressed or event.echo: return
+	_keyboard_navigation = true
+	$Hint.show()
 	if event.keycode in [KEY_LEFT, KEY_RIGHT] or event.physical_keycode in [KEY_LEFT, KEY_RIGHT]:
 		var code = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 		select_chapter(selected + (-1 if code == KEY_LEFT else 1))

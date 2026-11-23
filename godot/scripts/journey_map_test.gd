@@ -40,7 +40,7 @@ func run() -> void:
 	var current_flag: Vector2 = map.get_node("ScrollClip/ReadyFlag").position
 	for i in range(1, 5):
 		map.select_chapter(i)
-		check(map.get_node("ScrollClip/Details/Status").text == "未解锁" and map.get_node("ScrollClip/Details/Start").disabled, "future chapter preview stays disabled: " + map.chapters[i].id)
+		check(map.nodes[i].get_node("State").text == "未解锁" and not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Start").disabled, "future chapter preview stays disabled: " + map.chapters[i].id)
 		game._enter_chapter(map.chapters[i].id)
 		check(game.state == "map", "direct chapter request cannot bypass availability: " + map.chapters[i].id)
 	check(map.get_node("ScrollClip/Caravan").position == caravan and map.get_node("ScrollClip/ReadyFlag").position == current_flag and game.progress.completed_count() == 0, "browsing moves neither current-position flag nor party and creates no progress")
@@ -67,7 +67,7 @@ func run() -> void:
 	reread.load(save)
 	check(reread.get_value("journey", "intro_state") == "completed" and reread.get_value("custom", "note") == "keep", "sound saves retain journey and unknown fields")
 	game._action("motion")
-	check(game.reduced_motion and map.ready_to_start and map.get_node("Motion").text == "减少动态：开", "reduced motion setting immediately finishes entrance")
+	check(game.reduced_motion and map.ready_to_start and game.ui.get_node("Root/Utility/Settings/Motion").text == "减少动态：开", "reduced motion setting immediately finishes entrance")
 	map._process(0)
 	game._unhandled_input(event)
 	check(game.attack_time == 0 and game.combat_seconds == 0, "map never advances combat")
@@ -108,7 +108,7 @@ func run() -> void:
 	check(map.get_node("ScrollClip/Stops/Pass1/Seal").visible and map.get_node("ScrollClip/Details/Start").text == "再次挑战", "completed chapter shows stamp and replay action")
 	check(map.get_node("ScrollClip/Caravan").position == map.get_node("ScrollClip/TravelEnd").position and map.get_node("ScrollClip/ReadyFlag").visible and map.get_node("ScrollClip/ReadyFlag").position == map.get_node("ScrollClip/FlagEnd").position, "party and visible current-position flag reach first pass exit without entering unfinished chapter")
 	map.select_chapter(1)
-	check(game.progress.is_unlocked("luoyang") and not map.can_enter("luoyang") and map.get_node("ScrollClip/Details/Reason").text.contains("已满足前置"), "next story prerequisite is met but unreleased chapter remains preparation")
+	check(game.progress.is_unlocked("luoyang") and not map.can_enter("luoyang") and map.get_node("ScrollClip/Details/Reason").text.contains("前置已完成"), "next story prerequisite is met but unreleased chapter remains preparation")
 	game._enter_chapter("luoyang")
 	check(game.state == "map", "clearing first pass still cannot start unreleased second chapter")
 	map.select_chapter(0)
