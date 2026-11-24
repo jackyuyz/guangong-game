@@ -17,6 +17,7 @@ const HEAVY_DAMAGE = 3
 const HEAVY_RANGE = 220.0 # Forward reach; slightly beyond J's 145.
 const HEAVY_BACK = 30.0 # Also catches enemies overlapping from behind.
 const HEAVY_TIME = 0.35 # Pose time; also the heroic invincibility window.
+const HEAVY_CONTACT = 1.0 / 9.0 # Second attack frame, matching the authored heavy animation.
 const HEAVY_COOLDOWN = 0.9
 const HEAVY_STAGGER = 0.9
 const REST_RANGE = 85.0
@@ -36,6 +37,7 @@ var guard_broken = 0.0 # > 0 briefly after a boss sweep broke a plain guard.
 var resource = 0 # 义气, 0..RESOURCE_MAX.
 var heavy_time = 0.0 # > 0 while the 偃月斩 pose plays.
 var heavy_cooldown = 0.0
+var heavy_pending = false
 var rest_used = false
 var rest_announced = false
 var parries = 0
@@ -55,6 +57,7 @@ func reset() -> void:
 	guard_broken = 0.0
 	resource = 0
 	heavy_time = 0.0
+	heavy_pending = false
 	heavy_cooldown = 0.0
 	rest_used = false
 	rest_announced = false
@@ -86,6 +89,11 @@ func update(game: Node, dt: float) -> void:
 	block_flash = maxf(0.0, block_flash - dt)
 	guard_broken = maxf(0.0, guard_broken - dt)
 	heavy_time = maxf(0.0, heavy_time - dt)
+	if heavy_pending and heavy_time <= HEAVY_TIME - HEAVY_CONTACT:
+		heavy_pending = false
+		_heavy_contact(game)
+		if game.state != "play":
+			return
 	heavy_cooldown = maxf(0.0, heavy_cooldown - dt)
 	if game.checkpoint.is_empty():
 		checkpoint_resource = -1
@@ -149,14 +157,20 @@ func _heavy(game: Node) -> void:
 	resource -= HEAVY_COST
 	game.attack_time = 0.0
 	heavy_time = HEAVY_TIME
+	heavy_pending = true
 	heavy_cooldown = HEAVY_COOLDOWN
 	guard_timer = 0.0
 	game.invincible = maxf(game.invincible, HEAVY_TIME)
+	game._tone(150, 0.16, 0.14)
+
+func _heavy_contact(game: Node) -> void:
 	game.shake = 7.0
 	game.hit_stop = 0.07
-	game._tone(150, 0.16, 0.14)
 	var boss_down = false
-	for enemy in targets:
+	for enemy in game.enemies:
+		var distance: float = (enemy.x - game.x) * game.facing
+		if enemy.hp <= 0 or distance <= -HEAVY_BACK or distance >= HEAVY_RANGE:
+			continue
 		enemy.hp -= HEAVY_DAMAGE
 		enemy.flash = 0.2
 		game._sparks(enemy.x, enemy.y - 60, GOLD)
@@ -165,7 +179,6 @@ func _heavy(game: Node) -> void:
 		else:
 			_stagger(enemy, HEAVY_STAGGER)
 	if boss_down:
-		heavy_time = 0.0
 		game._win()
 		return
 	game.enemies = game.enemies.filter(func(e): return e.hp > 0)

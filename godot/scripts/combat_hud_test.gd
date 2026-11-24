@@ -61,6 +61,7 @@ func run() -> void:
 	check(hud.get_node("BossHealth").visible and hud.get_node("BossHealth/HP").value == 8 and hud.get_node("BossHealth/Phase").visible, "boss half health shows the named bottom bar and second-phase marker")
 	check(not hud.get_node("ObjectivePanel").visible and not hud.get_node("Message").visible, "boss entry removes duplicate objective and entry-banner text")
 	game.ext.handle_key(game, KEY_L)
+	game.ext.update(game, game.ext.HEAVY_CONTACT)
 	game._sync_scene()
 	check(game.ext.resource == 0 and not hud.get_node("Extensions/Skill/Ready").visible and hud.get_node("BossHealth/HP").value == 5, "real heavy attack consumption and damage are reflected together")
 	game._banner("横扫破防 · 须精准弹反或闪避")

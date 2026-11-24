@@ -1,0 +1,17 @@
+{
+  "generator": "OpenAI imagegen",
+  "date": "2026-11-24",
+  "notes": "Derived new animation sheets; original source sheets preserved. Full prompts and reference filenames follow.",
+  "images": [
+    {
+      "file": "kong-xiu-fall-sheet.png",
+      "ref": "kong-xiu-sheet.png",
+      "prompt": "Create a TRANSPARENT PNG pixel art sprite animation sheet, 4 columns x 2 rows of EIGHT equal square cells, 2:1 overall aspect, 1774x887 preferred. Reference is existing Kong Xiu game sprite sheet. EXACT same character identity, chibi proportions, outlines, navy armor with gold trim, silver helmet red plume, black beard, spear, same pixel art. NO text, numbers or grid. Original faces LEFT. NEW death animation, left-to-right top row then bottom row: 1 hit recoil, 2 stumbling backwards to right, 3 knees buckle, 4 starts tipping sideways right, 5 hand reaching ground while torso drops sideways, 6 shoulder hits ground, 7 lying on his SIDE head to right legs to left, 8 settled side lying fully defeated eyes shut. NO gore. Real changes of anatomy pose, not rotated standing sprite. Keep all artwork and spear within each cell with at least 15px side margins, spear falls down and rests horizontally beside body, never crosses cell. Match reference character standing height roughly 330px in each 443.5px cell. Ground contact baseline y408 within EVERY cell, feet for early poses and body bottom for later poses. Single consistent camera and character size through frames. Transparent alpha background, no shadows or scenery. Individual frames evenly centered x221.75; fall end body spans about350px horizontally at bottom of cell, no huge zoom. Final frame clean side lying body with helmet plume visible."
+    },
+    {
+      "file": "guan-yu-recover-sheet.png",
+      "ref": "guan-yu-sheet.png",
+      "prompt": "Create a TRANSPARENT PNG pixel art sprite animation sheet, 4 columns x 2 rows EIGHT equal square cells, 2:1 overall aspect, 1774x887 preferred. Use reference Guan Yu sheet for EXACT identity, proportions and pixel art: green robe gold armor, red face black long beard, green cap and crescent guandao. Character faces RIGHT throughout. NO text numbers or grid. This is POST ATTACK RECOVERY ONLY: 1 starts with guandao extended low forward to right matching reference bottom-row THIRD pose, 2 retract blade toward body, 3 lift shaft slightly, 4 straighten knees, 5 return weapon vertical on left, 6 settle robe, 7 ready stance, 8 identical reference first idle stance. Preserve character scale and silhouette throughout, all weapon tips stay inside cell with generous margin. Ground FEET baseline y393 within EVERY 443.5px cell. Pixelated thick dark outlines and same shaded palette as reference, no smooth painting, no new character, no other objects, actual transparent alpha no scenery. Keep cell origin/layout perfectly regular. Reference first top cell for final pose and standing height; reference bottom third cell for first pose."
+    }
+  ]
+}

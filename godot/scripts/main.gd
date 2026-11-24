@@ -9,6 +9,12 @@ const JADE = Color("72b69a")
 const RED = Color("cf6950")
 const VIEWPORT_WIDTH = 960.0
 const SCORE_VERSION = "ch01-v2-checkpoint"
+const ATTACK_TIME = 0.24
+const ATTACK_CONTACT = 0.08
+const FINISH_HOLD = 0.28
+var defeated_boss: Dictionary = {}
+var finish_elapsed = 0.0
+var finish_attack_left = 0.0
 var ext = preload("res://scripts/combat_extensions.gd").new()
 
 @onready var level = $Level
@@ -114,7 +120,7 @@ func _on_web_focus_change(_arguments: Array) -> void:
 func _pause_for_focus_loss() -> void:
 	window_active = false
 	if is_instance_valid(journey): journey.set_suspended(true)
-	if state in ["play", "dialogue", "prologue"]:
+	if state in ["play", "finishing", "dialogue", "prologue"]:
 		resume_state = state
 		state = "pause"
 		if is_instance_valid(prologue):
@@ -154,7 +160,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			state = "menu"
 		elif state == "pause":
 			state = resume_state
-		elif state in ["play", "dialogue", "prologue"]:
+		elif state in ["play", "finishing", "dialogue", "prologue"]:
 			resume_state = state
 			state = "pause"
 		_sync_scene()
@@ -181,7 +187,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		combo = combo + 1 if combo_window > 0.0 else 1
 		if combo > 3:
 			combo = 1
-		attack_time = 0.24
+		attack_time = ATTACK_TIME
 		attack_cooldown = 0.29 if combo < 3 else 0.48
 		combo_window = 0.64
 		swing_id += 1
@@ -217,9 +223,9 @@ func _action(action: String) -> void:
 			ui.focus_utility()
 			return
 		"settings", "help":
-			if state not in ["menu", "map", "pause", "play"]: return
+			if state not in ["menu", "map", "pause", "play", "finishing"]: return
 			if utility_panel.is_empty(): ui.remember_utility_focus()
-			if state == "play":
+			if state in ["play", "finishing"]:
 				resume_state = state
 				state = "pause"
 			utility_panel = action
@@ -277,8 +283,10 @@ func _action(action: String) -> void:
 				if prologue.begin(true):
 					state = "prologue"
 					show_culture = false
-		"next": _next_dialogue()
-		"skip": _finish_dialogue()
+		"next":
+			if state == "dialogue": _next_dialogue()
+		"skip":
+			if state == "dialogue": _finish_dialogue()
 		"resume": state = resume_state
 		"pause_click":
 			resume_state = state
@@ -378,6 +386,9 @@ func _reset_run() -> void:
 	_reset_effects()
 
 func _reset_effects() -> void:
+	defeated_boss.clear()
+	finish_elapsed = 0.0
+	finish_attack_left = 0.0
 	moving = false
 	attack_time = 0
 	attack_cooldown = 0
@@ -469,11 +480,16 @@ func _process(dt: float) -> void:
 			hit_stop -= dt
 		else:
 			_update_play(minf(dt, 0.04))
-	if state in ["play", "dialogue", "victory"]:
+	elif state == "finishing":
+		if hit_stop > 0:
+			hit_stop = maxf(0, hit_stop - dt)
+		else:
+			_update_finish(minf(dt, 0.04))
+	if state in ["play", "finishing", "dialogue", "victory"]:
 		var camera_end = maxf(level.world_left, level.world_right - VIEWPORT_WIDTH)
-		var target = camera_end if phase == 6 else clampf(x - 350, level.world_left, camera_end)
+		var target = camera_end if phase in [5, 6, 7] else clampf(x - 350, level.world_left, camera_end)
 		camera_x = lerpf(camera_x, target, minf(dt * 5, 1))
-	if state in ["play", "victory"]:
+	if state in ["play", "finishing", "victory"] and hit_stop <= 0:
 		shake = maxf(0, shake - dt * 20)
 		for p in particles:
 			p.life -= dt
@@ -488,6 +504,8 @@ func _process(dt: float) -> void:
 
 func _update_play(dt: float) -> void:
 	ext.update(self, dt)
+	if state != "play":
+		return # A lethal heavy contact has priority over every enemy in this tick.
 	attack_time = maxf(0, attack_time - dt)
 	attack_cooldown = maxf(0, attack_cooldown - dt)
 	combo_window = maxf(0, combo_window - dt)
@@ -510,7 +528,7 @@ func _update_play(dt: float) -> void:
 	if phase == 0 and x >= level.flag_origin.x:
 		phase = 1
 		_banner("按 J 挥刀，击中前方训练靶两次")
-	if phase == 1 and attack_time > 0.1 and (level.dummy_origin.x - x) * facing > -24 and absf(x - level.dummy_origin.x) < 135:
+	if phase == 1 and attack_time > 0.03 and attack_time <= ATTACK_TIME - ATTACK_CONTACT and (level.dummy_origin.x - x) * facing > -24 and absf(x - level.dummy_origin.x) < 135:
 		if tutorial_hits != swing_id:
 			tutorial_hits = swing_id
 			var count = int(get_meta("dummy_hits", 0)) + 1
@@ -527,7 +545,7 @@ func _update_play(dt: float) -> void:
 		if enemy.hp <= 0:
 			continue
 		enemy.flash = maxf(0, enemy.flash - dt)
-		if attack_time > 0.03 and enemy.last_swing != swing_id:
+		if attack_time > 0.03 and attack_time <= ATTACK_TIME - ATTACK_CONTACT and enemy.last_swing != swing_id:
 			var distance: float = (enemy.x - x) * facing
 			if distance > -24 and distance < 145:
 				enemy.last_swing = swing_id
@@ -623,16 +641,45 @@ func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 		state = "dead"
 
 func _win() -> void:
+	if phase == 7 or state != "play":
+		return
+	for enemy in enemies:
+		if enemy.boss:
+			defeated_boss = enemy.duplicate()
+			defeated_boss.hp = 0
+			defeated_boss.facing = -facing
+			break
 	phase = 7
+	state = "finishing"
+	moving = false
+	finish_elapsed = 0.0
+	var finish_heavy = ext.heavy_time > 0
+	finish_attack_left = ext.heavy_time if finish_heavy else attack_time
+	ext.guard_timer = 0.0
+	dodge_time = 0.0
+	invincible = 0.0
 	enemies.clear()
-	_reset_effects()
 	score = 600 + int(240.0 * hp / 6.0) + int(160.0 * clampf(1.0 - maxf(0, combat_seconds - 180) / 360.0, 0, 1))
 	best = maxi(best, score)
 	_first_clear_pending = not progress.is_cleared("dongling")
 	cleared = true
 	progress.mark_cleared("dongling", score)
 	_save()
-	_begin_dialogue(story.ending, "victory")
+
+func _update_finish(dt: float) -> void:
+	finish_elapsed += dt
+	clock += dt
+	attack_time = maxf(0, attack_time - dt)
+	ext.heavy_time = maxf(0, ext.heavy_time - dt)
+	var recovery_end: float = finish_attack_left + level.player.animation_length("finish_recover")
+	var fall_end: float = level.boss.animation_length("fall")
+	if finish_elapsed >= maxf(recovery_end, fall_end) + FINISH_HOLD:
+		attack_time = 0.0
+		ext.heavy_time = 0.0
+		particles.clear()
+		floaters.clear()
+		shake = 0.0
+		_begin_dialogue(story.ending, "victory")
 
 func _save() -> void:
 	progress.save_preferences(muted, reduced_motion, best)
@@ -674,8 +721,8 @@ func _sync_scene() -> void:
 	prologue.reduced_motion = reduced_motion
 	prologue.set_suspended(state != "prologue")
 	prologue.set_muted(muted)
-	if tone_player.playing and (muted or state in ["menu", "dead"] or phase == 7):
+	if tone_player.playing and (muted or state in ["menu", "dead", "dialogue", "victory"]):
 		tone_player.stop()
-	tone_player.stream_paused = state != "play"
+	tone_player.stream_paused = state not in ["play", "finishing"]
 	level.present(self)
 	ui.present(self)

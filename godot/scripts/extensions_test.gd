@@ -203,7 +203,7 @@ func test_state_guards() -> void:
 	var ext = game.ext
 	ext.resource = 4
 	game.enemies.append(enemy(1100))
-	for state in ["menu", "pause", "confirm", "dialogue", "dead", "victory"]:
+	for state in ["menu", "finishing", "pause", "confirm", "dialogue", "dead", "victory"]:
 		game.state = state
 		var consumed = ext.handle_key(game, KEY_K) or ext.handle_key(game, KEY_L) or ext.handle_key(game, KEY_E)
 		check(not consumed and not ext.is_guarding() and ext.resource == 4 and game.enemies[0].hp == 2, "no actions in " + state)
@@ -233,6 +233,7 @@ func test_resource_and_heavy() -> void:
 	game.facing = 1.0
 	ext.handle_key(game, KEY_L)
 	check(ext.resource == 0 and ext.heavy_cooldown > 0 and game.invincible >= ext.HEAVY_TIME, "L spends 义气, starts cooldown and grants i-frames")
+	ext.update(game, ext.HEAVY_CONTACT)
 	check(game.enemies.size() == 1 and game.enemies[0] == far and far.hp == 2, "L kills in range, spares out of range, removes the dead")
 	game.x = 1150
 	ext.resource = 4
@@ -244,6 +245,7 @@ func test_resource_and_heavy() -> void:
 	check(far.hp == 2, "no L mid-dodge")
 	game.dodge_time = 0
 	ext.handle_key(game, KEY_L)
+	ext.update(game, ext.HEAVY_CONTACT)
 	check(game.enemies.is_empty() and game.win_calls == 0, "guard kill does not win")
 
 func test_boss_lethal() -> void:
@@ -254,12 +256,14 @@ func test_boss_lethal() -> void:
 	game.enemies.append(boss)
 	ext.resource = 4
 	ext.handle_key(game, KEY_L)
+	ext.update(game, ext.HEAVY_CONTACT)
 	check(boss.hp == 13 and boss.mode == "recover" and game.win_calls == 0 and game.enemies.size() == 1, "L hurts and staggers the boss without winning")
 	boss.hp = 2
 	ext.resource = 4
 	ext.update(game, ext.HEAVY_COOLDOWN + 0.01)
 	game.invincible = 0
 	ext.handle_key(game, KEY_L)
+	ext.update(game, ext.HEAVY_CONTACT)
 	check(game.win_calls == 1 and game.phase == 7 and game.enemies.is_empty(), "lethal L on the boss wins")
 	var hp: int = game.hp
 	game._hurt(-1.0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/ui/cinnabar-seal-frame.png" id="seal"]
 [ext_resource type="Script" path="res://scripts/wuxia_feedback.gd" id="feedback"]
@@ -26,6 +26,8 @@
 
 [ext_resource type="PackedScene" path="res://scenes/ui/combat_hud.tscn" id="combat_hud"]
 
+[ext_resource type="PackedScene" path="res://scenes/ui/duel_dialogue.tscn" id="duel_dialogue"]
+
 [node name="GameUI" type="CanvasLayer"]
 layer = 10
 script = ExtResource("e1")
@@ -48,76 +50,8 @@ visible = false
 [node name="MainMenu" parent="Root" instance=ExtResource("main_menu")]
 visible = false
 
-[node name="Dialogue" type="Control" parent="Root"]
-layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 960.0
-offset_bottom = 540.0
-mouse_filter = 2
+[node name="Dialogue" parent="Root" instance=ExtResource("duel_dialogue")]
 visible = false
-
-[node name="Card" type="Panel" parent="Root/Dialogue"]
-layout_mode = 0
-offset_left = 74.0
-offset_top = 315.0
-offset_right = 886.0
-offset_bottom = 482.0
-mouse_filter = 2
-theme_type_variation = &"WuxiaHUD"
-
-[node name="Speaker" type="Label" parent="Root/Dialogue"]
-layout_mode = 0
-offset_left = 100.0
-offset_top = 323.0
-offset_right = 840.0
-offset_bottom = 355.0
-mouse_filter = 2
-text = "关羽"
-theme_override_font_sizes/font_size = 21
-theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
-theme_type_variation = &"WuxiaTitle"
-theme_override_fonts/font = ExtResource("kai")
-
-[node name="Body" type="Label" parent="Root/Dialogue"]
-layout_mode = 0
-offset_left = 100.0
-offset_top = 359.0
-offset_right = 840.0
-offset_bottom = 428.0
-mouse_filter = 2
-text = "关某护送二位夫人寻兄，还望将军放行。"
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-autowrap_mode = 3
-
-
-[node name="Skip" type="Button" parent="Root/Dialogue"]
-layout_mode = 0
-offset_left = 560.0
-offset_top = 436.0
-offset_right = 696.0
-offset_bottom = 480.0
-mouse_filter = 0
-text = "跳过"
-focus_mode = 0
-theme_override_font_sizes/font_size = 18
-metadata/action = "skip"
-theme_override_fonts/font = ExtResource("kai")
-
-[node name="Next" type="Button" parent="Root/Dialogue"]
-layout_mode = 0
-offset_left = 716.0
-offset_top = 436.0
-offset_right = 864.0
-offset_bottom = 480.0
-mouse_filter = 0
-text = "继续  ENTER"
-focus_mode = 0
-theme_override_font_sizes/font_size = 18
-metadata/action = "next"
-theme_override_fonts/font = ExtResource("kai")
-theme_type_variation = &"WuxiaPrimary"
 
 [node name="Pause" type="Control" parent="Root"]
 layout_mode = 0

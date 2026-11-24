@@ -40,19 +40,19 @@ func run() -> void:
 	check(game.phase == 1, "movement tutorial")
 	game.x = 600
 	press(KEY_J)
-	game._update_play(0.02)
+	game._update_play(0.09)
 	game._update_play(0.30)
 	press(KEY_J)
-	game._update_play(0.02)
+	game._update_play(0.09)
 	check(game.phase == 2, "two distinct training hits")
 	game._update_play(0.30)
 	press(KEY_SPACE)
-	game._update_play(0.02)
+	game._update_play(0.09)
 	check(game.phase == 3 and game.enemies.size() == 2, "dodge and first wave")
 	game._reset_effects()
 	game.x = game.enemies[0].x - 90
 	press(KEY_J)
-	game._update_play(0.01)
+	game._update_play(0.09)
 	var hp_after: int = game.enemies[0].hp
 	game._update_play(0.01)
 	check(hp_after == 1 and game.enemies[0].hp == 1, "one hit per enemy per swing")
@@ -93,6 +93,7 @@ func run() -> void:
 	check(not game.ext.is_guarding() and game.attack_time > 0, "J releases the guard and starts a swing")
 	game._sync_scene()
 	press(KEY_L)
+	game._update_play(0.12)
 	game._sync_scene()
 	check(boss.hp == 13 and game.ext.resource == 0 and game.attack_time == 0 and game.level.player.sprite.animation == &"heavy", "L replaces the J swing with one heavy hit and restarts the visual")
 	press(KEY_SPACE)
@@ -120,8 +121,9 @@ func run() -> void:
 	game._reset_effects()
 	press(KEY_J)
 	# Saving uses the isolated temporary save_path set above.
-	game._update_play(0.01)
-	check(game.phase == 7 and game.enemies.is_empty() and game.cleared, "boss victory stops all enemy damage and saves")
+	game._update_play(0.09)
+	check(game.phase == 7 and game.state == "finishing" and game.enemies.is_empty() and game.cleared, "boss victory stops all enemy damage and saves")
+	for i in 60: game._process(1.0 / 30)
 	game._finish_dialogue()
 	check(game.state == "victory" and game.show_culture, "ending and culture card")
 	var save = ConfigFile.new()
@@ -137,8 +139,9 @@ func run() -> void:
 	game.x = game.enemies[0].x - 100
 	game.ext.resource = 4
 	press(KEY_L)
+	game._update_play(0.12)
 	game._sync_scene()
-	check(game.state == "dialogue" and game.ext.heavy_time == 0 and game.level.player.sprite.animation == &"idle", "lethal heavy strike clears its pose and arc before the ending")
+	check(game.state == "finishing" and game.ext.heavy_time > 0 and game.level.player.sprite.animation == &"heavy", "lethal heavy strike keeps its pose and arc for the full finish")
 	print("SMOKE CHECKS COMPLETE")
 	game.queue_free()
 	await create_timer(0.15).timeout

@@ -108,7 +108,7 @@ func _emit_button(button: Button) -> void:
 	action_requested.emit(str(button.get_meta("action")))
 
 func present(game: Node) -> void:
-	$Root/HUD.visible = game.state == "play"
+	$Root/HUD.visible = game.state in ["play", "finishing"]
 	$Root/MainMenu.visible = game.state == "menu"
 	$Root/Dialogue.visible = game.state == "dialogue"
 	$Root/Pause.visible = game.state == "pause" and game.utility_panel.is_empty()
@@ -141,10 +141,7 @@ func present(game: Node) -> void:
 	$Root/Victory/Saved.visible = not game.progress.error_text.is_empty()
 	$Root/MainMenu/Record.text = game.progress.error_text
 	$Root/MainMenu/Record.visible = game.utility_panel.is_empty() and not game.progress.error_text.is_empty()
-	if game.state == "dialogue" and not game.dialogue.is_empty():
-		var line: Array = game.dialogue[game.dialogue_index]
-		$Root/Dialogue/Speaker.text = str(line[0])
-		$Root/Dialogue/Body.text = str(line[1])
+	$Root/Dialogue.present(game)
 	$Root/Defeat/Retry.text = "重试孔秀  ENTER" if not game.checkpoint.is_empty() else "从第一阵重试  ENTER"
 	$Root/Defeat/Restart.visible = not game.checkpoint.is_empty()
 	$Root/Defeat/Help.visible = not game.checkpoint.is_empty()

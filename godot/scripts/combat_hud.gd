@@ -13,7 +13,7 @@ const EMPTY = Color("747766")
 
 func present(game: Node) -> void:
 	var new_session: bool = game.state == "play" and last_state not in ["play", "pause", "confirm"]
-	active = game.state == "play" and game.window_active
+	active = game.state in ["play", "finishing"] and game.window_active
 	reduced_motion = game.reduced_motion
 	var health: int = clampi(game.hp, 0, 6)
 	if health < last_hp and not new_session and not reduced_motion:
@@ -26,7 +26,7 @@ func present(game: Node) -> void:
 	$Health/HP.tooltip_text = "气血 %d / 6" % health
 	$Health/LowHealth.visible = health > 0 and health <= 2
 	last_hp = health
-	$Extensions.visible = game.phase >= 3 and game.phase < 7
+	$Extensions.visible = game.phase >= 3 and (game.phase < 7 or game.state == "finishing")
 	for i in 4:
 		$Extensions/Pips.get_child(i).self_modulate = FILLED if i < game.ext.resource else EMPTY
 	$Extensions.tooltip_text = "义气 %d / %d" % [game.ext.resource, game.ext.RESOURCE_MAX]
@@ -44,10 +44,10 @@ func present(game: Node) -> void:
 	# Entry narration is already communicated by the boss name. Event/error messages remain.
 	$Message.visible = game.message_time > 0.0 and game.phase >= 3 and not game.message.begins_with("孔秀 ·")
 	$Message/Text.text = game.message
-	var showing_boss: bool = game.phase == 6 and not game.enemies.is_empty()
+	var showing_boss: bool = (game.phase == 6 and not game.enemies.is_empty()) or (game.state == "finishing" and not game.defeated_boss.is_empty())
 	$BossHealth.visible = showing_boss
 	if showing_boss:
-		var hp: int = maxi(0, game.enemies[0].hp)
+		var hp: int = maxi(0, game.enemies[0].hp) if game.phase == 6 else 0
 		$BossHealth/Name.text = "孔秀 · 东岭守将"
 		$BossHealth/Phase.visible = hp <= 8
 		if not boss_visible or reduced_motion or hp > last_boss_hp: $BossHealth/Trail.value = hp

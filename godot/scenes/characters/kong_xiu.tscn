@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="Script" path="res://scripts/actor_view.gd" id="e1"]
 
@@ -9,6 +9,8 @@
 [ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="sprite_shader"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/attack_telegraph.tscn" id="telegraph"]
+
+[ext_resource type="Texture2D" path="res://assets/animations/kong-xiu-fall-sheet.png" id="finish_sheet"]
 
 [sub_resource type="StyleBoxFlat" id="s1"]
 bg_color = Color(0.15, 0.18, 0.16, 1)
@@ -48,6 +50,46 @@ region = Rect2(887.0, 443.5, 443.5, 443.5)
 atlas = ExtResource("e2")
 region = Rect2(1330.5, 443.5, 443.5, 443.5)
 
+[sub_resource type="AtlasTexture" id="finish_0"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(0.0, 0.0, 443.5, 443.5)
+metadata/ground_baseline = 407
+
+[sub_resource type="AtlasTexture" id="finish_1"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(443.5, 0.0, 443.5, 443.5)
+metadata/ground_baseline = 407
+
+[sub_resource type="AtlasTexture" id="finish_2"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(887.0, 0.0, 443.5, 443.5)
+metadata/ground_baseline = 407
+
+[sub_resource type="AtlasTexture" id="finish_3"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(1330.5, 0.0, 443.5, 443.5)
+metadata/ground_baseline = 407
+
+[sub_resource type="AtlasTexture" id="finish_4"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(0.0, 443.5, 443.5, 443.5)
+metadata/ground_baseline = 400
+
+[sub_resource type="AtlasTexture" id="finish_5"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(443.5, 443.5, 443.5, 443.5)
+metadata/ground_baseline = 400
+
+[sub_resource type="AtlasTexture" id="finish_6"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(887.0, 443.5, 443.5, 443.5)
+metadata/ground_baseline = 400
+
+[sub_resource type="AtlasTexture" id="finish_7"]
+atlas = ExtResource("finish_sheet")
+region = Rect2(1330.5, 443.5, 443.5, 443.5)
+metadata/ground_baseline = 400
+
 [sub_resource type="SpriteFrames" id="motion_frames"]
 animations = [{"frames": [{"duration": 1.0, "texture": SubResource("frame_0")}], "loop": true, "name": &"idle", "speed": 4},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_0")}, {"duration": 1.0, "texture": SubResource("frame_1")}, {"duration": 1.0, "texture": SubResource("frame_2")}, {"duration": 1.0, "texture": SubResource("frame_3")}], "loop": true, "name": &"walk", "speed": 8},
@@ -55,7 +97,8 @@ animations = [{"frames": [{"duration": 1.0, "texture": SubResource("frame_0")}],
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_5")}, {"duration": 1.0, "texture": SubResource("frame_6")}, {"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"attack", "speed": 12.5},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"recover", "speed": 4},
 {"frames": [{"duration": 1.0, "texture": SubResource("frame_4")}], "loop": false, "name": &"guard", "speed": 4},
-{"frames": [{"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"hurt", "speed": 4}]
+{"frames": [{"duration": 1.0, "texture": SubResource("frame_7")}], "loop": false, "name": &"hurt", "speed": 4},
+{"frames": [{"duration": 1.4, "texture": SubResource("finish_0")}, {"duration": 1.4, "texture": SubResource("finish_1")}, {"duration": 1.2, "texture": SubResource("finish_2")}, {"duration": 1.1, "texture": SubResource("finish_3")}, {"duration": 0.8, "texture": SubResource("finish_4")}, {"duration": 0.8, "texture": SubResource("finish_5")}, {"duration": 1, "texture": SubResource("finish_6")}, {"duration": 1, "texture": SubResource("finish_7")}], "loop": false, "name": &"fall", "speed": 8}]
 
 [sub_resource type="ShaderMaterial" id="sprite_material"]
 shader = ExtResource("sprite_shader")

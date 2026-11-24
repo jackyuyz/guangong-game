@@ -57,8 +57,32 @@ func animate(animation: String, frozen: bool) -> void:
 		sprite.play(animation)
 	sprite.speed_scale = 0.0 if frozen else animation_speed
 
+func animation_length(animation: String) -> float:
+	var frames = sprite.sprite_frames
+	var duration = 0.0
+	for i in frames.get_frame_count(animation):
+		duration += frames.get_frame_duration(animation, i)
+	return duration / frames.get_animation_speed(animation)
+
+func pose_at(animation: String, elapsed: float) -> void:
+	# Logic owns combat timing, so hit-stop, pause and contact always share a frame.
+	var frames = sprite.sprite_frames
+	sprite.animation = animation
+	sprite.speed_scale = 0.0
+	var cursor = maxf(0, elapsed) * frames.get_animation_speed(animation)
+	var index = 0
+	while index < frames.get_frame_count(animation) - 1 and cursor >= frames.get_frame_duration(animation, index):
+		cursor -= frames.get_frame_duration(animation, index)
+		index += 1
+	sprite.set_frame_and_progress(index, minf(cursor / frames.get_frame_duration(animation, index), 1.0))
+	_align_frame()
+
 func _align_frame() -> void:
 	if frame_baselines.is_empty():
+		return
+	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	if texture != null and texture.has_meta("ground_baseline"):
+		sprite.offset.y = original_offset.y + frame_baselines[0] - float(texture.get_meta("ground_baseline"))
 		return
 	var indices: Array = FRAME_INDICES.get(str(sprite.animation), [0])
 	var index: int = indices[mini(sprite.frame, indices.size() - 1)]

@@ -100,7 +100,7 @@ func run() -> void:
 	game._update_play(0.01)
 	check(game.phase == 1, "crossing the relocated flag advances the tutorial")
 	game.x = 780
-	game.attack_time = 0.22
+	game.attack_time = 0.16
 	game.swing_id += 1
 	game._update_play(0.01)
 	check(game.get_meta("dummy_hits") == 1 and not game.particles.is_empty() and game.particles[0].pos == Vector2(800, 385), "target hit and sparks follow the relocated dummy")

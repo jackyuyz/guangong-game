@@ -44,7 +44,8 @@ func present(game: Node) -> void:
 	$Ground/Training/Flag.visible = game.phase <= 1
 	$Ground/Training/Dummy.visible = game.phase <= 2
 	$Ground/Companions.visible = game.camera_x < world_left + 350
-	$Ground/RetreatGuards.visible = game.phase == 7
+	var effective_state: String = game.resume_state if game.state in ["pause", "confirm"] else game.state
+	$Ground/RetreatGuards.visible = game.phase == 7 and effective_state != "finishing"
 	player.global_position = to_global(Vector2(game.x, game.player_y))
 	var moving: bool = game.moving
 	var frozen: bool = game.state != "play" or game.hit_stop > 0
@@ -64,6 +65,17 @@ func present(game: Node) -> void:
 	elif moving or game.dodge_time > 0:
 		motion = "walk"
 	player.animate(motion, frozen)
+	if game.attack_time > 0:
+		player.pose_at("attack", game.ATTACK_TIME - game.attack_time)
+	if game.ext.heavy_time > 0:
+		player.pose_at("heavy", game.ext.HEAVY_TIME - game.ext.heavy_time)
+	if not game.defeated_boss.is_empty():
+		player.pose(game.facing)
+		if game.finish_elapsed >= game.finish_attack_left:
+			var recovery_time: float = game.finish_elapsed - game.finish_attack_left
+			player.pose_at("finish_recover" if recovery_time < player.animation_length("finish_recover") else "idle", recovery_time)
+	# The dialogue stage owns the large portraits; avoid duplicate small actors behind it.
+	player.visible = game.phase != 5
 	$Ground/RestPoint.visible = game.phase in [4, 5]
 	$Ground/RestPoint/Hint.text = "已歇脚" if game.ext.rest_used else "E  茶摊歇脚"
 	$Ground/RestPoint.modulate.a = 0.5 if game.ext.rest_used else 1.0
@@ -77,5 +89,14 @@ func present(game: Node) -> void:
 		view.global_position = to_global(Vector2(enemy.x, enemy.y))
 		view.show()
 		view.present_enemy(enemy, game.x, frozen)
+	if not game.defeated_boss.is_empty():
+		var fallen: Dictionary = game.defeated_boss
+		boss.global_position = to_global(Vector2(fallen.x, fallen.y))
+		boss.show()
+		boss.get_node("Telegraph").hide()
+		boss.get_node("AttackHint").hide()
+		boss.get_node("Health").hide()
+		boss.pose(fallen.facing, Color(1.4, 1.15, 0.9) if game.finish_elapsed < 0.08 else Color.WHITE)
+		boss.pose_at("fall", game.finish_elapsed)
 	$Effects.game = game
 	$Effects.queue_redraw()

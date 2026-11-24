@@ -21,6 +21,10 @@
 
 音效由程序生成短音，未使用外部音频。故事文本见 `data/story.json`，均为原型草稿，尚无配音或文本组审定版本。
 
+## 孔秀登场前对白
+
+孔秀登场前的双人对白复用 `animations/guan-yu-sheet.png` 与 `animations/kong-xiu-sheet.png` 首个idle帧；原生AtlasTexture裁取，最近邻采样、共享透明边缘材质，未增加生成素材或独立口型帧。布局见 `scenes/ui/duel_dialogue.tscn`。
+
 ## 千里寻兄开篇
 
 六幕当前使用统一透视光照的完整像素连环画（`prologue/frames-v2/`）与 ElevenLabs 中文旁白，见 [开篇来源](prologue/SOURCES.md)。首版背景、道具和人物素材保留为迭代记录，源素材库保持不变。
@@ -32,3 +36,9 @@
 ## 赤兔征途首页
 
 独立背景、透明书法标题、金色笔触、首页书法字体及短音来源见 [首页素材说明](main-menu/SOURCES.md)。采用用户选中的第 4 张概念图；原关卡背景与素材库保留。
+
+## 最后一击收尾动画（2026-11-24）
+
+新增 `animations/guan-yu-recover-sheet.png` 与 `animations/kong-xiu-fall-sheet.png`，由 OpenAI imagegen 参考原对应图集生成；原图集和素材库均保留。两张均为透明1774×887、4×2图集，新增独立八帧收招与八帧踉跄／侧倒，使用最近邻及原透明边缘材质。完整提示和参考文件见 `animations/final-strike-creation.json`，生成记录不进入Web包。没有引入外部下载素材；生成素材沿用本课程项目的使用范围，不声称其为历史复原。
+
+角色场景中的AtlasTexture保存各帧接地基线：孔秀前四帧407、后四帧400；关羽前四帧401、后四帧395。运行时对齐原脚底393／408；不修改PNG，不旋转站立图冒充倒地。普通斩与偃月斩的攻击尾段保持伸刀帧，再接独立收招；原idle／hurt等复用情况保持。
