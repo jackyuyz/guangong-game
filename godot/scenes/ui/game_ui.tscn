@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/ui/cinnabar-seal-frame.png" id="seal"]
 [ext_resource type="Script" path="res://scripts/wuxia_feedback.gd" id="feedback"]
@@ -21,6 +21,8 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/main_menu.tscn" id="main_menu"]
 
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="settings_panel"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/credits_panel.tscn" id="credits_panel"]
 
 [sub_resource type="StyleBoxFlat" id="s8"]
 bg_color = Color(0.81, 0.412, 0.314, 1)
@@ -939,6 +941,13 @@ offset_left = 215.0
 offset_top = 77.0
 offset_right = 745.0
 offset_bottom = 461.0
+
+[node name="Credits" parent="Root/Utility" instance=ExtResource("credits_panel")]
+visible = false
+offset_left = 140.0
+offset_top = 54.0
+offset_right = 820.0
+offset_bottom = 486.0
 
 [node name="Body" parent="Root/Utility" instance=ExtResource("keyboard_guide")]
 visible = false

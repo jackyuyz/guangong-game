@@ -14,7 +14,8 @@ func restore_utility_focus() -> void:
 		_utility_focus.grab_focus()
 
 func focus_utility() -> void:
-	if $Root/Utility/Body.visible: $Root/Utility/Close.grab_focus()
+	if $Root/Utility/Credits.visible: $Root/Utility/Credits/Close.grab_focus()
+	elif $Root/Utility/Body.visible: $Root/Utility/Close.grab_focus()
 	else: $Root/Utility/Settings.focus_initial()
 
 func _input(event: InputEvent) -> void:
@@ -42,7 +43,7 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 			return
 		if not $Root/MainMenu.visible or not $Root/MainMenu.active: return
-		var entries: Array = [$Root/MainMenu/Start, $Root/MainMenu/Culture, $Root/MainMenu/Mute]
+		var entries: Array = $Root/MainMenu.buttons
 		if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
 			var current = entries.find(get_viewport().gui_get_focus_owner())
 			var direction = -1 if event.shift_pressed or code == KEY_UP else 1
@@ -56,6 +57,19 @@ func _input(event: InputEvent) -> void:
 			button.button_down.emit()
 			button.pressed.emit()
 			button.button_up.emit()
+		return
+	if $Root/Utility/Credits.visible:
+		get_viewport().set_input_as_handled()
+		if code in [KEY_ESCAPE, KEY_P]:
+			if not event.echo: action_requested.emit("utility_close")
+		elif code == KEY_M:
+			if not event.echo: action_requested.emit("mute")
+		elif code in [KEY_TAB, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
+			$Root/Utility/Credits/Close.grab_focus()
+		elif code in [KEY_ENTER, KEY_KP_ENTER, KEY_SPACE] and not event.echo:
+			$Root/Utility/Credits/Close.button_down.emit()
+			$Root/Utility/Credits/Close.pressed.emit()
+			$Root/Utility/Credits/Close.button_up.emit()
 		return
 	if not $Root/Utility/Body.visible:
 		if $Root/Utility/Settings.handle_key(event): get_viewport().set_input_as_handled()
@@ -126,12 +140,13 @@ func present(game: Node) -> void:
 	var helping: bool = game.utility_panel == "help"
 	$Root/Utility/Body.visible = helping
 	$Root/Utility/Body.set_demo_state(helping, game.reduced_motion, game.window_active, game.progress.error_text)
-	$Root/Utility/Settings.visible = not helping
+	$Root/Utility/Credits.visible = game.utility_panel == "credits"
+	$Root/Utility/Settings.visible = game.utility_panel == "settings"
 	$Root/Utility/Settings.present_preferences(game.muted, game.reduced_motion, game.window_active, game.utility_panel == "settings", game.progress.error_text)
 	$Root/Utility/Switch.visible = helping
 	$Root/Utility/Close.visible = helping
 	$Root/Utility/Dimmer.color.a = 0.55
-	$Root/MainMenu.set_controls_visible(game.utility_panel != "settings")
+	$Root/MainMenu.set_controls_visible(game.utility_panel not in ["settings", "credits"])
 	$Root/MainMenu/Start.text = "启程" if game.progress.intro_state() == "unseen" else "继续旅程"
 	$Root/MainMenu/Start.add_theme_font_size_override("font_size", 64 if game.progress.intro_state() == "unseen" else 38)
 	$Root/MainMenu.present_state(game.state == "menu" and not game.show_culture and game.utility_panel.is_empty(), game.muted, game.reduced_motion, game.window_active)

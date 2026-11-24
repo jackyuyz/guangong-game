@@ -209,6 +209,13 @@ func _action(action: String) -> void:
 		_sync_scene()
 		return
 	match action:
+		"credits":
+			if state != "menu" or show_culture: return
+			ui.remember_utility_focus()
+			utility_panel = "credits"
+			_sync_scene()
+			ui.focus_utility()
+			return
 		"settings", "help":
 			if state not in ["menu", "map", "pause", "play"]: return
 			if utility_panel.is_empty(): ui.remember_utility_focus()

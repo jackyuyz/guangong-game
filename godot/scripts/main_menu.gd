@@ -7,7 +7,7 @@ var window_active = true
 var last_hover_sound = -1000
 var hovered: Button
 var tweens: Dictionary = {}
-@onready var buttons: Array[Button] = [$Start, $Culture, $Mute]
+@onready var buttons: Array[Button] = [$Start, $Culture, $Mute, $Credits]
 
 func _ready() -> void:
 	for button in buttons:
@@ -82,5 +82,5 @@ func _refresh(button: Button, instant: bool = false, pressed: bool = false) -> v
 		tween.tween_property(line, "modulate:a", line_alpha, 0.12)
 
 func set_controls_visible(showing: bool) -> void:
-	for path in ["Title", "Subtitle", "SubtitleStrokeLeft", "SubtitleStrokeRight", "Tagline", "Start", "Culture", "Mute"]:
+	for path in ["Title", "Subtitle", "SubtitleStrokeLeft", "SubtitleStrokeRight", "Tagline", "Start", "Culture", "Mute", "Credits"]:
 		get_node(path).visible = showing
