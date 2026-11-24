@@ -1,11 +1,11 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="script"]
 [ext_resource type="Texture2D" path="res://assets/main-menu/rider-dawn.png" id="backdrop"]
 [ext_resource type="Texture2D" path="res://assets/main-menu/title-calligraphy.png" id="title"]
 [ext_resource type="Texture2D" path="res://assets/main-menu/menu-brush.png" id="brush"]
-[ext_resource type="FontFile" path="res://assets/main-menu/menu-brush-font.ttf" id="font"]
-[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="fallback"]
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="font"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="fallback"]
 [ext_resource type="AudioStream" path="res://assets/main-menu/hover.wav" id="hover"]
 [ext_resource type="AudioStream" path="res://assets/main-menu/confirm.wav" id="confirm"]
 
@@ -13,14 +13,10 @@
 atlas = ExtResource("brush")
 region = Rect2(120, 270, 1940, 180)
 
-[sub_resource type="FontVariation" id="menu_font"]
-base_font = ExtResource("font")
-fallbacks = [ExtResource("fallback")]
-
 [sub_resource type="StyleBoxEmpty" id="empty"]
 
 [sub_resource type="Theme" id="menu_theme"]
-default_font = SubResource("menu_font")
+default_font = ExtResource("font")
 default_font_size = 26
 Button/styles/normal = SubResource("empty")
 Button/styles/hover = SubResource("empty")
@@ -31,7 +27,7 @@ Button/colors/font_hover_color = Color(1, 0.85, 0.51, 1)
 Button/colors/font_focus_color = Color(1, 0.85, 0.51, 1)
 Button/colors/font_pressed_color = Color(1, 0.96, 0.82, 1)
 Button/colors/font_outline_color = Color(0.055, 0.08, 0.06, 0.8)
-Button/constants/outline_size = 2
+Button/constants/outline_size = 0
 Label/colors/font_color = Color(0.953, 0.91, 0.804, 1)
 
 [node name="MainMenu" type="Control"]
@@ -246,7 +242,7 @@ offset_right = 850.0
 offset_bottom = 520.0
 text = ""
 theme_override_fonts/font = ExtResource("fallback")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 autowrap_mode = 3
 mouse_filter = 2

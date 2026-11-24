@@ -1,40 +1,22 @@
 [gd_scene load_steps=6 format=3]
 
+[ext_resource type="Theme" path="res://themes/wuxia-game.tres" id="wuxia"]
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="kai"]
 [ext_resource type="Script" path="res://scripts/keyboard_guide.gd" id="script"]
 [ext_resource type="PackedScene" path="res://scenes/ui/guide_keycap.tscn" id="cap"]
-[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="font"]
-
-[sub_resource type="StyleBoxFlat" id="frame"]
-bg_color = Color(0.035, 0.075, 0.062, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.66, 0.55, 0.31, 0.9)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_left = 8
-corner_radius_bottom_right = 8
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 12
-
-[sub_resource type="Theme" id="theme"]
-default_font = ExtResource("font")
-default_font_size = 15
-Label/colors/font_color = Color(0.95, 0.91, 0.8, 1)
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="font"]
 
 [node name="KeyboardGuide" type="Control"]
 offset_right = 720.0
 offset_bottom = 420.0
 mouse_filter = 2
-theme = SubResource("theme")
+theme = ExtResource("wuxia")
 script = ExtResource("script")
 
 [node name="Card" type="Panel" parent="."]
 offset_right = 720.0
 offset_bottom = 420.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("frame")
 
 [node name="Title" type="Label" parent="."]
 offset_left = 34.0
@@ -43,8 +25,10 @@ offset_right = 394.0
 offset_bottom = 64.0
 mouse_filter = 2
 text = "操作指南"
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 34
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
+theme_type_variation = &"WuxiaTitle"
+theme_override_fonts/font = ExtResource("kai")
 
 [node name="CombatTitle" type="Label" parent="."]
 offset_left = 34.0
@@ -53,7 +37,7 @@ offset_right = 334.0
 offset_bottom = 102.0
 mouse_filter = 2
 text = "行走与战斗"
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.86, 0.71, 0.42, 1)
 
 [node name="MapTitle" type="Label" parent="."]
@@ -63,7 +47,7 @@ offset_right = 684.0
 offset_bottom = 102.0
 mouse_filter = 2
 text = "旅图与菜单"
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.86, 0.71, 0.42, 1)
 
 [node name="Rule" type="ColorRect" parent="."]
@@ -94,7 +78,7 @@ offset_right = 146.0
 offset_bottom = 149.0
 mouse_filter = 2
 text = "行走"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Attack" type="Label" parent="."]
@@ -104,7 +88,7 @@ offset_right = 146.0
 offset_bottom = 193.0
 mouse_filter = 2
 text = "挥刀"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Dodge" type="Label" parent="."]
@@ -114,7 +98,7 @@ offset_right = 146.0
 offset_bottom = 237.0
 mouse_filter = 2
 text = "闪避"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Guard" type="Label" parent="."]
@@ -124,7 +108,7 @@ offset_right = 146.0
 offset_bottom = 281.0
 mouse_filter = 2
 text = "格挡 / 弹反"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Interact" type="Label" parent="."]
@@ -134,7 +118,7 @@ offset_right = 146.0
 offset_bottom = 325.0
 mouse_filter = 2
 text = "茶摊互动"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="A" parent="Keys" instance=ExtResource("cap")]
@@ -199,7 +183,7 @@ offset_right = 354.0
 offset_bottom = 194.0
 mouse_filter = 2
 text = "连按三段"
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.86, 0.71, 0.42, 1)
 
 [node name="Space" parent="Keys" instance=ExtResource("cap")]
@@ -231,7 +215,7 @@ offset_right = 310.0
 offset_bottom = 282.0
 mouse_filter = 2
 text = "偃月斩"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="L" parent="Keys" instance=ExtResource("cap")]
@@ -263,7 +247,7 @@ offset_right = 310.0
 offset_bottom = 326.0
 mouse_filter = 2
 text = "声音"
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="M" parent="Keys" instance=ExtResource("cap")]
@@ -284,7 +268,7 @@ offset_right = 690.0
 offset_bottom = 149.0
 mouse_filter = 2
 text = "选关"
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Focus" type="Label" parent="."]
@@ -294,7 +278,7 @@ offset_right = 690.0
 offset_bottom = 193.0
 mouse_filter = 2
 text = "切换"
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Confirm" type="Label" parent="."]
@@ -304,7 +288,7 @@ offset_right = 690.0
 offset_bottom = 237.0
 mouse_filter = 2
 text = "确认"
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Return" type="Label" parent="."]
@@ -314,7 +298,7 @@ offset_right = 690.0
 offset_bottom = 281.0
 mouse_filter = 2
 text = "暂停 / 返回"
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="Help" type="Label" parent="."]
@@ -324,7 +308,7 @@ offset_right = 690.0
 offset_bottom = 325.0
 mouse_filter = 2
 text = "操作指南"
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.91, 0.8, 1)
 
 [node name="MapLeft" parent="Keys" instance=ExtResource("cap")]
@@ -411,7 +395,7 @@ offset_right = 686.0
 offset_bottom = 419.0
 mouse_filter = 2
 text = ""
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.86, 0.71, 0.42, 1)
 
 [node name="Alternative" type="Label" parent="."]
@@ -421,7 +405,7 @@ offset_right = 262.0
 offset_bottom = 150.0
 mouse_filter = 2
 text = "或"
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.7, 0.68, 0.55, 1)
 vertical_alignment = 1
 

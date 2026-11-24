@@ -2,7 +2,7 @@ extends Node2D
 ## Only transient effects remain procedural; level, actors and UI are real nodes.
 var game: Node
 const GOLD = Color("dfbc76")
-const FONT = preload("res://assets/demo-font.ttf")
+const FONT = preload("res://assets/ui/wuxia-reading-font.ttf")
 const TRAIL = preload("res://assets/guan-yu.png")
 
 func _draw() -> void:

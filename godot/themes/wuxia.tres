@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=3 format=3]
 
-[ext_resource type="FontFile" path="res://assets/ui/wuxia-brush-font.ttf" id="brush"]
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="brush"]
 
 [sub_resource type="StyleBoxEmpty" id="empty"]
 

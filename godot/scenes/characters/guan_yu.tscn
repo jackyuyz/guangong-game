@@ -4,7 +4,7 @@
 
 [ext_resource type="Texture2D" path="res://assets/animations/guan-yu-sheet.png" id="e2"]
 
-[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="e3"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="e3"]
 
 [ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="sprite_shader"]
 

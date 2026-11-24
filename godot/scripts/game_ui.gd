@@ -4,6 +4,7 @@ signal action_requested(action: String)
 var stats_expanded = false
 var _last_state = ""
 var _utility_focus: Control
+var _dialog_panel: Control
 
 func remember_utility_focus() -> void:
 	_utility_focus = get_viewport().gui_get_focus_owner()
@@ -20,6 +21,26 @@ func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed: return
 	var code = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 	if not $Root/Utility.visible:
+		var panel = _current_dialog()
+		if panel != null:
+			var controls = _dialog_buttons(panel)
+			if controls.is_empty(): return
+			var current = controls.find(get_viewport().gui_get_focus_owner())
+			if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
+				var step = -1 if event.shift_pressed or code == KEY_UP else 1
+				controls[posmod(current + step, controls.size()) if current >= 0 else (0 if step > 0 else controls.size() - 1)].grab_focus()
+				get_viewport().set_input_as_handled()
+			elif code in [KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+				get_viewport().set_input_as_handled()
+				if event.echo: return
+				var button: Button = controls[current] if current >= 0 else _default_dialog_button(controls)
+				if panel == $Root/Prologue and current < 0: button = $Root/Prologue/Next
+				button.button_down.emit()
+				button.pressed.emit()
+				button.button_up.emit()
+			elif code in [KEY_LEFT, KEY_RIGHT] and panel != $Root/Prologue:
+				get_viewport().set_input_as_handled()
+			return
 		if not $Root/MainMenu.visible or not $Root/MainMenu.active: return
 		var entries: Array = [$Root/MainMenu/Start, $Root/MainMenu/Culture, $Root/MainMenu/Mute]
 		if code in [KEY_TAB, KEY_UP, KEY_DOWN]:
@@ -47,6 +68,21 @@ func _input(event: InputEvent) -> void:
 	elif code in [KEY_LEFT, KEY_RIGHT]:
 		get_viewport().set_input_as_handled()
 
+func _current_dialog() -> Control:
+	if $Root/Utility.visible: return null
+	for path in ["Culture", "Confirm", "Pause", "Defeat", "Victory", "Dialogue", "Prologue"]:
+		var panel = $Root.get_node(path)
+		if panel.is_visible_in_tree(): return panel
+	return null
+
+func _dialog_buttons(panel: Control) -> Array[Button]:
+	var result: Array[Button] = []
+	for button in panel.find_children("*", "Button", true, false):
+		if button.is_visible_in_tree() and not button.disabled:
+			if panel == $Root/Prologue and $Root/Prologue.more_open and button not in [$Root/Prologue/ReplayVoice, $Root/Prologue/More]: continue
+			result.append(button)
+	return result
+
 const OBJECTIVES = ["前往旗标", "练习挥刀", "练习闪避", "击退第一阵守军", "清除守军，前往关门", "关前对话", "击败孔秀", "关门已开"]
 
 func _ready() -> void:
@@ -63,11 +99,11 @@ func present(game: Node) -> void:
 	$Root/HUD.visible = game.state == "play"
 	$Root/MainMenu.visible = game.state == "menu"
 	$Root/Dialogue.visible = game.state == "dialogue"
-	$Root/Pause.visible = game.state == "pause"
+	$Root/Pause.visible = game.state == "pause" and game.utility_panel.is_empty()
 	$Root/Confirm.visible = game.state == "confirm"
 	$Root/Defeat.visible = game.state == "dead"
 	$Root/Victory.visible = game.state == "victory"
-	$Root/Culture.visible = game.show_culture and game.state in ["menu", "victory"]
+	$Root/Culture.visible = game.show_culture and game.state in ["menu", "victory"] and game.utility_panel.is_empty()
 	$Root/HUD/Health/HP.value = game.hp
 	$Root/HUD/Extensions.visible = game.phase >= 3 and game.phase < 7
 	$Root/HUD/Extensions.text = "义气 %d/%d   L 偃月斩%s" % [game.ext.resource, game.ext.RESOURCE_MAX, " · 就绪" if game.ext.heavy_ready() else ""]
@@ -94,7 +130,7 @@ func present(game: Node) -> void:
 	$Root/Utility/Settings.present_preferences(game.muted, game.reduced_motion, game.window_active, game.utility_panel == "settings", game.progress.error_text)
 	$Root/Utility/Switch.visible = helping
 	$Root/Utility/Close.visible = helping
-	$Root/Utility/Dimmer.color.a = 0.55 if not helping else 0.82
+	$Root/Utility/Dimmer.color.a = 0.55
 	$Root/MainMenu.set_controls_visible(game.utility_panel != "settings")
 	$Root/MainMenu/Start.text = "启程" if game.progress.intro_state() == "unseen" else "继续旅程"
 	$Root/MainMenu/Start.add_theme_font_size_override("font_size", 64 if game.progress.intro_state() == "unseen" else 38)
@@ -125,3 +161,18 @@ func present(game: Node) -> void:
 	$Root/Victory/Stats.text = "战斗 %d 秒    剩余体力 %d / 6\n受击 %d 次    重试 %d 次" % [int(game.combat_seconds), game.hp, game.hits, game.retries]
 	$Root/Culture/Body.text = game.story.culture
 	$Root/Culture/Close.text = "查看结算" if game.state == "victory" else "返回"
+	$Feedback.present(game)
+	_refresh_dialog_focus()
+
+func _refresh_dialog_focus() -> void:
+	var panel = _current_dialog()
+	if panel == _dialog_panel: return
+	_dialog_panel = panel
+	if panel == null or panel == $Root/Prologue or panel == $Root/Dialogue: return
+	var controls = _dialog_buttons(panel)
+	if not controls.is_empty(): _default_dialog_button(controls).grab_focus()
+
+func _default_dialog_button(controls: Array[Button]) -> Button:
+	for button in controls:
+		if button.theme_type_variation == &"WuxiaPrimary": return button
+	return controls[0]

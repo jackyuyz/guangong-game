@@ -1,8 +1,10 @@
 [gd_scene load_steps=21 format=3]
 
+[ext_resource type="Theme" path="res://themes/wuxia-game.tres" id="wuxia"]
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="kai"]
 [ext_resource type="Script" path="res://scripts/prologue.gd" id="script"]
 
-[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="font"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="font"]
 
 [ext_resource type="AudioStream" path="res://assets/prologue/audio/wind.wav" id="wind"]
 
@@ -18,22 +20,9 @@
 
 [ext_resource type="Texture2D" path="res://assets/prologue/frames-v2/06-dongling.png" id="art5"]
 
-[sub_resource type="StyleBoxFlat" id="normal"]
-bg_color = Color(0.045, 0.08, 0.07, 0.94)
-border_width_bottom = 1
-border_color = Color(0.7, 0.58, 0.34, 0.8)
-content_margin_left = 12.0
-content_margin_right = 12.0
-
-[sub_resource type="StyleBoxFlat" id="hover"]
-bg_color = Color(0.18, 0.27, 0.21, 1)
-border_width_bottom = 1
-border_color = Color(0.7, 0.58, 0.34, 0.8)
-content_margin_left = 12.0
-content_margin_right = 12.0
-
 [sub_resource type="Gradient" id="shade"]
-colors = PackedColorArray(0.015, 0.035, 0.03, 0.8, 0.015, 0.035, 0.03, 0)
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.015, 0.035, 0.03, 0.88, 0.015, 0.035, 0.03, 0.8, 0.015, 0.035, 0.03, 0)
 
 [sub_resource type="GradientTexture2D" id="header"]
 gradient = SubResource("shade")
@@ -154,6 +143,7 @@ offset_bottom = 540.0
 mouse_filter = 0
 clip_contents = true
 script = ExtResource("script")
+theme = ExtResource("wuxia")
 
 [node name="Panels" type="Node2D" parent="."]
 
@@ -286,7 +276,7 @@ layout_mode = 0
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 960.0
-offset_bottom = 142.0
+offset_bottom = 220.0
 mouse_filter = 2
 texture = SubResource("header")
 expand_mode = 1
@@ -321,7 +311,7 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 1
 
 
 [node name="Title" type="Label" parent="."]
@@ -332,12 +322,12 @@ offset_right = 648.0
 offset_bottom = 83.0
 mouse_filter = 2
 text = "乱世失散"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 32
 theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
-
+theme_override_constants/outline_size = 1
+theme_type_variation = &"WuxiaTitle"
 
 [node name="Context" type="Label" parent="."]
 layout_mode = 0
@@ -351,7 +341,7 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.85, 0.85, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 1
 
 
 
@@ -359,16 +349,16 @@ theme_override_constants/outline_size = 3
 [node name="AudioHint" type="Label" parent="."]
 layout_mode = 0
 offset_left = 48.0
-offset_top = 375.0
+offset_top = 384.0
 offset_right = 700.0
-offset_bottom = 398.0
+offset_bottom = 401.0
 mouse_filter = 2
 text = ""
 theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 12
-theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.91, 0.792, 0.514, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 1
 horizontal_alignment = 0
 
 [node name="Caption" type="Label" parent="."]
@@ -383,84 +373,60 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 1
 autowrap_mode = 3
 theme_override_constants/line_spacing = 4
 
 [node name="Previous" type="Button" parent="."]
 layout_mode = 0
 offset_left = 48.0
-offset_top = 497.0
+offset_top = 488.0
 offset_right = 142.0
-offset_bottom = 529.0
+offset_bottom = 532.0
 mouse_filter = 0
 focus_mode = 2
 text = "上一幕"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
 
 
 [node name="Auto" type="Button" parent="."]
 layout_mode = 0
 offset_left = 155.0
-offset_top = 497.0
+offset_top = 488.0
 offset_right = 271.0
-offset_bottom = 529.0
+offset_bottom = 532.0
 mouse_filter = 0
 focus_mode = 2
 text = "暂停播放"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
 
 
 [node name="Next" type="Button" parent="."]
 layout_mode = 0
-offset_left = 777.0
-offset_top = 497.0
-offset_right = 912.0
-offset_bottom = 529.0
+offset_left = 710.0
+offset_top = 488.0
+offset_right = 936.0
+offset_bottom = 532.0
 mouse_filter = 0
 focus_mode = 2
 text = "继续  ENTER"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
-
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
+theme_type_variation = &"WuxiaPrimary"
 
 [node name="Skip" type="Button" parent="."]
 layout_mode = 0
 offset_left = 804.0
 offset_top = 24.0
 offset_right = 912.0
-offset_bottom = 58.0
+offset_bottom = 68.0
 mouse_filter = 0
 focus_mode = 2
 text = "跳过前情"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
 
 
 [node name="Sound" type="Button" parent="."]
@@ -468,22 +434,16 @@ layout_mode = 0
 offset_left = 662.0
 offset_top = 24.0
 offset_right = 788.0
-offset_bottom = 58.0
+offset_bottom = 68.0
 mouse_filter = 0
 focus_mode = 2
 text = "声音：开"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
 metadata/action = "prologue_sound"
 
 
-[node name="MorePanel" type="ColorRect" parent="."]
+[node name="MorePanel" type="Panel" parent="."]
 layout_mode = 0
 offset_left = 650.0
 offset_top = 440.0
@@ -491,28 +451,23 @@ offset_right = 912.0
 offset_bottom = 490.0
 mouse_filter = 0
 visible = false
-color = Color(0.045, 0.085, 0.075, 0.98)
+theme_type_variation = &"WuxiaHUD"
 
 [node name="ReplayVoice" type="Button" parent="."]
 layout_mode = 0
 offset_left = 660.0
 offset_top = 448.0
 offset_right = 902.0
-offset_bottom = 484.0
+offset_bottom = 492.0
 mouse_filter = 0
 focus_mode = 2
 text = "重听本幕"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20
 visible = false
 
 [node name="Progress" type="ProgressBar" parent="."]
+theme_type_variation = &"WuxiaNarrativeProgress"
 layout_mode = 0
 offset_left = 310.0
 offset_top = 510.0
@@ -534,7 +489,7 @@ theme_override_fonts/font = ExtResource("font")
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.75, 0.75, 0.67, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.9)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 1
 horizontal_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -556,18 +511,12 @@ playback_type = 1
 
 [node name="More" type="Button" parent="."]
 layout_mode = 0
-offset_left = 650.0
-offset_top = 497.0
-offset_right = 746.0
-offset_bottom = 529.0
+offset_left = 638.0
+offset_top = 488.0
+offset_right = 702.0
+offset_bottom = 532.0
 mouse_filter = 0
 focus_mode = 2
 text = "更多"
-theme_override_fonts/font = ExtResource("font")
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("normal")
-theme_override_styles/hover = SubResource("hover")
-theme_override_styles/pressed = SubResource("hover")
-theme_override_colors/font_color = Color(0.95, 0.89, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.95, 0.82, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.95, 0.82, 1)
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 20

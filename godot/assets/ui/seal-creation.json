@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image_gen",
+  "intent": "generate",
+  "transparent_background": true,
+  "prompt": "Use case: game-asset. Create one isolated traditional Chinese cinnabar seal FRAME texture for a restrained wuxia game's chapter-clear screen. Square hand-carved vermilion red ink impression, double imperfect square border with tiny broken ink gaps and dry granulation, muted bright cinnabar #CF6A50 with a few deeper red ink flecks. EMPTY fully transparent center: no Chinese characters, no lettering, no symbol inside. Border thickness approximately 7% of total square width, 9% transparent outer padding all around. Flat front-facing 2D stamp impression, strictly no perspective, no paper, no shadows, no glow, no gold, no objects, no mockup. On a genuinely transparent alpha background including the hollow central area. Strong readable silhouette at a small 64-pixel game size, avoid isolated spray far from frame. Square image. The developer will place the real Chinese character 过 inside using an editable font. Only the blank ink seal outline.",
+  "output_source": "/Users/yuyuanzhengjack/.codex/generated_images/01a1ef8d-02f7-7213-8d96-1388e2885ef6/exec-7e6d9eed-6d5d-4427-9726-d7a2178e3907.png",
+  "asset": "cinnabar-seal-frame.png",
+  "usage": "TextureRect with separate editable Chinese glyph 过; chapter clear, not game completion."
+}

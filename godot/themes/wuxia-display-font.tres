@@ -1,0 +1,9 @@
+[gd_resource type="FontVariation" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-kai.otf" id="kai"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="read"]
+
+[resource]
+base_font = ExtResource("kai")
+fallbacks = [ExtResource("read")]
+variation_embolden = 0.45

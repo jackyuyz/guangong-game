@@ -6,7 +6,7 @@
 
 [ext_resource type="Texture2D" path="res://assets/dongling.png" id="e3"]
 
-[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="e4"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="e4"]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/guan_yu.tscn" id="e5"]
 

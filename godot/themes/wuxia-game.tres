@@ -1,0 +1,150 @@
+[gd_resource type="Theme" load_steps=22 format=3]
+
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="kai"]
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="read"]
+[ext_resource type="StyleBox" path="res://themes/wuxia-panel.tres" id="panel"]
+[ext_resource type="Texture2D" path="res://assets/ui/wuxia-primary-brush.png" id="gold"]
+[ext_resource type="Texture2D" path="res://assets/main-menu/menu-brush.png" id="line"]
+[ext_resource type="Texture2D" path="res://assets/journey-map/five-passes-scroll.png" id="paper"]
+
+[sub_resource type="AtlasTexture" id="gold_atlas"]
+atlas = ExtResource("gold")
+region = Rect2(85, 100, 2000, 540)
+
+[sub_resource type="AtlasTexture" id="line_atlas"]
+atlas = ExtResource("line")
+region = Rect2(120, 270, 1940, 180)
+
+[sub_resource type="AtlasTexture" id="paper_atlas"]
+atlas = ExtResource("paper")
+region = Rect2(1280, 230, 250, 490)
+
+[sub_resource type="StyleBoxEmpty" id="clear"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+
+[sub_resource type="StyleBoxTexture" id="wash"]
+texture = SubResource("line_atlas")
+modulate_color = Color(1, 1, 1, 0.16)
+content_margin_left = 8.0
+content_margin_right = 8.0
+
+[sub_resource type="StyleBoxTexture" id="press"]
+texture = SubResource("line_atlas")
+modulate_color = Color(1, 1, 1, 0.24)
+content_margin_left = 8.0
+content_margin_right = 8.0
+
+[sub_resource type="StyleBoxTexture" id="primary"]
+texture = SubResource("gold_atlas")
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxTexture" id="primary_hover"]
+texture = SubResource("gold_atlas")
+modulate_color = Color(1.08, 1.05, 0.95, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxTexture" id="primary_press"]
+texture = SubResource("gold_atlas")
+modulate_color = Color(0.87, 0.82, 0.7, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="hud"]
+bg_color = Color(0.051, 0.106, 0.09, 0.88)
+border_width_bottom = 1
+border_color = Color(0.78, 0.631, 0.353, 0.45)
+
+[sub_resource type="StyleBoxTexture" id="paper_style"]
+texture = SubResource("paper_atlas")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="progress_bg"]
+bg_color = Color(0.125, 0.224, 0.184, 0.95)
+[sub_resource type="StyleBoxFlat" id="health_fill"]
+bg_color = Color(0.447, 0.714, 0.604, 1)
+[sub_resource type="StyleBoxFlat" id="progress_gold"]
+bg_color = Color(0.78, 0.631, 0.353, 1)
+
+[sub_resource type="StyleBoxFlat" id="hud_hover"]
+bg_color = Color(0.125, 0.224, 0.184, 0.97)
+border_width_bottom = 2
+border_color = Color(0.91, 0.792, 0.514, 1)
+
+[resource]
+default_font = ExtResource("read")
+default_font_size = 18
+Label/colors/font_color = Color(0.933, 0.886, 0.765, 1)
+Button/fonts/font = ExtResource("kai")
+Button/font_sizes/font_size = 22
+Button/colors/font_color = Color(0.933, 0.886, 0.765, 1)
+Button/colors/font_hover_color = Color(0.91, 0.792, 0.514, 1)
+Button/colors/font_focus_color = Color(0.91, 0.792, 0.514, 1)
+Button/colors/font_pressed_color = Color(0.953, 0.91, 0.804, 1)
+Button/colors/font_disabled_color = Color(0.659, 0.682, 0.592, 1)
+Button/constants/outline_size = 0
+Button/styles/normal = SubResource("clear")
+Button/styles/hover = SubResource("wash")
+Button/styles/pressed = SubResource("press")
+Button/styles/hover_pressed = SubResource("press")
+Button/styles/focus = SubResource("wash")
+Button/styles/disabled = SubResource("clear")
+Panel/styles/panel = ExtResource("panel")
+WuxiaTitle/base_type = &"Label"
+WuxiaTitle/fonts/font = ExtResource("kai")
+WuxiaTitle/font_sizes/font_size = 34
+WuxiaPrimary/base_type = &"Button"
+WuxiaPrimary/styles/normal = SubResource("primary")
+WuxiaPrimary/styles/hover = SubResource("primary_hover")
+WuxiaPrimary/styles/pressed = SubResource("primary_press")
+WuxiaPrimary/styles/hover_pressed = SubResource("primary_press")
+WuxiaPrimary/styles/focus = SubResource("primary_hover")
+WuxiaPrimary/colors/font_color = Color(0.051, 0.106, 0.09, 1)
+WuxiaPrimary/colors/font_hover_color = Color(0.051, 0.106, 0.09, 1)
+WuxiaPrimary/colors/font_focus_color = Color(0.051, 0.106, 0.09, 1)
+WuxiaPrimary/colors/font_pressed_color = Color(0.051, 0.106, 0.09, 1)
+WuxiaDanger/base_type = &"Button"
+WuxiaDanger/colors/font_color = Color(0.91, 0.57, 0.43, 1)
+WuxiaDanger/colors/font_focus_color = Color(1, 0.72, 0.53, 1)
+WuxiaDanger/colors/font_hover_color = Color(1, 0.72, 0.53, 1)
+WuxiaHUD/base_type = &"Panel"
+WuxiaHUD/styles/panel = SubResource("hud")
+WuxiaPaper/base_type = &"Panel"
+WuxiaPaper/styles/panel = SubResource("paper_style")
+WuxiaPaperAction/base_type = &"Button"
+WuxiaPaperAction/colors/font_color = Color(0.051, 0.106, 0.09, 1)
+WuxiaPaperAction/colors/font_hover_color = Color(0.29, 0.18, 0.06, 1)
+WuxiaPaperAction/colors/font_focus_color = Color(0.29, 0.18, 0.06, 1)
+WuxiaPaperAction/colors/font_pressed_color = Color(0.29, 0.18, 0.06, 1)
+WuxiaMapStop/base_type = &"Button"
+WuxiaMapStop/styles/normal = SubResource("clear")
+WuxiaMapStop/styles/hover = SubResource("clear")
+WuxiaMapStop/styles/pressed = SubResource("clear")
+WuxiaMapStop/styles/focus = SubResource("clear")
+ProgressBar/styles/background = SubResource("progress_bg")
+ProgressBar/styles/fill = SubResource("health_fill")
+WuxiaNarrativeProgress/base_type = &"ProgressBar"
+WuxiaNarrativeProgress/styles/fill = SubResource("progress_gold")
+WuxiaHUDAction/base_type = &"Button"
+WuxiaHUDAction/styles/normal = SubResource("hud")
+WuxiaHUDAction/styles/hover = SubResource("hud_hover")
+WuxiaHUDAction/styles/focus = SubResource("hud_hover")
+WuxiaHUDAction/styles/pressed = SubResource("hud_hover")
+WuxiaSettingsLabel/base_type = &"Label"
+WuxiaSettingsLabel/fonts/font = ExtResource("kai")
+WuxiaSettingsLabel/font_sizes/font_size = 28
+WuxiaSettingsChoice/base_type = &"Button"
+WuxiaSettingsChoice/font_sizes/font_size = 28
+WuxiaSettingsChoice/colors/font_color = Color(0.659, 0.682, 0.592, 1)
+WuxiaSettingsChoice/colors/font_pressed_color = Color(0.78, 0.631, 0.353, 1)
+WuxiaSettingsChoice/colors/font_hover_pressed_color = Color(0.91, 0.792, 0.514, 1)
+WuxiaSettingsChoice/styles/normal = SubResource("clear")
+WuxiaSettingsChoice/styles/hover = SubResource("clear")
+WuxiaSettingsChoice/styles/pressed = SubResource("clear")
+WuxiaSettingsChoice/styles/hover_pressed = SubResource("clear")
+WuxiaSettingsChoice/styles/focus = SubResource("clear")

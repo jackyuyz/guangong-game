@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/settings_panel.gd" id="script"]
-[ext_resource type="Theme" path="res://themes/wuxia.tres" id="theme"]
+[ext_resource type="Theme" path="res://themes/wuxia-game.tres" id="theme"]
 [ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="reading"]
 [ext_resource type="Texture2D" path="res://assets/ui/wuxia-panel.png" id="panel"]
 [ext_resource type="Texture2D" path="res://assets/main-menu/menu-brush.png" id="line"]
@@ -42,6 +42,7 @@ texture = SubResource("panel_region")
 expand_mode = 1
 
 [node name="Title" type="Label" parent="."]
+theme_type_variation = &"WuxiaTitle"
 layout_mode = 0
 offset_left = 48.0
 offset_top = 24.0
@@ -72,6 +73,7 @@ offset_bottom = 148.0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="Sound"]
+theme_type_variation = &"WuxiaSettingsLabel"
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 44.0
@@ -80,6 +82,7 @@ text = "声音"
 vertical_alignment = 1
 
 [node name="On" type="Button" parent="Sound"]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 300.0
 offset_right = 364.0
@@ -91,6 +94,7 @@ button_pressed = true
 metadata/action = "sound_on"
 
 [node name="Off" type="Button" parent="Sound"]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 372.0
 offset_right = 436.0
@@ -110,6 +114,7 @@ offset_bottom = 204.0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="Motion"]
+theme_type_variation = &"WuxiaSettingsLabel"
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 44.0
@@ -118,6 +123,7 @@ text = "减少动态"
 vertical_alignment = 1
 
 [node name="On" type="Button" parent="Motion"]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 300.0
 offset_right = 364.0
@@ -129,6 +135,7 @@ button_pressed = false
 metadata/action = "motion_on"
 
 [node name="Off" type="Button" parent="Motion"]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 372.0
 offset_right = 436.0
@@ -140,6 +147,7 @@ button_pressed = true
 metadata/action = "motion_off"
 
 [node name="Help" type="Button" parent="."]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 52.0
 offset_top = 216.0
@@ -163,6 +171,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Close" type="Button" parent="."]
+theme_type_variation = &"WuxiaSettingsChoice"
 layout_mode = 0
 offset_left = 280.0
 offset_top = 296.0
@@ -174,6 +183,7 @@ theme_override_colors/font_color = Color(0.051, 0.106, 0.09, 1)
 theme_override_colors/font_hover_color = Color(0.051, 0.106, 0.09, 1)
 theme_override_colors/font_focus_color = Color(0.051, 0.106, 0.09, 1)
 theme_override_colors/font_pressed_color = Color(0.051, 0.106, 0.09, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.051, 0.106, 0.09, 1)
 
 theme_override_font_sizes/font_size = 34
 
