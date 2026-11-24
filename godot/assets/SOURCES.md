@@ -15,7 +15,7 @@
 
 鼠标光标复用青龙偃月刀原图。在 GameUI 场景中逆时针旋转 90 度、缩放为 0.65 倍并对齐刀尖，采用最近邻采样。刀尖朝左上，刀刃朝左下。
 
-背景是完整概念场景，原型仅做少量水平平移，地面纹理取同图的一块区域。尚不是可无缝展开的多层关卡美术。角色图集 `animations/guan-yu-sheet.png`、`animations/guard-sheet.png`、`animations/kong-xiu-sheet.png` 由图像模型参考对应的素材库立绘生成。图集为 1774×887，按 4×2 切片。走路用四帧，攻击用三帧，其余姿态复用图集帧。偃月斩复用关羽攻击帧，刀光、粒子和闪避残影由程序绘制。
+原完整概念背景保留；当前东岭关使用可编辑分层场景、连续水平道路与独立终点关口。原图复制、三张派生纹理、完整提示与来源见 [东岭关分层素材](dongling-layers/SOURCES.md)。角色图集 `animations/guan-yu-sheet.png`、`animations/guard-sheet.png`、`animations/kong-xiu-sheet.png` 由图像模型参考对应的素材库立绘生成。图集为 1774×887，按 4×2 切片。走路用四帧，攻击用三帧，其余姿态复用图集帧。偃月斩复用关羽攻击帧，刀光、粒子和闪避残影由程序绘制。
 
 `demo-font.ttf` 是 Noto Sans SC Regular 的字符子集，来源于 [Google Fonts](https://github.com/google/fonts/tree/main/ofl/notosanssc)，遵循同目录 `FONT-LICENSE.txt` 中的 SIL Open Font License。修改/添加中文文本后需重新生成字符子集。界面精简版已补齐运行字形；从完整可变字体实例化为 Regular 400 后再取子集，保持原有常规字重。
 

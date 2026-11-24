@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-24",
+  "reference": "docs/art/combat-concepts-2026-11-24/02-cinnabar-brush.png",
+  "tool": "built-in image_gen.imagegen",
+  "assets": [
+    {
+      "tool": "built-in image_gen.imagegen",
+      "date": "2026-11-24",
+      "reference": "docs/art/combat-concepts-2026-11-24/02-cinnabar-brush.png",
+      "source_generation": "/Users/yuyuanzhengjack/.codex/generated_images/01a20eee-d209-7622-85e5-ec2b966035d3/exec-cd364e35-2eee-4e98-88a5-f556addff65e.png",
+      "asset": "godot/assets/ui/combat-jade-medallion.png",
+      "intended_display": "62x62 logical pixels; native editable glyph added separately by parent",
+      "transparent_background": true,
+      "prompt": "Use case: ui-mockup, isolated production raster asset.\nInput image: attached selected combat UI concept is STYLE REFERENCE ONLY. Recreate just the dark jade circular medallion at its upper-left corner, removing the central Chinese glyph entirely.\nPrimary request: ONE perfectly front-facing circular dark jade carved medallion on a genuinely transparent canvas. No other elements. Square canvas with disk centered and filling about 90% of width; balanced transparent padding. Intended display size is only 62x62 logical pixels in a Godot wuxia game HUD, so use a strong readable silhouette and uncluttered shallow carving.\nMaterials: deep desaturated jade stone #20392F, near-black green central field #0D1B17. Restrained traditional cloud/leaf shallow carving on the annular rim, a thin aged-gold outer edge #C7A15A with tiny worn breaks. Elegant and mature, not shiny plastic, no neon. A single ring border and broad EMPTY smooth dark-green center for later editable Chinese text in-engine.\nConstraints: NO text, NO glyph, NO 关, no letters, no numbers, no dragons or animal heads, no dangling tassels or jewelry attachments, no perspective or tilt, no scenery, no health bars, no drop shadow outside the disk, no background pattern. Only the medallion disk is opaque; all surrounding canvas must have true alpha transparency. Do not bake checkerboard into the image."
+    },
+    {
+      "tool": "built-in image_gen.imagegen",
+      "reference": "docs/art/combat-concepts-2026-11-24/02-cinnabar-brush.png",
+      "prompt": "Use case: ui-mockup / game UI asset extraction recreation.\nInput image: the attached Dongling Pass game concept is a style and proportion reference ONLY. Recreate ONLY the very thin horizontal aged-gold boss health-bar frame at the bottom of that reference as a separate production asset.\nOutput: one long horizontal hollow frame, perfectly straight-on and centered, isolated on a TRUE transparent background. Prefer a wide 3:1 transparent canvas, with the thin strip centered vertically and generous empty transparent space above and below. The visible strip itself must have an aspect ratio around 24:1, suitable to display at 500 by 20 logical pixels. The strip should occupy almost all canvas width with transparent margin at left/right.\nDesign: muted old-gold metal, fine understated outline forming a long empty rectangular health-bar trough, two matching small geometric spearhead endpoints pointing outward, tiny traditional joint detail where spearheads meet the trough, hand-finished texture like the reference. The interior of the trough is fully transparent and EMPTY, so a game engine can put its own fill behind it. Outer background is fully transparent as well. Continuous straight thin top and bottom gold rules, no perspective, no curved shield, no heavy shadows, no glow, no opaque backing.\nDo not include any life fill, no white/yellow/red progress stroke, no characters, no letters, no text, no symbols inside the trough, no title, no labels, no decorative panels, no scenery, no watermark. This is exactly one UI frame, not a sheet of alternatives. Maintain subtly textured aged-gold edges but high contrast and crisp silhouette when shrunk.",
+      "source_generation": "/Users/yuyuanzhengjack/.codex/generated_images/01a20eee-ee62-7922-bb19-acad5852ac44/exec-15eb691e-b1a8-4113-b105-7453fee937e5.png",
+      "asset": "godot/assets/ui/combat-boss-frame.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "alpha": "RGBA; center and exterior transparent",
+      "recommended_atlas_region": [
+        48,
+        324,
+        2077,
+        70
+      ],
+      "visible_alpha_over_32_bounds": [
+        51,
+        328,
+        2121,
+        390
+      ],
+      "recommended_display": [
+        500,
+        17
+      ],
+      "note": "Use AtlasTexture region to remove empty transparent canvas; sparse very-low-alpha artifacts exist outside region, preserved in original. No alpha post-processing or source edits."
+    },
+    {
+      "tool": "built-in image_gen.imagegen",
+      "source": "/Users/yuyuanzhengjack/.codex/generated_images/01a20eef-8d00-7951-9882-8a2bc158f8af/exec-18982c72-7121-4d82-8406-43a755c252f5.png",
+      "output": "/Users/yuyuanzhengjack/Developments/GitHub_Repos/guangong-game/godot/assets/ui/combat-qi-diamond.png",
+      "reference": "docs/art/combat-concepts-2026-11-24/02-cinnabar-brush.png",
+      "canvas": [
+        1254,
+        1254
+      ],
+      "occupied_alpha_bounds": [
+        33,
+        22,
+        1224,
+        1230
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "prompt": "Use case: ui-mockup asset. Generate exactly ONE isolated small game HUD resource marker: a simple old-gold diamond/rhombus, flat front-facing, four equal straight sides with a point at top, right, bottom, left. Warm muted aged gold #D9B96D, very subtle beaten-gold metal texture and a fine brighter top edge, clear filled silhouette at tiny 13x13 display size. Reference image is style inspiration only, specifically its four gold diamond resource pips beneath the red health stroke. Do not reproduce any of the screenshot or scene. Plain one diamond centered, modest padding. Absolutely no jewel faceting, no star, no sparkle, no rays, no words, no border panel or shadow. TRUE transparent background outside the diamond. Output square raster PNG with alpha, not a checkerboard painted into the image.",
+      "note": "Original generated PNG copied unchanged; no pixel edits.",
+      "occupied_alpha_bounds_above_32": [
+        363,
+        360,
+        891,
+        893
+      ],
+      "occupied_alpha_bounds_above_128": [
+        363,
+        361,
+        890,
+        893
+      ]
+    },
+    {
+      "tool": "built-in image_gen.imagegen",
+      "date": "2026-11-24",
+      "reference": "docs/art/combat-concepts-2026-11-24/02-cinnabar-brush.png",
+      "source_generation": "/Users/yuyuanzhengjack/.codex/generated_images/01a20eee-d209-7622-85e5-ec2b966035d3/exec-bb0d8414-8e04-46e2-a9e1-2d9bcf7470e1.png",
+      "asset": "godot/assets/ui/combat-ink-wash.png",
+      "intended_display": "330x95 logical pixels, full image",
+      "transparent_background": true,
+      "prompt": "Use case: ui-mockup, isolated production raster texture.\nInput image: attached selected Chinese wuxia combat HUD concept is STYLE REFERENCE ONLY; inspect the quiet dark local contrast wash behind the top-left health/name/medallion group. Produce only a new EMPTY contrast-scrim texture, not a game screen or complete HUD.\nPrimary request: a very soft feathered deep ink-green wash on true transparent background, one wide horizontally oval shape, appropriate for a subdued local HUD backdrop. Wide 3:1 composition. Intended display about330x95 logical pixels. Shape fills about90% of canvas width and75% of height with a generous soft fade to complete transparency at all edges.\nColor and material: nearly black desaturated green #0D1B17, darkest and most opaque toward left-center; gently becomes less opaque toward right and every outside edge. Flat dilute sumi ink wash, smooth very low-detail surface, no readable texture at small size. Soft organically irregular boundary only visible as an opacity gradient; quiet and restrained.\nConstraints: no hard rectangle, no frame, no straight edges, no brush streaks, no scratchy hairs, no dramatic smoky tendrils, no clouds in the sky, no glows, no gold, no words, no letters, no glyphs, no symbols, no icons, no medallion, no life bars. All surrounding canvas true alpha transparency, no baked checkerboard, no opaque white or black background. The texture will sit over an existing detailed scene purely to improve text contrast."
+    }
+  ],
+  "source_art_policy": "Existing character sprites, animation atlases and level source artwork kept unchanged. Only HUD art generated."
+}

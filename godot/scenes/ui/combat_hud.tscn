@@ -1,0 +1,663 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat_hud.gd" id="script"]
+
+[ext_resource type="Theme" path="res://themes/wuxia-game.tres" id="theme"]
+
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="kai"]
+
+[ext_resource type="Texture2D" path="res://assets/main-menu/menu-brush.png" id="brush"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/wuxia-primary-brush.png" id="wash"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/combat-jade-medallion.png" id="medallion"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/combat-qi-diamond.png" id="diamond"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/combat-boss-frame.png" id="frame"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/combat-ink-wash.png" id="ink_wash"]
+
+[sub_resource type="AtlasTexture" id="brush"]
+atlas = ExtResource("brush")
+region = Rect2(120, 270, 1940, 180)
+
+[sub_resource type="AtlasTexture" id="wash"]
+atlas = ExtResource("wash")
+region = Rect2(85, 100, 2000, 540)
+
+[sub_resource type="AtlasTexture" id="frame"]
+atlas = ExtResource("frame")
+region = Rect2(48, 324, 2077, 70)
+
+[sub_resource type="AtlasTexture" id="diamond"]
+atlas = ExtResource("diamond")
+region = Rect2(355, 352, 544, 549)
+
+[sub_resource type="StyleBoxFlat" id="keycap"]
+bg_color = Color(0.933, 0.886, 0.765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.68, 0.53, 0.29, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+
+[node name="HUD" type="Control"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+script = ExtResource("script")
+theme = ExtResource("theme")
+
+[node name="TitleInk" type="TextureRect" parent="."]
+offset_left = 353.0
+offset_top = -1.0
+offset_right = 607.0
+offset_bottom = 70.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.88)
+
+[node name="UtilityInk" type="TextureRect" parent="."]
+offset_left = 728.0
+offset_top = -2.0
+offset_right = 962.0
+offset_bottom = 66.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.94)
+
+[node name="Health" type="Control" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 334.0
+offset_bottom = 86.0
+mouse_filter = 2
+
+[node name="Ink" type="TextureRect" parent="Health"]
+layout_mode = 0
+offset_left = -13.0
+offset_top = -2.0
+offset_right = 324.0
+offset_bottom = 83.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.88)
+
+[node name="Medallion" type="TextureRect" parent="Health"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 0.0
+offset_right = 64.0
+offset_bottom = 66.0
+mouse_filter = 2
+texture = ExtResource("medallion")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Glyph" type="Label" parent="Health"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 12.0
+offset_right = 52.0
+offset_bottom = 54.0
+mouse_filter = 2
+text = "关"
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+horizontal_alignment = 1
+theme_override_constants/outline_size = 0
+
+[node name="Name" type="Label" parent="Health"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = -3.0
+offset_right = 155.0
+offset_bottom = 33.0
+mouse_filter = 2
+text = "关羽"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+
+[node name="Rule" type="TextureRect" parent="Health"]
+layout_mode = 0
+offset_left = 145.0
+offset_top = 26.0
+offset_right = 305.0
+offset_bottom = 27.2
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Under" type="TextureProgressBar" parent="Health"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 38.0
+offset_right = 308.0
+offset_bottom = 56.0
+mouse_filter = 2
+max_value = 6.0
+value = 6.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(0.035, 0.061, 0.05, 1)
+
+[node name="Trail" type="TextureProgressBar" parent="Health"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 38.0
+offset_right = 308.0
+offset_bottom = 56.0
+mouse_filter = 2
+max_value = 6.0
+value = 6.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(0.92, 0.72, 0.38, 0.8)
+
+[node name="HP" type="TextureProgressBar" parent="Health"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 38.0
+offset_right = 308.0
+offset_bottom = 56.0
+mouse_filter = 2
+max_value = 6.0
+value = 6.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(0.88, 0.21, 0.14, 1)
+
+[node name="LowHealth" type="Label" parent="Health"]
+layout_mode = 0
+offset_left = 318.0
+offset_top = 35.0
+offset_right = 408.0
+offset_bottom = 59.0
+mouse_filter = 2
+text = "气血不足"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+visible = false
+theme_override_colors/font_color = Color(0.98, 0.74, 0.55, 1)
+
+[node name="Extensions" type="Control" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 76.0
+offset_right = 314.0
+offset_bottom = 103.0
+mouse_filter = 2
+
+[node name="Ink" type="TextureRect" parent="Extensions"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = -10.0
+offset_right = 245.0
+offset_bottom = 37.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.9)
+
+[node name="Pips" type="Control" parent="Extensions"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 92.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Pip1" type="TextureRect" parent="Extensions/Pips"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 4.0
+offset_right = 13.0
+offset_bottom = 17.0
+mouse_filter = 2
+texture = SubResource("diamond")
+expand_mode = 1
+texture_filter = 2
+self_modulate = Color(0.91, 0.79, 0.51, 1)
+
+[node name="Pip2" type="TextureRect" parent="Extensions/Pips"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 4.0
+offset_right = 31.0
+offset_bottom = 17.0
+mouse_filter = 2
+texture = SubResource("diamond")
+expand_mode = 1
+texture_filter = 2
+self_modulate = Color(0.91, 0.79, 0.51, 1)
+
+[node name="Pip3" type="TextureRect" parent="Extensions/Pips"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 4.0
+offset_right = 49.0
+offset_bottom = 17.0
+mouse_filter = 2
+texture = SubResource("diamond")
+expand_mode = 1
+texture_filter = 2
+self_modulate = Color(0.91, 0.79, 0.51, 1)
+
+[node name="Pip4" type="TextureRect" parent="Extensions/Pips"]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 4.0
+offset_right = 67.0
+offset_bottom = 17.0
+mouse_filter = 2
+texture = SubResource("diamond")
+expand_mode = 1
+texture_filter = 2
+self_modulate = Color(0.91, 0.79, 0.51, 1)
+
+[node name="Skill" type="Control" parent="Extensions"]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 0.0
+offset_right = 225.0
+offset_bottom = 25.0
+mouse_filter = 2
+
+[node name="Key" type="Panel" parent="Extensions/Skill"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 25.0
+offset_bottom = 25.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("keycap")
+
+[node name="Label" type="Label" parent="Extensions/Skill/Key"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = -1.0
+offset_right = 25.0
+offset_bottom = 25.0
+mouse_filter = 2
+text = "L"
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+horizontal_alignment = 1
+theme_override_constants/outline_size = 0
+theme_override_colors/font_color = Color(0.05, 0.106, 0.09, 1)
+
+[node name="Name" type="Label" parent="Extensions/Skill"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = -3.0
+offset_right = 130.0
+offset_bottom = 27.0
+mouse_filter = 2
+text = "偃月斩"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+
+[node name="Ready" type="TextureRect" parent="Extensions/Skill"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 26.0
+offset_right = 126.0
+offset_bottom = 28.0
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 16.0
+offset_right = 570.0
+offset_bottom = 56.0
+mouse_filter = 2
+text = "东岭关"
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+horizontal_alignment = 1
+
+[node name="TitleLeft" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 365.0
+offset_top = 37.0
+offset_right = 391.0
+offset_bottom = 38.5
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="TitleRight" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 568.0
+offset_top = 37.0
+offset_right = 594.0
+offset_bottom = 38.5
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Help" type="Button" parent="."]
+layout_mode = 0
+offset_left = 750.0
+offset_top = 17.0
+offset_right = 810.0
+offset_bottom = 48.0
+text = "操作"
+focus_mode = 0
+theme_override_font_sizes/font_size = 19
+metadata/action = "help"
+theme_override_fonts/font = ExtResource("kai")
+
+[node name="Mute" type="Button" parent="."]
+layout_mode = 0
+offset_left = 815.0
+offset_top = 17.0
+offset_right = 875.0
+offset_bottom = 48.0
+text = "静音"
+focus_mode = 0
+theme_override_font_sizes/font_size = 19
+metadata/action = "mute"
+theme_override_fonts/font = ExtResource("kai")
+
+[node name="Pause" type="Button" parent="."]
+layout_mode = 0
+offset_left = 880.0
+offset_top = 17.0
+offset_right = 940.0
+offset_bottom = 48.0
+text = "暂停"
+focus_mode = 0
+theme_override_font_sizes/font_size = 19
+metadata/action = "pause_click"
+theme_override_fonts/font = ExtResource("kai")
+
+[node name="UtilityRule1" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 811.0
+offset_top = 23.0
+offset_right = 812.0
+offset_bottom = 42.0
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="UtilityRule2" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 876.0
+offset_top = 23.0
+offset_right = 877.0
+offset_bottom = 42.0
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+
+[node name="ObjectivePanel" type="Control" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 116.0
+offset_right = 322.0
+offset_bottom = 146.0
+mouse_filter = 2
+
+[node name="Objective" type="Label" parent="ObjectivePanel"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 298.0
+offset_bottom = 28.0
+mouse_filter = 2
+text = "前往旗标"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+
+[node name="BossHealth" type="Control" parent="."]
+layout_mode = 0
+offset_left = 230.0
+offset_top = 472.0
+offset_right = 730.0
+offset_bottom = 525.0
+mouse_filter = 2
+visible = false
+
+[node name="Ink" type="TextureRect" parent="BossHealth"]
+layout_mode = 0
+offset_left = -40.0
+offset_top = -7.0
+offset_right = 540.0
+offset_bottom = 60.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.88)
+
+[node name="Name" type="Label" parent="BossHealth"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 0.0
+offset_right = 430.0
+offset_bottom = 30.0
+mouse_filter = 2
+text = "孔秀 · 东岭守将"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+horizontal_alignment = 1
+
+[node name="Phase" type="Label" parent="BossHealth"]
+layout_mode = 0
+offset_left = 414.0
+offset_top = 3.0
+offset_right = 474.0
+offset_bottom = 28.0
+mouse_filter = 2
+text = "奋战"
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("kai")
+visible = false
+theme_override_colors/font_color = Color(0.91, 0.79, 0.51, 1)
+
+[node name="Under" type="TextureProgressBar" parent="BossHealth"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 36.0
+offset_right = 458.0
+offset_bottom = 43.0
+mouse_filter = 2
+max_value = 16.0
+value = 16.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(0.04, 0.07, 0.055, 1)
+
+[node name="Trail" type="TextureProgressBar" parent="BossHealth"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 36.0
+offset_right = 458.0
+offset_bottom = 43.0
+mouse_filter = 2
+max_value = 16.0
+value = 16.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(0.75, 0.46, 0.25, 1)
+
+[node name="HP" type="TextureProgressBar" parent="BossHealth"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 36.0
+offset_right = 458.0
+offset_bottom = 43.0
+mouse_filter = 2
+max_value = 16.0
+value = 16.0
+step = 0.0
+nine_patch_stretch = true
+texture_filter = 2
+texture_progress = SubResource("wash")
+tint_progress = Color(1, 0.97, 0.78, 1)
+
+[node name="Frame" type="TextureRect" parent="BossHealth"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 31.0
+offset_right = 500.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = SubResource("frame")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Message" type="Control" parent="."]
+layout_mode = 0
+offset_left = 255.0
+offset_top = 128.0
+offset_right = 705.0
+offset_bottom = 168.0
+mouse_filter = 2
+visible = false
+
+[node name="Ink" type="TextureRect" parent="Message"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = -2.0
+offset_right = 460.0
+offset_bottom = 38.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(1, 1, 1, 0.92)
+
+[node name="Text" type="Label" parent="Message"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 450.0
+offset_bottom = 36.0
+mouse_filter = 2
+text = ""
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Controls" type="Control" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+
+[node name="Backdrop" type="TextureRect" parent="Controls"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 490.0
+offset_right = 356.0
+offset_bottom = 532.0
+mouse_filter = 2
+texture = SubResource("wash")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(0.012, 0.026, 0.022, 0.85)
+
+[node name="Keys" type="Label" parent="Controls"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 494.0
+offset_right = 352.0
+offset_bottom = 529.0
+mouse_filter = 2
+text = "A / D  移动"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+
+[node name="Dodge" type="Label" parent="Controls"]
+layout_mode = 0
+offset_left = 365.0
+offset_top = 82.0
+offset_right = 525.0
+offset_bottom = 107.0
+mouse_filter = 2
+text = "SPACE  冷却"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 1
+vertical_alignment = 1
+visible = false

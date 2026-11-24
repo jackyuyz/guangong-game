@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/attack_telegraph.gd" id="script"]
+
+[node name="Telegraph" type="Node2D"]
+script = ExtResource("script")
+
+[node name="Sweep" type="Node2D" parent="."]
+
+[node name="Fill" type="Polygon2D" parent="Sweep"]
+polygon = PackedVector2Array(0, 0, 178, -17, 186, -12, 190, -5, 190, 2, 185, 9, 176, 13)
+color = Color(0.93, 0.58, 0.22, 0.16)
+
+[node name="Outline" type="Line2D" parent="Sweep"]
+points = PackedVector2Array(0, 0, 178, -17, 186, -12, 190, -5, 190, 2, 185, 9, 176, 13, 0, 0)
+width = 1.5
+default_color = Color(1, 0.76, 0.36, 0.95)
+antialiased = true
+
+[node name="Thrust" type="Node2D" parent="."]
+visible = false
+
+[node name="Fill" type="Polygon2D" parent="Thrust"]
+polygon = PackedVector2Array(0, -3, 178, -3, 190, 0, 178, 3, 0, 3)
+color = Color(0.93, 0.58, 0.22, 0.2)
+
+[node name="Outline" type="Line2D" parent="Thrust"]
+points = PackedVector2Array(0, -3, 178, -3, 190, 0, 178, 3, 0, 3)
+width = 1.5
+default_color = Color(1, 0.76, 0.36, 0.95)
+antialiased = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/actor_view.gd" id="e1"]
 
@@ -7,6 +7,8 @@
 [ext_resource type="FontFile" path="res://assets/ui/wuxia-reading-font.ttf" id="e3"]
 
 [ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="sprite_shader"]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/attack_telegraph.tscn" id="telegraph"]
 
 [sub_resource type="StyleBoxFlat" id="s1"]
 bg_color = Color(0.15, 0.18, 0.16, 1)
@@ -82,25 +84,24 @@ animation = &"idle"
 [node name="WeaponOrigin" type="Marker2D" parent="."]
 position = Vector2(30, -63)
 
-[node name="Telegraph" type="ColorRect" parent="."]
+[node name="Telegraph" parent="." instance=ExtResource("telegraph")]
 visible = false
-offset_left = -120.0
-offset_top = -8.0
-offset_bottom = 0.0
-mouse_filter = 2
-color = Color(0.9, 0.45, 0.25, 0.5)
+position = Vector2(0, -5)
 
 [node name="AttackHint" type="Label" parent="."]
 visible = false
-offset_left = -48.0
-offset_right = 90.0
-offset_top = -165.0
-offset_bottom = -120.0
+offset_left = 56.0
+offset_right = 146.0
+offset_top = -54.0
+offset_bottom = -26.0
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("e3")
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.87, 0.74, 0.46, 1)
-text = "!  突刺"
+text = "突刺"
+
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 1)
+theme_override_constants/outline_size = 2
 
 [node name="Health" type="ProgressBar" parent="."]
 visible = false

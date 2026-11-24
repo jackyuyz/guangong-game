@@ -97,8 +97,6 @@ func _dialog_buttons(panel: Control) -> Array[Button]:
 			result.append(button)
 	return result
 
-const OBJECTIVES = ["前往旗标", "练习挥刀", "练习闪避", "击退第一阵守军", "清除守军，前往关门", "关前对话", "击败孔秀", "关门已开"]
-
 func _ready() -> void:
 	for button in $Root.find_children("*", "Button", true, false):
 		button.focus_mode = Control.FOCUS_NONE if $Root/HUD.is_ancestor_of(button) else Control.FOCUS_ALL
@@ -118,24 +116,7 @@ func present(game: Node) -> void:
 	$Root/Defeat.visible = game.state == "dead"
 	$Root/Victory.visible = game.state == "victory"
 	$Root/Culture.visible = game.show_culture and game.state in ["menu", "victory"] and game.utility_panel.is_empty()
-	$Root/HUD/Health/HP.value = game.hp
-	$Root/HUD/Extensions.visible = game.phase >= 3 and game.phase < 7
-	$Root/HUD/Extensions.text = "义气 %d/%d   L 偃月斩%s" % [game.ext.resource, game.ext.RESOURCE_MAX, " · 就绪" if game.ext.heavy_ready() else ""]
-	if game.ext.can_rest(game): $Root/HUD/Extensions.text += "   E 歇脚"
-	$Root/HUD/Controls/Backdrop.visible = game.phase < 3
-	$Root/HUD/Controls/Keys.visible = game.phase < 3
-	$Root/HUD/Controls/Keys.text = ["A / D  移动", "J  挥刀，连按三段", "SPACE  闪避"][mini(game.phase, 2)]
-	$Root/HUD/ObjectivePanel/Objective.text = "◆  " + OBJECTIVES[game.phase]
-	$Root/HUD/Message.visible = game.message_time > 0 and game.phase >= 3
-	$Root/HUD/Message/Text.text = game.message
-	$Root/HUD/Controls/Dodge.visible = game.dodge_cooldown > 0
-	$Root/HUD/Controls/Dodge.text = "闪避冷却…"
-	$Root/HUD/Mute.text = "开声" if game.muted else "静音"
-	$Root/HUD/BossHealth.visible = game.phase == 6 and not game.enemies.is_empty()
-	if $Root/HUD/BossHealth.visible:
-		var boss: Dictionary = game.enemies[0]
-		$Root/HUD/BossHealth/Name.text = "孔秀" + ("  ·  奋战" if boss.hp <= 8 else "  ·  东岭守将")
-		$Root/HUD/BossHealth/HP.value = boss.hp
+	$Root/HUD.present(game)
 	$Root/Utility.visible = not game.utility_panel.is_empty()
 	var helping: bool = game.utility_panel == "help"
 	$Root/Utility/Body.visible = helping

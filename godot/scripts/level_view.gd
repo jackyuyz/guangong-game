@@ -1,5 +1,6 @@
 extends Node2D
 ## Scene-authored transforms are captured once, then used as spawn positions.
+@export_range(0.0, 1.0) var distant_scroll_ratio: float = 0.2
 @onready var player: Node2D = $Ground/Player
 @onready var player_origin = to_local(player.global_position)
 @onready var boss: Node2D = $Ground/Boss
@@ -38,7 +39,8 @@ func present(game: Node) -> void:
 	$Ground.visible = game.state not in ["menu", "map", "prologue"] and not (game.state in ["pause", "confirm"] and game.resume_state == "prologue")
 	$Camera.position.x = game.camera_x + 480
 	$Camera.offset.x = camera_offset.x + (0.0 if game.reduced_motion else sin(game.clock * 65) * game.shake)
-	$Backdrop.position.x = backdrop_origin.x + (game.camera_x - world_left) * 0.92
+	# Only distant scenery has parallax. Road, architecture and props share world coordinates.
+	$Backdrop.position.x = backdrop_origin.x + (game.camera_x - world_left) * (1.0 - distant_scroll_ratio)
 	$Ground/Training/Flag.visible = game.phase <= 1
 	$Ground/Training/Dummy.visible = game.phase <= 2
 	$Ground/Companions.visible = game.camera_x < world_left + 350

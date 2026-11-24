@@ -7,6 +7,7 @@ extends Node2D
 @onready var rest_y = visual.position.y
 @onready var animation_speed = sprite.speed_scale
 @onready var rest_tint = sprite.modulate
+@onready var hint_origin: Vector2 = $AttackHint.position if has_node("AttackHint") else Vector2.ZERO
 
 func pose(direction: float, tint: Color = Color.WHITE, tilt: float = 0.0, bob: float = 0.0) -> void:
 	sprite.flip_h = direction != native_facing
@@ -23,10 +24,10 @@ func present_enemy(enemy: Dictionary, player_x: float, frozen: bool) -> void:
 	$Health.max_value = enemy.max_hp
 	$Health.value = enemy.hp
 	var reach = 190.0 if enemy.boss else 120.0
-	$Telegraph.size.x = reach
-	$Telegraph.position.x = 0 if enemy.facing > 0 else -reach
-	$Telegraph.color.a = 0.5 if windup else 0.85
-	$AttackHint.text = "!  横扫" if enemy.boss and enemy.move % 2 == 0 else "!  突刺"
+	var sweep: bool = enemy.boss and enemy.move % 2 == 0
+	$Telegraph.present(enemy.facing, reach, sweep, enemy.mode == "strike")
+	$AttackHint.text = "横扫" if sweep else "突刺"
+	$AttackHint.position.x = hint_origin.x if enemy.facing < 0 else -hint_origin.x - $AttackHint.size.x
 	var tint = Color(1.8, 1.4, 0.9) if enemy.flash > 0 else Color.WHITE
 	pose(enemy.facing, tint, -enemy.facing * 0.13 if windup else 0.0)
 	var motion = "idle"

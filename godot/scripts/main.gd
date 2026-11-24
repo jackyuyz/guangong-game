@@ -599,6 +599,8 @@ func _update_enemy(e: Dictionary, dt: float) -> void:
 			elif e.timer <= 0:
 				e.mode = "approach"
 				e.timer = 0.2
+	# Lunges and knockback share the same authored road limits as the player.
+	e.x = _clamp_player_x(e.x)
 
 func _clamp_player_x(position_x: float) -> float:
 	var left: float = level.world_left + 65 if phase < 6 else level.arena_min_x
