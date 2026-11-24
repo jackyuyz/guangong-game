@@ -1,16 +1,14 @@
-[gd_resource type="StyleBoxTexture" load_steps=3 format=3]
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://csm67aaxujurq"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/wuxia-panel.png" id="panel"]
+[ext_resource type="Texture2D" uid="uid://bb3om3f5ed2qd" path="res://assets/ui/wuxia-panel.png" id="panel"]
+
 [sub_resource type="AtlasTexture" id="atlas"]
 atlas = ExtResource("panel")
 region = Rect2(14, 13, 1456, 1035)
+
 [resource]
-texture = SubResource("atlas")
-texture_margin_left = 0.0
-texture_margin_top = 0.0
-texture_margin_right = 0.0
-texture_margin_bottom = 0.0
 content_margin_left = 24.0
 content_margin_top = 24.0
 content_margin_right = 24.0
 content_margin_bottom = 24.0
+texture = SubResource("atlas")
