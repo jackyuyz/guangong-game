@@ -9,6 +9,7 @@ extends Node2D
 @onready var wave_retry_origin = to_local($Ground/WaveRetrySpawn.global_position)
 @onready var flag_origin = to_local($Ground/Training/Flag.global_position)
 @onready var dummy_origin = to_local($Ground/Training/Dummy.global_position)
+@onready var dummy_hit_origin = to_local($Ground/Training/Dummy/HitOrigin.global_position)
 @onready var rest_origin = to_local($Ground/RestPoint.global_position)
 @onready var gate_x: float = to_local($Ground/GateTrigger.global_position).x
 @onready var arena_min_x: float = to_local($Ground/ArenaLeft.global_position).x
@@ -41,8 +42,9 @@ func present(game: Node) -> void:
 	$Camera.offset.x = camera_offset.x + (0.0 if game.reduced_motion else sin(game.clock * 65) * game.shake)
 	# Only distant scenery has parallax. Road, architecture and props share world coordinates.
 	$Backdrop.position.x = backdrop_origin.x + (game.camera_x - world_left) * (1.0 - distant_scroll_ratio)
-	$Ground/Training/Flag.visible = game.phase <= 1
-	$Ground/Training/Dummy.visible = game.phase <= 2
+	$Ground/Training/Flag.visible = true
+	$Ground/Training/Dummy.visible = true
+	$Ground/Training/Dummy.present(game)
 	$Ground/Companions.visible = game.camera_x < world_left + 350
 	var effective_state: String = game.resume_state if game.state in ["pause", "confirm"] else game.state
 	$Ground/RetreatGuards.visible = game.phase == 7 and effective_state != "finishing"

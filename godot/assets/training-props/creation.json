@@ -1,0 +1,26 @@
+{
+  "generator": "OpenAI imagegen",
+  "date": "2026-11-24",
+  "images": [
+    {
+      "file": "training-post-states.png",
+      "refs": [
+        "godot/assets/animations/guan-yu-sheet.png"
+      ],
+      "prompt": "Asset: production pixel art game PROP spritesheet, transparent PNG. Reference image is ONLY STYLE/SCALE reference for chunky pixel rendering, no character should appear. Create exactly THREE equal SQUARE cells in ONE horizontal row, total1536x512 preferred (3:1 ratio). A grounded ancient Chinese martial training cutting target made of a thick bundle of golden dry STRAW wrapped in hemp rope, mounted chest-height on a rough dark wooden upright stake with a low wide cross foot and small stones. NOT humanoid, NOT a modern archery bullseye. A small faded cinnabar-red cloth knot at the front gives an aim point. Earthy honey straw, dark wood, frayed fiber, thick dark pixel outlines and crisp shaded pixels like reference game sprites. Target about360px high, lower foot baseliney460 in all512px cells, xcenter256. Same orthographic side-view camera and SAME scale, stake and base EXACTLY aligned across all three cells. Cell1 intact: neat upright oval cylindrical thick straw bundle, tightly bound, clear red knot at middle. Cell2 FIRST sword strike: one deep diagonal slash splitting straw surface, one rope cut and loose ends, bundle visibly skewed and fraying but still standing on SAME base. Cell3 SECOND strike destroyed: top bundle and rope completely severed and fallen in two chunks on ground beside stake, low splintered stump remains with exposed diagonal cut, scattered straw and broken rope on ground. Clear 0/1/2 damage progression, destroyed totalheight under200px. Preserve wooden foot in SAME place through cells; debris stays inside own cell. All contents inside cells with24px margins, no crop or crossing cells. Background ACTUALLY transparent zero alpha. NO scenery, no ground plane, cast shadow, typography, labels, grid, human, faces, weapons, blood or UI. Only these three isolated prop states."
+    },
+    {
+      "file": "training-waymark.png",
+      "refs": [
+        "assets/art/chapters/01-dongling-pass/environment/military-banner.png",
+        "godot/assets/animations/guan-yu-sheet.png"
+      ],
+      "prompt": "Generate one transparent PNG GAME PROP: a modest rustic roadside waymark flag for a Chinese pixel art Guan Yu side-scrolling game. Image1 reference is only Chinese weathered wood/brass/cinnabar cloth material design, image2 reference is pixel art rendering style. Make this a SIMPLE SHORT outdoor PRACTICE FLAG, not monumental architecture. Orthographic side view with slight visible wood thickness, rough dark wood pole bound by two hemp ropes, tiny dull bronze finial, faded red cloth pennant extending to RIGHT in a natural gentle wind with fabric folds and a subtly frayed lower corner. NO painted text or insignia. A small rock-supported wooden foot grounds it naturally. Detailed crisp chunky pixel art, thick dark edges like character sheet, limited earthy warm palette, no photorealistic smooth rendering. Isolated fully visible object centered in square1024x1024 canvas; object fromy90to920 baseline, about480px wide, fullpole and fabric fit generousmargins. Background genuine zero-alpha TRANSPARENT, no white fill, glow, backdrop, grass, landscape, shadows, scene, grid or words. Keep grounded, plausible and readable at120px high in game."
+    }
+  ],
+  "cleanup": {
+    "target": "training-post-states.png",
+    "prompt": "Edit this THREE-stage pixel art straw cutting target sheet. Keep the actual straw targets and wooden stands EXACTLY the same in every cell: same positions, scale, colors, damage shapes, 3 equal square cells in one row. Change ONLY background and edges: REMOVE every white/grey patch, colored halo, stray speckle, semi-transparent background noise, ground shadow and matte surrounding the objects. Outside the three prop silhouettes must be actual ZERO ALPHA TRANSPARENT, absolutely no white fill or checkerboard. Preserve opaque straw, rope, wood, red cloth and stones. Clean crisp pixel edges, no glow fringe. Maintain2172x724pixels and3:1aspect. Preserve complete first state, slashed second state and broken stump/debris third state; do not recenter/rescale any cell or shift foot baselines. Output a genuinely transparent production PNG spritesheet without text/grid/scenery."
+  },
+  "notes": "New derived training props; source character and environment artwork preserved. Cleanup removes background artifacts; runtime uses the existing pixel cutout shader."
+}

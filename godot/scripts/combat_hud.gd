@@ -39,6 +39,8 @@ func present(game: Node) -> void:
 	$Controls/Backdrop.visible = game.phase < 3
 	$Controls/Keys.visible = game.phase < 3
 	$Controls/Keys.text = ["A / D  移动", "J  挥刀，连按三段", "SPACE  闪避"][mini(game.phase, 2)]
+	if game.phase == 1:
+		$Controls/Keys.text = "J  练习挥刀 · %d / 2" % clampi(int(game.get_meta("dummy_hits", 0)), 0, 2)
 	$Controls/Dodge.visible = game.dodge_cooldown > 0.0
 	$Mute.text = "开声" if game.muted else "静音"
 	# Entry narration is already communicated by the boss name. Event/error messages remain.

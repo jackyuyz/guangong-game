@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat_hud.gd" id="script"]
 
@@ -17,6 +17,16 @@
 [ext_resource type="Texture2D" path="res://assets/ui/combat-boss-frame.png" id="frame"]
 
 [ext_resource type="Texture2D" path="res://assets/ui/combat-ink-wash.png" id="ink_wash"]
+
+[ext_resource type="Texture2D" path="res://assets/animations/guan-yu-sheet.png" id="guan_yu"]
+[ext_resource type="Shader" path="res://scripts/portrait_cutout.gdshader" id="portrait_shader"]
+
+[sub_resource type="AtlasTexture" id="portrait"]
+atlas = ExtResource("guan_yu")
+region = Rect2(180, 122, 144, 180)
+
+[sub_resource type="ShaderMaterial" id="portrait_material"]
+shader = ExtResource("portrait_shader")
 
 [sub_resource type="AtlasTexture" id="brush"]
 atlas = ExtResource("brush")
@@ -108,22 +118,17 @@ texture = ExtResource("medallion")
 expand_mode = 1
 texture_filter = 2
 
-[node name="Glyph" type="Label" parent="Health"]
+[node name="Portrait" type="TextureRect" parent="Health"]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 12.0
-offset_right = 52.0
-offset_bottom = 54.0
+offset_left = 13.0
+offset_top = 8.0
+offset_right = 53.0
+offset_bottom = 58.0
 mouse_filter = 2
-text = "关"
-theme_override_font_sizes/font_size = 34
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
-theme_override_constants/outline_size = 1
-vertical_alignment = 1
-theme_override_fonts/font = ExtResource("kai")
-horizontal_alignment = 1
-theme_override_constants/outline_size = 0
+texture = SubResource("portrait")
+material = SubResource("portrait_material")
+texture_filter = 1
+expand_mode = 1
 
 [node name="Name" type="Label" parent="Health"]
 layout_mode = 0

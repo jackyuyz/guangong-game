@@ -17,6 +17,13 @@
 [ext_resource type="Texture2D" uid="uid://bl016l4vv026t" path="res://assets/dongling-layers/tree.png" id="tree"]
 [ext_resource type="Texture2D" uid="uid://djvc8hf16a5i8" path="res://assets/dongling-layers/wall.png" id="wall"]
 
+[ext_resource type="PackedScene" path="res://scenes/levels/training_dummy.tscn" id="training_dummy"]
+[ext_resource type="Texture2D" path="res://assets/training-props/training-waymark.png" id="training_waymark"]
+[ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="prop_cutout"]
+
+[sub_resource type="ShaderMaterial" id="prop_material"]
+shader = ExtResource("prop_cutout")
+
 [sub_resource type="ShaderMaterial" id="road_material"]
 shader = ExtResource("road_blend")
 
@@ -156,52 +163,15 @@ region_rect = Rect2(8, 11, 80, 77)
 [node name="Flag" type="Node2D" parent="Ground/Training" unique_id=950815701]
 position = Vector2(445, 440)
 
-[node name="Pole" type="Line2D" parent="Ground/Training/Flag" unique_id=999631968]
-points = PackedVector2Array(0, 0, 0, -110)
-width = 3.0
-default_color = Color(0.87, 0.74, 0.46, 1)
+[node name="Visual" type="Sprite2D" parent="Ground/Training/Flag"]
+texture = ExtResource("training_waymark")
+material = SubResource("prop_material")
+scale = Vector2(0.105, 0.105)
+centered = false
+offset = Vector2(-445, -1192)
 
-[node name="Cloth" type="Polygon2D" parent="Ground/Training/Flag" unique_id=95299649]
-color = Color(0.59, 0.247, 0.196, 1)
-polygon = PackedVector2Array(0, -110, 35, -103, 30, -68, 0, -75)
-
-[node name="Hint" type="Label" parent="Ground/Training/Flag" unique_id=782524228]
-offset_left = -12.0
-offset_top = -144.0
-offset_right = 48.0
-offset_bottom = -120.0
-theme_override_fonts/font = ExtResource("e4")
-theme_override_font_sizes/font_size = 13
-text = "前行"
-
-[node name="Dummy" type="Node2D" parent="Ground/Training" unique_id=506891207]
+[node name="Dummy" parent="Ground/Training" unique_id=506891207 instance=ExtResource("training_dummy")]
 position = Vector2(650, 440)
-
-[node name="Pole" type="Line2D" parent="Ground/Training/Dummy" unique_id=1100441036]
-points = PackedVector2Array(0, 0, 0, -85)
-width = 7.0
-default_color = Color(0.72, 0.596, 0.38, 1)
-
-[node name="Target" type="Polygon2D" parent="Ground/Training/Dummy" unique_id=1235777456]
-position = Vector2(0, -62)
-color = Color(0.49, 0.36, 0.22, 1)
-polygon = PackedVector2Array(22, 0, 21.577, 4.292, 20.325, 8.419, 18.292, 12.223, 15.556, 15.556, 12.223, 18.292, 8.419, 20.325, 4.292, 21.577, 0, 22, -4.292, 21.577, -8.419, 20.325, -12.223, 18.292, -15.556, 15.556, -18.292, 12.223, -20.325, 8.419, -21.577, 4.292, -22, 0, -21.577, -4.292, -20.325, -8.419, -18.292, -12.223, -15.556, -15.556, -12.223, -18.292, -8.419, -20.325, -4.292, -21.577, 0, -22, 4.292, -21.577, 8.419, -20.325, 12.223, -18.292, 15.556, -15.556, 18.292, -12.223, 20.325, -8.419, 21.577, -4.292)
-
-[node name="Ring" type="Line2D" parent="Ground/Training/Dummy" unique_id=1023334649]
-position = Vector2(0, -62)
-points = PackedVector2Array(14, 0, 13.731, 2.731, 12.934, 5.358, 11.641, 7.778, 9.899, 9.899, 7.778, 11.641, 5.358, 12.934, 2.731, 13.731, 0, 14, -2.731, 13.731, -5.358, 12.934, -7.778, 11.641, -9.899, 9.899, -11.641, 7.778, -12.934, 5.358, -13.731, 2.731, -14, 0, -13.731, -2.731, -12.934, -5.358, -11.641, -7.778, -9.899, -9.899, -7.778, -11.641, -5.358, -12.934, -2.731, -13.731, 0, -14, 2.731, -13.731, 5.358, -12.934, 7.778, -11.641, 9.899, -9.899, 11.641, -7.778, 12.934, -5.358, 13.731, -2.731)
-closed = true
-width = 3.0
-default_color = Color(0.87, 0.74, 0.46, 1)
-
-[node name="Hint" type="Label" parent="Ground/Training/Dummy" unique_id=1625190755]
-offset_left = -26.0
-offset_top = -122.0
-offset_right = 50.0
-offset_bottom = -98.0
-theme_override_fonts/font = ExtResource("e4")
-theme_override_font_sizes/font_size = 12
-text = "训练靶"
 
 [node name="RestPoint" type="Node2D" parent="Ground" unique_id=186598618]
 position = Vector2(2060, 390)

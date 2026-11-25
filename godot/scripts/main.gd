@@ -352,8 +352,6 @@ func _enter_chapter(id: String) -> void:
 	phase = 0
 	_place_player(level.player_origin)
 	camera_x = level.world_left
-	set_meta("dummy_hits", 0)
-	tutorial_hits = 0
 	show_culture = false
 	prologue_return_state = ""
 	state = "play"
@@ -383,6 +381,8 @@ func _inputs_held() -> bool:
 	return Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 
 func _reset_run() -> void:
+	set_meta("dummy_hits", 0)
+	tutorial_hits = 0
 	await_input_release = false
 	hp = 6
 	facing = 1
@@ -550,9 +550,9 @@ func _update_play(dt: float) -> void:
 	if phase == 1 and attack_time > 0.03 and attack_time <= ATTACK_TIME - ATTACK_CONTACT and (level.dummy_origin.x - x) * facing > -24 and absf(x - level.dummy_origin.x) < 135:
 		if tutorial_hits != swing_id:
 			tutorial_hits = swing_id
-			var count = int(get_meta("dummy_hits", 0)) + 1
+			var count = mini(2, int(get_meta("dummy_hits", 0)) + 1)
 			set_meta("dummy_hits", count)
-			_sparks(level.dummy_origin.x, level.dummy_origin.y - 55, GOLD)
+			_sparks(level.dummy_hit_origin.x, level.dummy_hit_origin.y, GOLD)
 			if count >= 2:
 				phase = 2
 				_banner("按空格向前闪避，再向右迎战守军")

@@ -1,0 +1,46 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/training_dummy.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/training-props/training-post-states.png" id="sheet"]
+[ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="cutout"]
+
+[sub_resource type="AtlasTexture" id="intact"]
+atlas = ExtResource("sheet")
+region = Rect2(0, 0, 724, 724)
+metadata/ground_anchor_x = 342
+metadata/ground_baseline = 683
+
+[sub_resource type="AtlasTexture" id="damaged"]
+atlas = ExtResource("sheet")
+region = Rect2(724, 0, 560, 724)
+metadata/ground_anchor_x = 318
+metadata/ground_baseline = 685
+
+[sub_resource type="AtlasTexture" id="broken"]
+atlas = ExtResource("sheet")
+region = Rect2(1436, 0, 736, 724)
+metadata/ground_anchor_x = 330
+metadata/ground_baseline = 688
+
+[sub_resource type="SpriteFrames" id="frames"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("intact")}, {"duration": 1.0, "texture": SubResource("damaged")}, {"duration": 1.0, "texture": SubResource("broken")}], "loop": false, "name": &"damage", "speed": 1.0}]
+
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("cutout")
+
+[node name="Dummy" type="Node2D"]
+texture_filter = 1
+script = ExtResource("script")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="States" type="AnimatedSprite2D" parent="Visual"]
+material = SubResource("material")
+scale = Vector2(0.17, 0.17)
+sprite_frames = SubResource("frames")
+animation = &"damage"
+centered = false
+offset = Vector2(-342, -683)
+
+[node name="HitOrigin" type="Marker2D" parent="."]
+position = Vector2(0, -65)

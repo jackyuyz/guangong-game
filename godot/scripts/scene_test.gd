@@ -103,7 +103,7 @@ func run() -> void:
 	game.attack_time = 0.16
 	game.swing_id += 1
 	game._update_play(0.01)
-	check(game.get_meta("dummy_hits") == 1 and not game.particles.is_empty() and game.particles[0].pos == Vector2(800, 385), "target hit and sparks follow the relocated dummy")
+	check(game.get_meta("dummy_hits") == 1 and not game.particles.is_empty() and game.particles[0].pos == Vector2(800, 375), "target hit and sparks follow the relocated dummy's authored hit marker")
 	game._reset_effects()
 	game.dodge_time = 0.3
 	game._sync_scene()

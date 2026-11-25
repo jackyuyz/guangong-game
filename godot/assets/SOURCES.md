@@ -46,3 +46,11 @@
 新增 `animations/guan-yu-recover-sheet.png` 与 `animations/kong-xiu-fall-sheet.png`，由 OpenAI imagegen 参考原对应图集生成；原图集和素材库均保留。两张均为透明1774×887、4×2图集，新增独立八帧收招与八帧踉跄／侧倒，使用最近邻及原透明边缘材质。完整提示和参考文件见 `animations/final-strike-creation.json`，生成记录不进入Web包。没有引入外部下载素材；生成素材沿用本课程项目的使用范围，不声称其为历史复原。
 
 角色场景中的AtlasTexture保存各帧接地基线：孔秀前四帧407、后四帧400；关羽前四帧401、后四帧395。运行时对齐原脚底393／408；不修改PNG，不旋转站立图冒充倒地。普通斩与偃月斩的攻击尾段保持伸刀帧，再接独立收招；原idle／hurt等复用情况保持。
+
+## 起步教学器具（2026-11-24）
+
+`training-props/training-waymark.png`（1254×1254）与`training-props/training-post-states.png`（2172×724）为内置OpenAI imagegen新生成透明派生素材，参考原关羽图集的像素风格、素材库`assets/art/chapters/01-dongling-pass/environment/military-banner.png`的木／布材质；原素材未覆盖或删除。练刀桩含完整、斜裂、断落三个状态，不是连续破碎动画；首次草束图有背景残留，使用imagegen清理后的版本接入。保留生成透明度，复用原cutout材质；Atlas裁取和逐状态锚点见`scenes/levels/training_dummy.tscn`及[教学器具规格](../../docs/design/training-props-spec.md)。完整原始提示、清理提示及参考路径见`training-props/creation.json`，该记录排除Web包。没有新增外部下载素材，沿用课程项目使用范围，不声称为历史复原。
+
+## 战斗玉牌头像（2026-11-24）
+
+HUD头像复用`animations/guan-yu-sheet.png`首帧，AtlasTexture取(180,122,144,180)头肩区域，保留原绿巾、红脸、长须和朝右姿态。真实TextureRect配`portrait_cutout.gdshader`圆形及透明边缘遮罩，最近邻采样；保留原玉牌背景，不新增生成图、不覆盖原PNG，来源与原角色素材一致。
