@@ -50,7 +50,7 @@ func run() -> void:
   if heavy: game._process(0.04)
   boss.mode = "strike"
   boss.struck = false
-  boss.timer = 1.0
+  boss.timer = 0.16
   game.invincible = 0.0
   game._process(0.04)
   check(game.state == "finishing" and game.phase == 7 and game.hp == 1 and game.hits == 3, label + " lethal contact locks victory before enemy damage")

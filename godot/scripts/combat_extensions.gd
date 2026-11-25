@@ -186,6 +186,8 @@ func _heavy_contact(game: Node) -> void:
 
 func _stagger(enemy: Dictionary, seconds: float) -> void:
 	enemy.mode = "recover"
+	enemy.recover_age = 0.0
+	enemy.settling = false
 	enemy.timer = seconds
 	enemy.combo_pending = false
 	enemy.struck = true

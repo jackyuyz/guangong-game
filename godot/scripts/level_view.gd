@@ -74,6 +74,9 @@ func present(game: Node) -> void:
 		if game.finish_elapsed >= game.finish_attack_left:
 			var recovery_time: float = game.finish_elapsed - game.finish_attack_left
 			player.pose_at("finish_recover" if recovery_time < player.animation_length("finish_recover") else "idle", recovery_time)
+	if game.player_fallen:
+		player.pose(game.death_facing, Color(1.4, 1.15, 0.9) if game.death_elapsed < 0.08 else Color.WHITE)
+		player.pose_at("fall", game.death_elapsed)
 	# The dialogue stage owns the large portraits; avoid duplicate small actors behind it.
 	player.visible = game.phase != 5
 	$Ground/RestPoint.visible = game.phase in [4, 5]
@@ -89,6 +92,9 @@ func present(game: Node) -> void:
 		view.global_position = to_global(Vector2(enemy.x, enemy.y))
 		view.show()
 		view.present_enemy(enemy, game.x, frozen)
+		if game.player_fallen:
+			view.get_node("Telegraph").hide()
+			view.get_node("AttackHint").hide()
 	if not game.defeated_boss.is_empty():
 		var fallen: Dictionary = game.defeated_boss
 		boss.global_position = to_global(Vector2(fallen.x, fallen.y))

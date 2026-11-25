@@ -40,6 +40,12 @@ func present_enemy(enemy: Dictionary, player_x: float, frozen: bool) -> void:
 	elif absf(enemy.x - player_x) > (145 if enemy.boss else 95):
 		motion = "walk"
 	animate(motion, frozen)
+	if enemy.mode == "strike":
+		pose_at("attack", 0.24 - enemy.timer)
+	elif enemy.mode == "recover" and enemy.get("settling", false):
+		var recovery = "finish_recover" if sprite.sprite_frames.has_animation("finish_recover") else "recover"
+		var age: float = enemy.get("recover_age", 0.0)
+		pose_at(recovery if age < animation_length(recovery) else "idle", age)
 
 const FRAME_INDICES = {"idle": [0], "walk": [0, 1, 2, 3], "windup": [4], "attack": [5, 6, 7], "heavy": [5, 6, 7], "recover": [7], "guard": [4], "hurt": [7]}
 @export var frame_baselines = PackedFloat32Array()

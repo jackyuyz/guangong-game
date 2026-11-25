@@ -12,6 +12,13 @@ const SCORE_VERSION = "ch01-v2-checkpoint"
 const ATTACK_TIME = 0.24
 const ATTACK_CONTACT = 0.08
 const FINISH_HOLD = 0.28
+const ENEMY_STRIKE_TIME = 0.24
+const ENEMY_CONTACT = 0.08
+var player_fallen = false
+var death_elapsed = 0.0
+var death_facing = 1.0
+var death_attack_left = 0.0
+var death_attacker: Dictionary = {}
 var defeated_boss: Dictionary = {}
 var finish_elapsed = 0.0
 var finish_attack_left = 0.0
@@ -120,7 +127,7 @@ func _on_web_focus_change(_arguments: Array) -> void:
 func _pause_for_focus_loss() -> void:
 	window_active = false
 	if is_instance_valid(journey): journey.set_suspended(true)
-	if state in ["play", "finishing", "dialogue", "prologue"]:
+	if state in ["play", "finishing", "dying", "dialogue", "prologue"]:
 		resume_state = state
 		state = "pause"
 		if is_instance_valid(prologue):
@@ -160,7 +167,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			state = "menu"
 		elif state == "pause":
 			state = resume_state
-		elif state in ["play", "finishing", "dialogue", "prologue"]:
+		elif state in ["play", "finishing", "dying", "dialogue", "prologue"]:
 			resume_state = state
 			state = "pause"
 		_sync_scene()
@@ -223,9 +230,9 @@ func _action(action: String) -> void:
 			ui.focus_utility()
 			return
 		"settings", "help":
-			if state not in ["menu", "map", "pause", "play", "finishing"]: return
+			if state not in ["menu", "map", "pause", "play", "finishing", "dying"]: return
 			if utility_panel.is_empty(): ui.remember_utility_focus()
-			if state in ["play", "finishing"]:
+			if state in ["play", "finishing", "dying"]:
 				resume_state = state
 				state = "pause"
 			utility_panel = action
@@ -291,10 +298,12 @@ func _action(action: String) -> void:
 		"pause_click":
 			resume_state = state
 			state = "pause"
-		"retry": _retry()
+		"retry":
+			if state == "dead": _retry()
 		"restart":
-			checkpoint.clear()
-			_retry()
+			if state == "dead":
+				checkpoint.clear()
+				_retry()
 		"menu_confirm":
 			_confirm_origin = state
 			_confirm_to_map = false
@@ -386,6 +395,10 @@ func _reset_run() -> void:
 	_reset_effects()
 
 func _reset_effects() -> void:
+	player_fallen = false
+	death_elapsed = 0.0
+	death_attack_left = 0.0
+	death_attacker = {} # Do not clear the dictionary of a still-live enemy.
 	defeated_boss.clear()
 	finish_elapsed = 0.0
 	finish_attack_left = 0.0
@@ -432,7 +445,8 @@ func _place_player(origin: Vector2) -> void:
 func _spawn(origin: Vector2, view: Node2D, boss: bool = false) -> void:
 	enemies.append({"x": origin.x, "y": origin.y, "view": view, "hp": 16 if boss else 2, "max_hp": 16 if boss else 2,
 		"boss": boss, "mode": "approach", "timer": 0.4, "facing": -1.0,
-		"last_swing": -1, "flash": 0.0, "move": 0, "struck": false, "combo_pending": false})
+		"last_swing": -1, "flash": 0.0, "move": 0, "struck": false, "combo_pending": false,
+		"recover_age": 0.0, "settling": false})
 
 func _enter_boss() -> void:
 	phase = 6
@@ -485,11 +499,16 @@ func _process(dt: float) -> void:
 			hit_stop = maxf(0, hit_stop - dt)
 		else:
 			_update_finish(minf(dt, 0.04))
-	if state in ["play", "finishing", "dialogue", "victory"]:
+	elif state == "dying":
+		if hit_stop > 0:
+			hit_stop = maxf(0, hit_stop - dt)
+		else:
+			_update_death(minf(dt, 0.04))
+	if state in ["play", "finishing", "dying", "dialogue", "victory"]:
 		var camera_end = maxf(level.world_left, level.world_right - VIEWPORT_WIDTH)
 		var target = camera_end if phase in [5, 6, 7] else clampf(x - 350, level.world_left, camera_end)
 		camera_x = lerpf(camera_x, target, minf(dt * 5, 1))
-	if state in ["play", "finishing", "victory"] and hit_stop <= 0:
+	if state in ["play", "finishing", "dying", "victory"] and hit_stop <= 0:
 		shake = maxf(0, shake - dt * 20)
 		for p in particles:
 			p.life -= dt
@@ -595,20 +614,27 @@ func _update_enemy(e: Dictionary, dt: float) -> void:
 		"windup":
 			if e.timer <= 0:
 				e.mode = "strike"
-				e.timer = 0.24
+				e.timer = ENEMY_STRIKE_TIME
 				e.struck = false
 		"strike":
 			var reach = 190.0 if e.boss else 120.0
 			if e.boss and e.move % 2 != 0:
 				e.x += e.facing * 390 * dt
-			if not e.struck and (x - e.x) * e.facing > -25 and distance < reach:
+			e.x = _clamp_player_x(e.x)
+			distance = absf(e.x - x)
+			if e.timer > 0 and e.timer <= ENEMY_STRIKE_TIME - ENEMY_CONTACT and not e.struck and (x - e.x) * e.facing > -25 and distance < reach:
 				e.struck = true
 				_hurt(e.facing, e)
+				if state != "play":
+					return
 			if e.timer <= 0:
 				e.mode = "recover"
 				e.timer = 0.85 if e.boss else 1.0
+				e.recover_age = 0.0
+				e.settling = true
 				e.combo_pending = e.boss and e.hp <= 8 and e.move % 3 == 0
 		"recover":
+			e.recover_age = float(e.get("recover_age", 0.0)) + dt
 			if e.combo_pending and e.timer < 0.35:
 				e.combo_pending = false
 				e.move = 2
@@ -629,7 +655,7 @@ func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 		return
 	if ext.absorb_damage(self, direction, attacker):
 		return
-	hp -= 1
+	hp = maxi(0, hp - 1)
 	hits += 1
 	invincible = 0.8
 	x = _clamp_player_x(x + direction * 28)
@@ -638,6 +664,48 @@ func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 	_sparks(x, player_y - 60, RED)
 	_tone(80, 0.10, 0.17)
 	if hp <= 0:
+		_begin_death(direction, attacker)
+
+func _begin_death(direction: float, attacker: Dictionary) -> void:
+	state = "dying"
+	player_fallen = true
+	death_elapsed = 0.0
+	death_facing = -direction if direction != 0 else facing
+	death_attacker = attacker
+	death_attack_left = maxf(0, attacker.timer) if attacker.get("mode") == "strike" else 0.0
+	if not death_attacker.is_empty():
+		death_attacker.combo_pending = false
+		death_attacker.struck = true
+	moving = false
+	attack_time = 0.0
+	dodge_time = 0.0
+	invincible = 0.0
+	ext.heavy_time = 0.0
+	ext.heavy_pending = false
+	ext.guard_timer = 0.0
+	# No checkpoint, score or progress writes: this remains a failed attempt.
+
+func _update_death(dt: float) -> void:
+	death_elapsed += dt
+	clock += dt
+	var attacker_end = 0.0
+	if not death_attacker.is_empty():
+		var view: Node2D = death_attacker.view
+		var recovery = "finish_recover" if view.sprite.sprite_frames.has_animation("finish_recover") else "recover"
+		attacker_end = death_attack_left + view.animation_length(recovery)
+		# Hold the impact positions while the spear follows through; do not run over the fallen player.
+		if death_elapsed < death_attack_left:
+			death_attacker.mode = "strike"
+			death_attacker.timer = death_attack_left - death_elapsed
+		else:
+			death_attacker.mode = "recover"
+			death_attacker.settling = true
+			death_attacker.recover_age = death_elapsed - death_attack_left
+			death_attacker.timer = maxf(0, attacker_end - death_elapsed)
+	if death_elapsed >= maxf(level.player.animation_length("fall"), attacker_end) + FINISH_HOLD:
+		particles.clear()
+		floaters.clear()
+		shake = 0.0
 		state = "dead"
 
 func _win() -> void:
@@ -723,6 +791,6 @@ func _sync_scene() -> void:
 	prologue.set_muted(muted)
 	if tone_player.playing and (muted or state in ["menu", "dead", "dialogue", "victory"]):
 		tone_player.stop()
-	tone_player.stream_paused = state not in ["play", "finishing"]
+	tone_player.stream_paused = state not in ["play", "finishing", "dying"]
 	level.present(self)
 	ui.present(self)

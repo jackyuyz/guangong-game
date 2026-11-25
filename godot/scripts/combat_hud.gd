@@ -13,7 +13,7 @@ const EMPTY = Color("747766")
 
 func present(game: Node) -> void:
 	var new_session: bool = game.state == "play" and last_state not in ["play", "pause", "confirm"]
-	active = game.state in ["play", "finishing"] and game.window_active
+	active = game.state in ["play", "finishing", "dying"] and game.window_active
 	reduced_motion = game.reduced_motion
 	var health: int = clampi(game.hp, 0, 6)
 	if health < last_hp and not new_session and not reduced_motion:
@@ -30,7 +30,7 @@ func present(game: Node) -> void:
 	for i in 4:
 		$Extensions/Pips.get_child(i).self_modulate = FILLED if i < game.ext.resource else EMPTY
 	$Extensions.tooltip_text = "义气 %d / %d" % [game.ext.resource, game.ext.RESOURCE_MAX]
-	var ready: bool = game.ext.heavy_ready()
+	var ready: bool = game.state == "play" and game.ext.heavy_ready()
 	$Extensions/Skill.modulate = Color.WHITE if ready else Color(0.68, 0.7, 0.61, 1)
 	$Extensions/Skill/Ready.visible = ready
 	$ObjectivePanel.visible = game.phase < 6

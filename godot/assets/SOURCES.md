@@ -2,6 +2,10 @@
 
 下表为从仓库素材库复制到工程的 PNG，源文件保留。角色使用最近邻采样，按帧调整脚底基线。
 
+关羽新增倒地与孔秀新增收枪：`animations/guan-yu-fall-sheet.png`、`animations/kong-xiu-recover-sheet.png`，由OpenAI imagegen参考原对应角色图集派生，原图不改。均为1774×887透明PNG、4×2浮点切片；运行时最近邻、原透明边缘材质。`animations/player-defeat-creation.json`记录完整提示、废弃初稿原因及用户指出第6帧后的修正，导出排除该记录。没有新增外部下载素材或配音。
+
+倒地第6帧为向侧卧过渡的承重姿态，长刀降至地面，未旋转站立图代替新姿势。关羽逐帧接地基线411／411／411／412／388／393／395／395，对齐原393；孔秀收枪前四帧408、后四帧410，对齐原408。基线存入真实角色场景的AtlasTexture元数据，两种方向均校准。
+
 | 工程文件 | 素材库来源（相对仓库根目录） |
 | --- | --- |
 | dongling.png | assets/art/chapters/01-dongling-pass/backgrounds/environment-only.png |

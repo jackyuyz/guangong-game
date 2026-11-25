@@ -108,7 +108,7 @@ func _emit_button(button: Button) -> void:
 	action_requested.emit(str(button.get_meta("action")))
 
 func present(game: Node) -> void:
-	$Root/HUD.visible = game.state in ["play", "finishing"]
+	$Root/HUD.visible = game.state in ["play", "finishing", "dying"]
 	$Root/MainMenu.visible = game.state == "menu"
 	$Root/Dialogue.visible = game.state == "dialogue"
 	$Root/Pause.visible = game.state == "pause" and game.utility_panel.is_empty()

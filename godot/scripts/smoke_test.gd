@@ -75,7 +75,9 @@ func run() -> void:
 	game.hp = 1
 	game.combat_seconds = 35
 	game._hurt(1)
-	check(game.state == "dead", "defeat")
+	check(game.state == "dying", "lethal hit begins defeat animation")
+	for i in 60: game._process(1.0 / 30)
+	check(game.state == "dead", "defeat waits for complete fall")
 	game._retry()
 	check(game.hp == 4 and game.combat_seconds == 21 and game.hits == 4 and game.retries == 1, "checkpoint restores successful path stats")
 	check(game.enemies[0].hp == 16 and game.enemies[0].mode == "approach", "boss reset")
@@ -86,7 +88,7 @@ func run() -> void:
 	press(KEY_K)
 	boss.mode = "strike"
 	boss.facing = -1
-	boss.timer = 0.2
+	boss.timer = 0.16
 	game._update_play(0.01)
 	check(game.hp == 4 and boss.mode == "recover" and game.ext.parries == 1, "live strike can be parried through K")
 	press(KEY_J)

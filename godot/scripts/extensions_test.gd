@@ -203,7 +203,7 @@ func test_state_guards() -> void:
 	var ext = game.ext
 	ext.resource = 4
 	game.enemies.append(enemy(1100))
-	for state in ["menu", "finishing", "pause", "confirm", "dialogue", "dead", "victory"]:
+	for state in ["menu", "dying", "finishing", "pause", "confirm", "dialogue", "dead", "victory"]:
 		game.state = state
 		var consumed = ext.handle_key(game, KEY_K) or ext.handle_key(game, KEY_L) or ext.handle_key(game, KEY_E)
 		check(not consumed and not ext.is_guarding() and ext.resource == 4 and game.enemies[0].hp == 2, "no actions in " + state)
