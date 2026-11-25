@@ -37,13 +37,14 @@ func run() -> void:
 	check(map.get_node("Progress").text == "已通过 0 / 5 关" and map.selected == 0, "new journey shows actual zero progress and first recommendation")
 	check(map.can_enter("dongling"), "first chapter is available")
 	var caravan: Vector2 = map.get_node("ScrollClip/Caravan").position
-	var current_flag: Vector2 = map.get_node("ScrollClip/ReadyFlag").position
+	check(not map.has_node("ScrollClip/ReadyFlag") and not map.nodes[0].has_node("State"), "map uses no ambiguous red flag or redundant per-stop state captions")
+	check(not map.get_node("ScrollClip/Veils/Pass1").visible, "available first pass stays clear")
 	for i in range(1, 5):
 		map.select_chapter(i)
-		check(map.nodes[i].get_node("State").text == "未解锁" and not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Start").disabled, "future chapter preview stays disabled: " + map.chapters[i].id)
+		check(map.get_node("ScrollClip/Veils").get_child(i).visible and not map.nodes[i].has_node("State") and not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Start").disabled, "future chapter preview stays disabled: " + map.chapters[i].id)
 		game._enter_chapter(map.chapters[i].id)
 		check(game.state == "map", "direct chapter request cannot bypass availability: " + map.chapters[i].id)
-	check(map.get_node("ScrollClip/Caravan").position == caravan and map.get_node("ScrollClip/ReadyFlag").position == current_flag and game.progress.completed_count() == 0, "browsing moves neither current-position flag nor party and creates no progress")
+	check(map.get_node("ScrollClip/Caravan").position == caravan and game.progress.completed_count() == 0, "browsing preserves the actual party position and creates no progress")
 	var event = InputEventKey.new()
 	event.physical_keycode = KEY_LEFT
 	event.pressed = true
@@ -107,7 +108,9 @@ func run() -> void:
 	game._action("map_return")
 	check(game.state == "map" and map.selected == 0 and map.get_node("Progress").text == "已通过 1 / 5 关", "settlement returns to map with one of five complete")
 	check(map.get_node("ScrollClip/Stops/Pass1/Seal").visible and map.get_node("ScrollClip/Details/Start").text == "再次挑战", "completed chapter shows stamp and replay action")
-	check(map.get_node("ScrollClip/Caravan").position == map.get_node("ScrollClip/TravelEnd").position and map.get_node("ScrollClip/ReadyFlag").visible and map.get_node("ScrollClip/ReadyFlag").position == map.get_node("ScrollClip/FlagEnd").position, "party and visible current-position flag reach first pass exit without entering unfinished chapter")
+	check(map.get_node("ScrollClip/Caravan").position == map.get_node("ScrollClip/TravelEnd").position and map.get_node("ScrollClip/Caravan").scale.x > 1.0, "larger party reaches the authored first-pass exit without entering an unfinished chapter")
+	check(map.nodes[0].get_node("Seal/Glyph").text == game.ui.get_node("Root/Victory/Seal/Glyph").text and map.nodes[0].get_node("Seal").texture == game.ui.get_node("Root/Victory/Seal").texture, "map reuses the victory page's legible guo glyph and red seal artwork")
+	check(map.nodes[0].get_node("Name").get_theme_color("font_color") != map.nodes[1].get_node("Name").get_theme_color("font_color"), "clear and unavailable names use distinct readable inks")
 	map.select_chapter(1)
 	check(game.progress.is_unlocked("luoyang") and not map.can_enter("luoyang") and map.get_node("ScrollClip/Details/Reason").text.contains("前置已完成"), "next story prerequisite is met but unreleased chapter remains preparation")
 	game._enter_chapter("luoyang")
@@ -127,11 +130,14 @@ func run() -> void:
 	loaded.save_path = save
 	root.add_child(loaded)
 	loaded.set_process(false)
+	loaded.muted = true
 	loaded._start()
 	check(loaded.state == "map" and loaded.cleared and loaded.best == 5000 and loaded.reduced_motion, "reloaded journey enters map with persistent progress and settings")
 	for i in range(1, 5):
 		loaded.journey.chapters[i].released = true
 		loaded.journey.chapters[i].entry = "res://scenes/levels/dongling_pass.tscn"
+	loaded.journey.present()
+	check(not loaded.journey.get_node("ScrollClip/Veils/Pass2").visible and loaded.journey.get_node("ScrollClip/Veils/Pass3").visible, "mist clears for a genuinely available chapter while later locked stops remain veiled")
 	check(loaded.journey.can_enter("luoyang") and not loaded.journey.can_enter("sishui"), "test release configuration still enforces sequence")
 	loaded.progress.mark_cleared("luoyang", 0)
 	check(loaded.journey.can_enter("sishui") and not loaded.journey.can_enter("xingyang"), "later test release opens only after required completion")

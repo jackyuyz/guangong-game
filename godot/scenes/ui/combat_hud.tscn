@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat_hud.gd" id="script"]
 
@@ -20,6 +20,30 @@
 
 [ext_resource type="Texture2D" path="res://assets/animations/guan-yu-sheet.png" id="guan_yu"]
 [ext_resource type="Shader" path="res://scripts/portrait_cutout.gdshader" id="portrait_shader"]
+
+[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="hint_sans"]
+
+[ext_resource type="FontFile" path="res://assets/ui/wuxia-kai.otf" id="hint_kai"]
+
+[sub_resource type="FontVariation" id="hint_action_font"]
+base_font = ExtResource("hint_kai")
+variation_embolden = 0.75
+
+[sub_resource type="FontVariation" id="hint_key_font"]
+base_font = ExtResource("hint_sans")
+variation_embolden = 0.55
+
+[sub_resource type="StyleBoxFlat" id="hint_keycap"]
+bg_color = Color(0.039, 0.075, 0.059, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.62, 0.42, 0.23, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
 
 [sub_resource type="AtlasTexture" id="portrait"]
 atlas = ExtResource("guan_yu")
@@ -626,31 +650,89 @@ offset_right = 960.0
 offset_bottom = 540.0
 mouse_filter = 2
 
-[node name="Backdrop" type="TextureRect" parent="Controls"]
+[node name="Hint" type="Control" parent="Controls"]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 490.0
-offset_right = 356.0
-offset_bottom = 532.0
+offset_left = 64.0
+offset_top = 468.0
+offset_right = 264.0
+offset_bottom = 520.0
 mouse_filter = 2
-texture = SubResource("wash")
+
+[node name="Backdrop" type="TextureRect" parent="Controls/Hint"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = -10.0
+offset_right = 170.0
+offset_bottom = 56.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
 expand_mode = 1
 texture_filter = 2
-modulate = Color(0.012, 0.026, 0.022, 0.85)
+modulate = Color(0.4, 0.33, 0.26, 1)
 
-[node name="Keys" type="Label" parent="Controls"]
+[node name="Content" type="HBoxContainer" parent="Controls/Hint"]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 494.0
-offset_right = 352.0
-offset_bottom = 529.0
+offset_left = 8.0
+offset_top = -1.0
+offset_bottom = 43.0
 mouse_filter = 2
-text = "A / D  移动"
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
-theme_override_constants/outline_size = 1
+theme_override_constants/separation = 14
+
+[node name="Key1" type="Label" parent="Controls/Hint/Content"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+text = "A"
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("hint_keycap")
+theme_override_fonts/font = SubResource("hint_key_font")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.953, 0.886, 0.733, 1)
+theme_override_constants/outline_size = 0
+horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Key2" type="Label" parent="Controls/Hint/Content"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+text = "D"
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("hint_keycap")
+theme_override_fonts/font = SubResource("hint_key_font")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.953, 0.886, 0.733, 1)
+theme_override_constants/outline_size = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Action" type="Label" parent="Controls/Hint/Content"]
+layout_mode = 2
+mouse_filter = 2
+text = "前行"
+theme_override_fonts/font = SubResource("hint_action_font")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.953, 0.886, 0.733, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_colors/font_shadow_color = Color(0.015, 0.025, 0.018, 0.55)
+vertical_alignment = 1
+
+[node name="Underline" type="TextureRect" parent="Controls/Hint/Content/Action"]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -6.0
+offset_right = 12.0
+offset_bottom = 12.0
+mouse_filter = 2
+texture = SubResource("brush")
+expand_mode = 1
+texture_filter = 2
+modulate = Color(0.68, 0.075, 0.02, 0.94)
 
 [node name="Dodge" type="Label" parent="Controls"]
 layout_mode = 0

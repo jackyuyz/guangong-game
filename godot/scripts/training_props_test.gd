@@ -63,7 +63,7 @@ func run() -> void:
  check(game.get_meta("dummy_hits")==0 and sprite.frame==0,"target stays intact during attack windup")
  step(0.05)
  check(game.get_meta("dummy_hits")==1 and game.phase==1 and sprite.frame==1,"first real contact shows split straw while tutorial remains active")
- check(game.ui.get_node("Root/HUD/Controls/Keys").text.contains("1 / 2"),"tutorial feedback reflects actual first-hit count")
+ check(game.ui.get_node("Root/HUD/Controls/Hint/Content/Action").text=="挥刀","first hit keeps the simple attack instruction without a progress counter")
  check(not game.particles.is_empty(),"first slash spawns contact particles")
  var pose=dummy.get_node("Visual").transform
  var age: float=dummy.impact_age
@@ -111,7 +111,7 @@ func run() -> void:
   game._sync_scene()
   var tex=sprite.sprite_frames.get_frame_texture("damage",i)
   check(is_equal_approx(sprite.offset.y+float(tex.get_meta("ground_baseline")),0) and is_equal_approx(sprite.offset.x+float(tex.get_meta("ground_anchor_x")),0),"state %d keeps ground and post anchor aligned"%i)
- var font: Font=game.ui.get_node("Root/HUD/Controls/Keys").get_theme_font("font")
+ var font: Font=game.ui.get_node("Root/HUD/Controls/Hint/Content/Action").get_theme_font("font")
  var covered=true
  for character in "练习挥刀": covered=covered and font.has_char(character.unicode_at(0))
  check(covered,"updated practice instruction has all required glyphs")

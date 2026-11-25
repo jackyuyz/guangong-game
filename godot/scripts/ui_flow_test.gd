@@ -54,7 +54,7 @@ func run() -> void:
  game._return_to_map()
  map._process(0)
  map.select_chapter(1)
- var position: Vector2=map.get_node("ScrollClip/ReadyFlag").position
+ var position: Vector2=map.get_node("ScrollClip/Caravan").position
  game._action("settings")
  check(map.suspended, "settings pauses map motion")
  game._notification(NOTIFICATION_APPLICATION_FOCUS_IN)
@@ -62,7 +62,7 @@ func run() -> void:
  game._enter_chapter("dongling")
  check(game.state=="map" and map.selected==1, "direct chapter entry remains blocked by settings")
  game._action("utility_close")
- check(map.selected==1 and map.get_node("ScrollClip/ReadyFlag").position==position and not map.suspended, "closing map settings restores selection and actual position")
+ check(map.selected==1 and map.get_node("ScrollClip/Caravan").position==position and not map.suspended, "closing map settings restores selection and actual position")
  check(not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Reason").text.contains("尚未开放"), "locked preview uses one actionable reason without a redundant button")
  map.select_chapter(0)
  map._process(0)
@@ -103,7 +103,8 @@ func run() -> void:
  check(game.state=="play" and game.phase==0, "resuming guide preserves the current tutorial")
  game.phase=3
  game._sync_scene()
- check(not ui.get_node("Root/HUD/Controls/Keys").visible, "completed basic tutorial removes the persistent keyboard strip")
+ ui.get_node("Root/HUD")._process(0.3)
+ check(not ui.get_node("Root/HUD/Controls/Hint").visible, "completed basic tutorial removes the persistent keyboard strip")
  game._return_to_map()
  game._action("map_replay")
  var prologue=game.prologue

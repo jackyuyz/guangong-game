@@ -7,6 +7,9 @@ var last_hp = 6
 var last_boss_hp = 16
 var boss_visible = false
 var last_state = ""
+var hint_phase = -1
+var hint_alpha = 0.0
+const HINT_FADE_TIME = 0.28
 
 const FILLED = Color.WHITE
 const EMPTY = Color("747766")
@@ -36,11 +39,7 @@ func present(game: Node) -> void:
 	$ObjectivePanel.visible = game.phase < 6
 	$ObjectivePanel/Objective.text = ["前往旗标", "练习挥刀", "练习闪避", "击退第一阵守军", "清除守军，前往关门", "关前对话", "", ""][game.phase]
 	if game.phase == 4 and game.enemies.is_empty(): $ObjectivePanel/Objective.text = "前往关门"
-	$Controls/Backdrop.visible = game.phase < 3
-	$Controls/Keys.visible = game.phase < 3
-	$Controls/Keys.text = ["A / D  移动", "J  挥刀，连按三段", "SPACE  闪避"][mini(game.phase, 2)]
-	if game.phase == 1:
-		$Controls/Keys.text = "J  练习挥刀 · %d / 2" % clampi(int(game.get_meta("dummy_hits", 0)), 0, 2)
+	_present_hint(game.phase, new_session)
 	$Controls/Dodge.visible = game.dodge_cooldown > 0.0
 	$Mute.text = "开声" if game.muted else "静音"
 	# Entry narration is already communicated by the boss name. Event/error messages remain.
@@ -61,9 +60,31 @@ func present(game: Node) -> void:
 
 func _process(delta: float) -> void:
 	if not active: return
+	if hint_phase >= 3 and hint_alpha > 0.0:
+		hint_alpha = maxf(0.0, hint_alpha - delta / HINT_FADE_TIME)
+		_paint_hint()
 	if damage_delay > 0.0:
 		damage_delay = maxf(0.0, damage_delay - delta)
 	else:
 		$Health/Trail.value = move_toward($Health/Trail.value, $Health/HP.value, delta * 8.0)
 	if boss_visible:
 		$BossHealth/Trail.value = move_toward($BossHealth/Trail.value, $BossHealth/HP.value, delta * 14.0)
+
+func _present_hint(phase: int, reset: bool) -> void:
+	if phase < 3:
+		hint_alpha = 1.0
+		$Controls/Hint/Content/Key1.text = ["A", "J", "SPACE"][phase]
+		$Controls/Hint/Content/Key1.custom_minimum_size.x = 58.0 if phase == 2 else 30.0
+		$Controls/Hint/Content/Key1.add_theme_font_size_override("font_size", 12 if phase == 2 else 16)
+		$Controls/Hint/Content/Key2.visible = phase == 0
+		$Controls/Hint/Content/Action.text = ["前行", "挥刀", "闪避"][phase]
+		$Controls/Hint/Content.size.x = 0.0
+		$Controls/Hint/Backdrop.size.x = $Controls/Hint/Content.get_combined_minimum_size().x + 56.0
+	elif hint_phase < 0 or reduced_motion or reset:
+		hint_alpha = 0.0
+	hint_phase = phase
+	_paint_hint()
+
+func _paint_hint() -> void:
+	$Controls/Hint.modulate.a = hint_alpha
+	$Controls/Hint.visible = hint_alpha > 0.0

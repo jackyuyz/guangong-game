@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-25",
+  "generator": "OpenAI imagegen built-in",
+  "reference": "reference-current.png",
+  "reference_original": "builds/previews/tutorial-hint/02-attack.png",
+  "requested_dimensions": [
+    1280,
+    720
+  ],
+  "actual_dimensions": [
+    1672,
+    941
+  ],
+  "purpose": "Three visual concepts only; no game code or runtime assets changed in this task.",
+  "limitations": "Generated scenes contain minor redraws; typography is a visual direction, not a shipped font or exact screenshot. Static concepts do not demonstrate fade behavior.",
+  "concepts": [
+    {
+      "key": "jade",
+      "file": "01-jade-gold.png",
+      "name": "墨绿旧金",
+      "display_order": 1,
+      "prompt": "Use case: ui-mockup / precise-object-edit. Create realistic, production-quality game UI design with clear hierarchy, strong typography and purposeful spacing. Input image is the ACTUAL CURRENT Guan Yu game screenshot; it is the edit target, not loose inspiration. Target1280x720 landscape, identical16:9 framing, no device frame. Preserve the entire original scene, pixel Guan Yu, straw practice post, wooden red flag, horse, carriage, mountain forest, ground, top jade portrait/red health bar/title and all other text AS CLOSELY AS POSSIBLE. Edit ONLY the small bottom-left tutorial hint. Remove the old beige J key and thin-serif 挥刀 text/black brush. Replace it inside x80..380,y612..686 with a compact refined DARK JADE AND OLD GOLD hint. Design direction: a rich deep-jade short softly feathered ink-wash ribbon, about260x58px, enough breathable padding so no edges touch letters. One discreet dark-jade rectangular physical keycap with very fine aged gold rim and slight lower key edge; NO bright beige fill. Key text exactly J in a thick clean geometric SANS SERIF, size24px. To its right text exactly 挥刀 in warm ivory, weighty readable Chinese KAI calligraphy (substantial strokes, like the top title, NOT thin Song/Ming serif), about30px tall. Key and action balanced with equal visual prominence, tidy vertical alignment, deliberate16px gap. Earthy palette coherent with original wuxia HUD; lightly worn materials, restrained contrast. Main game remains hero, hint secondary. One hint only. Do NOT add numbers, counters, slash marks, progress, badges, extra labels, descriptions, headings, red dots, arrows, other UI, option name or watermark. Do not add three variants in one image. No progress/training reward decoration. No changes outside the small hint area. Current date2026-11-25; display no dates. Output one full current-scene concept screenshot, not a cropped component.",
+      "original_path": "/Users/yuyuanzhengjack/.codex/generated_images/01a20bce-f43f-7431-8961-10f0af2494f5/exec-1e9ecff6-e3d1-437d-bb3d-3e8da2b2a823.png"
+    },
+    {
+      "key": "cinnabar",
+      "file": "02-cinnabar-calligraphy.png",
+      "name": "朱砂书法",
+      "display_order": 2,
+      "prompt": "Use case: ui-mockup / precise-object-edit. Create realistic production-quality UI with clear hierarchy, strong typography and purposeful spacing. Input is the ACTUAL CURRENT Guan Yu game screenshot, an edit target. Target1280x72016:9 full scene. Preserve original background, mountains, trees, dirt road, pixel Guan Yu, horse, carriage, red flag, straw target and all top HUD/title/text as closely as possible. Change ONLY bottom-left tutorial hint currently beige J + thin 挥刀. Local edit region x80..380,y612..686. Design direction: CINNABAR AND BOLD CHINESE CALLIGRAPHY, martial arts title slip. Compact restrained hint about260x58px at same bottom-left position. The action words exactly 挥刀 are the visual hero: warm ivory, confident thick Chinese Kai brush calligraphy, about34px high, weight like the top-level Chinese name, NO spindly Song/Ming serif. To the left a SMALL subdued physical keycap marked exactly J, dark charcoal green fill with softly worn bronze thin rim, plain medium-bold SANS SERIF J about19px. Key is visibly smaller/quieter than Chinese words. A low-opacity soft charcoal ink-wash underneath both, comfortable padding, and ONE short flat faded vermilion brush underline just under the action word, as typographic ornament only. Not a progress bar, NOT two diagonal slash marks. Hint should feel like a calligrapher's short title on an illustrated wuxia scroll, restrained and tasteful, clear readable gameplay typography, no giant splash/glow, no bright white buttons. Match scene earthy old-gold/deep-green/cinnabar palette. Do not add descriptions, captions, option title, counters, badges, seals with extra words, tutorials progress, slash marks, numbers, arrows or any other interface. No training feedback. Output one full current battle-scene concept, no frame, no collage, not a cropped UI component. Current date2026-11-25, no date text. Keep all non-hint objects and UI positions unchanged.",
+      "original_path": "/Users/yuyuanzhengjack/.codex/generated_images/01a20bce-f43f-7431-8961-10f0af2494f5/exec-c6a000b2-ca0b-4300-98db-c2d59b65cb37.png"
+    },
+    {
+      "key": "minimal",
+      "file": "03-minimal-floating.png",
+      "name": "简洁悬浮",
+      "display_order": 3,
+      "prompt": "Use case: ui-mockup / precise-object-edit. Create realistic production-quality game UI with clear hierarchy, typography and spacing. Input screenshot is the ACTUAL CURRENT Guan Yu game, edit target. Target1280x72016:9 full scene, no frame. Preserve original mountain forest, road, Guan Yu pixel character, horse/carriage, wooden red flag/straw post, all upper HUD/title/portrait/health/objective text and all scene placements AS CLOSELY AS POSSIBLE. Edit ONLY bottom-left tutorial hint in x80..380,y612..686. Delete beige filled J button and thin serif 挥刀 text. Design direction: MINIMAL FLOATING GAMEPLAY INSTRUCTION, quiet and exceptionally legible. About260x58px horizontal group at same bottom-left position and footprint as other directions. One transparent charcoal-tinted keycap with fine warm-ivory OUTLINE, crisp square corners with barely softened edges, no thick bezel, no aged gold ornament, no beige fill, no drop shadow. Key text exactly J in confident medium-bold geometric SANS SERIF, about24px high. To its right exact text 挥刀 in clean well-proportioned Chinese SANS SERIF semi-bold Hei font, about28px tall, NO brush calligraphy and NO Song/Ming thin serifs. Ivory typography. Use only a very soft translucent smoky charcoal wash fading into the scene beneath the whole group, no solid panel or sharp spiky brush shape. Comfortable padding and16px separation, clean baseline alignment. The key outline is secondary to the action label. Should feel modern-readable yet discreet enough for this painterly Chinese wuxia game. Do not add decorations, red brush, colored accent, counters, slash marks, progress, numbers, stamp, extra labels, titles, captions, glows, arrows, badges, other controls or option labels. No practice feedback. Keep main game as the visual hero. Output one complete current-scene concept screenshot, not a cropped hint and no collage. Current date2026-11-25; show no dates.",
+      "original_path": "/Users/yuyuanzhengjack/.codex/generated_images/01a20bce-f43f-7431-8961-10f0af2494f5/exec-da0ccd7a-c493-4bd7-9bd1-286100d55573.png"
+    }
+  ]
+}

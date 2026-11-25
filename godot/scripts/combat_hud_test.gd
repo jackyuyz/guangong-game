@@ -89,8 +89,41 @@ func run() -> void:
 	game._sync_scene()
 	check(hud.get_node("Health/HP").value == game.checkpoint.hp and hud.get_node("Health/Trail").value == game.checkpoint.hp and hud.get_node("BossHealth/HP").value == 16, "checkpoint retry resets both real bars and any old damage feedback")
 	game.phase = 0
+	game.reduced_motion = false
 	game._sync_scene()
-	check(hud.get_node("Controls/Keys").visible and not hud.get_node("Extensions").visible and not hud.get_node("BossHealth").visible, "tutorial shows only its current instruction and health")
+	check(hud.get_node("Controls/Hint").visible and not hud.get_node("Extensions").visible and not hud.get_node("BossHealth").visible, "tutorial shows only its current instruction and health")
+	check(hud.get_node("Controls/Hint/Content/Key1").text == "A" and hud.get_node("Controls/Hint/Content/Key2").visible, "movement uses separate A and D keycaps")
+	game.phase = 1
+	game._sync_scene()
+	check(hud.get_node("Controls/Hint/Content/Key1").text == "J" and not hud.get_node("Controls/Hint/Content/Key2").visible and hud.get_node("Controls/Hint/Content/Action").text == "挥刀", "attack instruction has one keycap and no practice-progress decoration")
+	game.phase = 2
+	game._sync_scene()
+	check(hud.get_node("Controls/Hint/Content/Key1").text == "SPACE" and hud.get_node("Controls/Hint/Content/Action").text == "闪避", "dodge uses a wider Space keycap")
+	game.phase = 3
+	game._sync_scene()
+	hud._process(0.1)
+	check(hud.hint_alpha > 0.0 and hud.hint_alpha < 1.0 and hud.get_node("Controls/Hint").visible, "completed tutorial fades the existing hint instead of removing it instantly")
+	var hint_held: float = hud.hint_alpha
+	game.state = "pause"
+	game._sync_scene()
+	hud._process(0.5)
+	check(is_equal_approx(hud.hint_alpha, hint_held), "pause freezes the hint fade")
+	game.state = "play"
+	game.window_active = false
+	game._sync_scene()
+	hud._process(0.5)
+	check(is_equal_approx(hud.hint_alpha, hint_held), "focus loss freezes the hint fade")
+	game.window_active = true
+	game._sync_scene()
+	hud._process(0.5)
+	check(not hud.get_node("Controls/Hint").visible and hud.hint_alpha == 0.0, "resuming finishes the fade and clears the hint")
+	game.phase = 0
+	game._sync_scene()
+	check(hud.hint_alpha == 1.0 and hud.get_node("Controls/Hint").visible, "new tutorial restores the authored hint at full opacity")
+	game.phase = 3
+	game.reduced_motion = true
+	game._sync_scene()
+	check(not hud.get_node("Controls/Hint").visible, "reduced motion removes completed hints without a fade")
 	check(not FileAccess.file_exists(game.save_path), "HUD and telegraph checks never write player progress")
 	game.queue_free()
 	await process_frame
