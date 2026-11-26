@@ -47,13 +47,17 @@
 | `audio/zh-CN/03-letter.mp3` | 4.48 秒 | 7 秒 |
 | `audio/zh-CN/04-farewell.mp3` | 8.16 秒 | 9 秒 |
 | `audio/zh-CN/05-escort.mp3` | 4.40 秒 | 8 秒 |
-| `audio/zh-CN/06-dongling-clean.mp3` | 7.30 秒 | 10 秒 |
+| `audio/zh-CN/06-dongling-steady.mp3` | 7.53 秒 | 10 秒 |
 
-旁白合计 37.72 秒，留白及转场后自动播放约 51 秒，末幕等待确认。台词、控制标记、音色、模型、哈希和实际时长记录于 [voice-manifest.json](voice-manifest.json)。原始生成记录和已批准试音保存在忽略目录 `builds/audio/prologue/zh-CN/`。生成工具只从仓库根目录 `.env` 读取 Key，voice ID 为命令参数；游戏不调用 API。
+旁白合计 37.95 秒，留白及转场后自动播放约 51 秒，末幕等待确认。台词、控制标记、音色、模型、哈希和实际时长记录于 [voice-manifest.json](voice-manifest.json)。原始生成记录和已批准试音保存在忽略目录 `builds/audio/prologue/zh-CN/`。生成工具只从仓库根目录 `.env` 读取 Key，voice ID 为命令参数；游戏不调用 API。
 
 首幕录音原本重复说了两次“话说”。按用户反馈，2026-11-22 用本地 ffmpeg 去掉前 1.10 秒，在两遍之间的静音处起剪并加 5 ms 淡入；保留第二遍与其余全文。原始 6.16 秒录音保留于忽略目录 `builds/audio/prologue/zh-CN/first-scene-edit/01-separation-original.mp3`，运行成品改为 5.06 秒；第一幕停留仍为 7 秒，总流程仍为 51 秒。使用临时安装的本地 mlx-whisper/base 核对剪前两遍、剪后一遍，识别正文其余部分不变；不以自动转写替代人名发音审听。剪点、原／成品哈希与工具记录在 manifest；未重新生成配音、未上传音频。
 
 第六幕原录音也在开头重复“曹操”。按2026-11-25用户反馈，以本地ffmpeg在两遍间0.666871–0.896349秒的静音段内起剪，移除前0.78秒，加5ms淡入；新成品为`audio/zh-CN/06-dongling-clean.mp3`，7.30秒，原`06-dongling.mp3`继续保留。沿用原音色／语速／正文，未重新调用语音生成或上传音频；第六幕画面仍10秒，整体仍51秒。已有离线mlx-whisper/base逐词时间戳核对剪前重复与剪后单遍，后文完整，转写存在人名同音误字，不当作真人发音验收；保留段PCM相关度0.999957，剪点／源与成品哈希见manifest。
+
+2026-11-25用户进一步指定第二句为“众人尚未领到文书，便来到东岭关。”以避免“一行”的多音歧义。本轮通过ElevenLabs连接器沿用Mr. Chen／eleven_v4和原`[elderly voice] [seriously]`标记重录一次整幕，第一句保持“曹操虽已允行，沿途关口仍须文书。”，新成品`06-dongling-zhongren.mp3`原样接入，44100Hz／单声道／128kbps，8.48秒，无后期剪辑。旧原音与clean版保留，manifest的previous_versions保留剪辑历史；当前台词、生成来源ID及成品哈希见manifest，不保存短期下载链接或账户切换链接。离线转写确认单遍开头与完整新句，专名同音误字不当作人工发音验收；峰值−7.9dB，现有+2dB旁白增益仍有余量，画面10秒及总51秒不变。
+
+用户随后反馈两句tone差异过大及末尾未剪净。8.48秒版在正文结束后静音约0.68秒，8.32秒后另有明显短声，不再作为当前成品。沿用Mr. Chen／eleven_v4重录一份，保留elderly voice、改为全段calm／steady delivery，配音输入以逗号连续连接各分句，字幕仍保留原句号与两行。新原件9.76秒，原样保留在忽略目录`builds/audio/prologue/zh-CN/sixth-tone/06-dongling-steady-raw.mp3`；其首句重复，取第二遍前静音点2.15秒起剪，完整末字自然衰减后9.68秒结束，5ms淡入及末70ms淡出，成品`06-dongling-steady.mp3`为7.53秒。离线逐词核对单遍开头／完整末句，最后100ms RMS约−79.44dB；不改变音高或播放速度。用户已试听认可平稳语气和清理后的收尾；自动转写／静音检查不替代听感审听。此前各版保留，完整输入、剪点和来源／哈希历史在manifest；当前旁白37.95秒，画面时长不变。
 
 ## 原创合成音效与字体
 

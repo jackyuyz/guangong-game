@@ -81,26 +81,96 @@
       "model_id": "eleven_v4",
       "language": "zh",
       "output_format": "mp3_44100_128",
-      "text": "[elderly voice] [seriously] 曹操虽已允行，沿途关口仍须文书。 未领文书的一行，来到东岭关。",
-      "text_sha256": "88f6bd074aa83e1074a45381a4cd3013a50bdfe7698cf0a5b6402aaf62d792d5",
-      "duration_seconds": 7.3,
-      "audio_file": "06-dongling-clean.mp3",
-      "source_generation_duration_seconds": 8.08,
-      "audio_sha256": "79bb4b2e6c18d3cb17d617fba8838f86a2ec3869fb762606805bcfe3ee43c964",
+      "text": "[elderly voice] [calm] [steady delivery] 曹操虽已允行，沿途关口仍须文书，众人尚未领到文书，便来到东岭关。",
+      "text_sha256": "b7e284dc27da3230c3e91d5ae351259b39e546b60323cb7abd2e2977b7a2cd49",
+      "duration_seconds": 7.53,
+      "audio_file": "06-dongling-steady.mp3",
+      "audio_sha256": "feeaefcef2e9f284f027eff8c3dd7edf0e8555a20e254cb3daad56fc79671bd7",
+      "source_generation_duration_seconds": 9.76,
+      "generation": {
+        "date": "2026-11-25",
+        "tool": "ElevenLabs connector creative_generate_speech",
+        "flow_id": "p4zqeJiYzzLOsynwJRGK",
+        "node_id": "csFUqHaWZSk4xnf013HT",
+        "generation_id": "JSY1kxuNElRGnCDicEiA",
+        "takes": 1,
+        "reason": "User requested consistent tone between clauses and a clean ending",
+        "delivery": "Global calm/steady delivery; commas join the spoken clauses. Displayed subtitle punctuation stays unchanged."
+      },
       "postprocess": {
         "date": "2026-11-25",
-        "operation": "remove duplicated first 曹操; preserve second occurrence and remaining narration",
-        "source_audio_file": "06-dongling.mp3",
-        "source_audio_sha256": "5a49c2d5579496712248eed0e77f41bf7f03b19b2b5ad20f89f48ddf60bcbee6",
-        "trim_start_seconds": 0.78,
+        "source_audio_file": "builds/audio/prologue/zh-CN/sixth-tone/06-dongling-steady-raw.mp3",
+        "source_audio_sha256": "77b49e1b5746f7632fa02fba48d43d04f5dc31dca827eeeb014340b6f8b532c0",
+        "trim_start_seconds": 2.15,
+        "trim_end_seconds": 9.68,
         "fade_in_seconds": 0.005,
-        "source_silence_interval_seconds": [
-          0.666871,
-          0.896349
-        ],
+        "fade_out_start_seconds": 7.46,
+        "fade_out_seconds": 0.07,
         "tool": "ffmpeg atrim + asetpts + afade; libmp3lame 128k 44100 Hz mono",
-        "verification": "Offline cached mlx-whisper/base before/after word timestamps show removed lead-in and complete remaining two sentences; transcription has proper-name homophone errors and is not human pronunciation acceptance",
-        "retained_pcm_correlation": 0.999957
+        "operation": "Remove first repeated opening clause at a silence, retain complete second occurrence and final 东岭关, trim trailing padding and fade to silence",
+        "verification": "Offline word timestamps preserve full intended text with a single opening; final 100ms RMS -79.44dB. Does not constitute human tone/pronunciation acceptance."
+      },
+      "previous_versions": [
+        {
+          "provider": "ElevenLabs",
+          "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+          "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+          "model_id": "eleven_v4",
+          "language": "zh",
+          "output_format": "mp3_44100_128",
+          "text": "[elderly voice] [seriously] 曹操虽已允行，沿途关口仍须文书。 众人尚未领到文书，便来到东岭关。",
+          "text_sha256": "853753064dff82b9a89945c115221c58674aa1a5b2c3d4b069e007b668ae70b9",
+          "duration_seconds": 8.48,
+          "audio_file": "06-dongling-zhongren.mp3",
+          "audio_sha256": "6d5a5d69af93bb9fd9f4972af533b2c84eb6bf1a0a4665721300338600a0a95c",
+          "generation": {
+            "date": "2026-11-25",
+            "tool": "ElevenLabs connector creative_generate_speech",
+            "flow_id": "zsDS7MLqsNVVSMXfSirV",
+            "node_id": "vi0ytUFsuleduoI111VE",
+            "generation_id": "8c05pdfvc9Hi2rCuEt2R",
+            "reason": "User replaced second sentence to avoid 一行 polyphonic ambiguity",
+            "takes": 1,
+            "postprocess": "None; downloaded generation unchanged",
+            "verification": "Offline cached mlx-whisper/base finds one opening occurrence and the complete revised second sentence; proper-name homophone transcription errors are not treated as pronunciation acceptance"
+          },
+          "previous_versions": [
+            {
+              "provider": "ElevenLabs",
+              "voice_id": "cwzmKSYMCC9Aym1ymCnt",
+              "voice_name": "Mr. Chen - Trustworthy Chinese Narrator",
+              "model_id": "eleven_v4",
+              "language": "zh",
+              "output_format": "mp3_44100_128",
+              "text": "[elderly voice] [seriously] 曹操虽已允行，沿途关口仍须文书。 未领文书的一行，来到东岭关。",
+              "text_sha256": "88f6bd074aa83e1074a45381a4cd3013a50bdfe7698cf0a5b6402aaf62d792d5",
+              "duration_seconds": 7.3,
+              "audio_file": "06-dongling-clean.mp3",
+              "source_generation_duration_seconds": 8.08,
+              "audio_sha256": "79bb4b2e6c18d3cb17d617fba8838f86a2ec3869fb762606805bcfe3ee43c964",
+              "postprocess": {
+                "date": "2026-11-25",
+                "operation": "remove duplicated first 曹操; preserve second occurrence and remaining narration",
+                "source_audio_file": "06-dongling.mp3",
+                "source_audio_sha256": "5a49c2d5579496712248eed0e77f41bf7f03b19b2b5ad20f89f48ddf60bcbee6",
+                "trim_start_seconds": 0.78,
+                "fade_in_seconds": 0.005,
+                "source_silence_interval_seconds": [
+                  0.666871,
+                  0.896349
+                ],
+                "tool": "ffmpeg atrim + asetpts + afade; libmp3lame 128k 44100 Hz mono",
+                "verification": "Offline cached mlx-whisper/base before/after word timestamps show removed lead-in and complete remaining two sentences; transcription has proper-name homophone errors and is not human pronunciation acceptance",
+                "retained_pcm_correlation": 0.999957
+              }
+            }
+          ]
+        }
+      ],
+      "acceptance": {
+        "date": "2026-11-25",
+        "user_feedback": "可以，很好",
+        "scope": "steady tone and cleaned ending"
       }
     }
   ]
