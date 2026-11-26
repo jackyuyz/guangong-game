@@ -86,7 +86,8 @@ func present(game: Node) -> void:
 		player.pose(game.death_facing, Color(1.4, 1.15, 0.9) if game.death_elapsed < 0.08 else Color.WHITE)
 		player.pose_at("fall", game.death_elapsed)
 	# The dialogue stage owns the large portraits; avoid duplicate small actors behind it.
-	player.visible = game.phase != 5
+	var ending_portrait: bool = effective_state == "dialogue" and game.phase == 7 and game.dialogue_after == "victory" and not game.dialogue.is_empty() and str(game.dialogue[game.dialogue_index][0]) == "关羽"
+	player.visible = game.phase != 5 and not ending_portrait
 	$Ground/RestPoint.present(game)
 	$Ground/RestRecovery.present(game, player)
 	for view in guard_views:
