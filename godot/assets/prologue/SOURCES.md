@@ -47,11 +47,13 @@
 | `audio/zh-CN/03-letter.mp3` | 4.48 秒 | 7 秒 |
 | `audio/zh-CN/04-farewell.mp3` | 8.16 秒 | 9 秒 |
 | `audio/zh-CN/05-escort.mp3` | 4.40 秒 | 8 秒 |
-| `audio/zh-CN/06-dongling.mp3` | 8.08 秒 | 10 秒 |
+| `audio/zh-CN/06-dongling-clean.mp3` | 7.30 秒 | 10 秒 |
 
-旁白合计 38.50 秒，留白及转场后自动播放约 51 秒，末幕等待确认。台词、控制标记、音色、模型、哈希和实际时长记录于 [voice-manifest.json](voice-manifest.json)。原始生成记录和已批准试音保存在忽略目录 `builds/audio/prologue/zh-CN/`。生成工具只从仓库根目录 `.env` 读取 Key，voice ID 为命令参数；游戏不调用 API。
+旁白合计 37.72 秒，留白及转场后自动播放约 51 秒，末幕等待确认。台词、控制标记、音色、模型、哈希和实际时长记录于 [voice-manifest.json](voice-manifest.json)。原始生成记录和已批准试音保存在忽略目录 `builds/audio/prologue/zh-CN/`。生成工具只从仓库根目录 `.env` 读取 Key，voice ID 为命令参数；游戏不调用 API。
 
 首幕录音原本重复说了两次“话说”。按用户反馈，2026-11-22 用本地 ffmpeg 去掉前 1.10 秒，在两遍之间的静音处起剪并加 5 ms 淡入；保留第二遍与其余全文。原始 6.16 秒录音保留于忽略目录 `builds/audio/prologue/zh-CN/first-scene-edit/01-separation-original.mp3`，运行成品改为 5.06 秒；第一幕停留仍为 7 秒，总流程仍为 51 秒。使用临时安装的本地 mlx-whisper/base 核对剪前两遍、剪后一遍，识别正文其余部分不变；不以自动转写替代人名发音审听。剪点、原／成品哈希与工具记录在 manifest；未重新生成配音、未上传音频。
+
+第六幕原录音也在开头重复“曹操”。按2026-11-25用户反馈，以本地ffmpeg在两遍间0.666871–0.896349秒的静音段内起剪，移除前0.78秒，加5ms淡入；新成品为`audio/zh-CN/06-dongling-clean.mp3`，7.30秒，原`06-dongling.mp3`继续保留。沿用原音色／语速／正文，未重新调用语音生成或上传音频；第六幕画面仍10秒，整体仍51秒。已有离线mlx-whisper/base逐词时间戳核对剪前重复与剪后单遍，后文完整，转写存在人名同音误字，不当作真人发音验收；保留段PCM相关度0.999957，剪点／源与成品哈希见manifest。
 
 ## 原创合成音效与字体
 

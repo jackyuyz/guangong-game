@@ -138,7 +138,6 @@ func _set_more(value: bool) -> void:
 	more_open = value
 	$MorePanel.visible = value
 	$ReplayVoice.visible = value
-	_refresh_audio()
 	if active:
 		if value: $ReplayVoice.grab_focus()
 		else: $More.grab_focus()
@@ -157,7 +156,7 @@ func _input(event: InputEvent) -> void:
 			else: $ReplayVoice.grab_focus()
 			get_viewport().set_input_as_handled()
 	if event is InputEventMouseButton and event.pressed:
-		if not $MorePanel.get_global_rect().has_point(event.position) and not $More.get_global_rect().has_point(event.position):
+		if not $MorePanel.get_global_rect().has_point(event.position) and not $ReplayVoice.get_global_rect().has_point(event.position) and not $More.get_global_rect().has_point(event.position):
 			_set_more(false)
 			get_viewport().set_input_as_handled()
 
@@ -199,14 +198,15 @@ func _audio_context_ready() -> bool:
 
 func _refresh_audio() -> void:
 	waiting_for_audio = active and not _muted and not _audio_context_ready()
-	var paused = suspended or more_open or not auto_play or waiting_for_audio
+	var paused = suspended or not auto_play or waiting_for_audio
 	for player in [voice, ambience, effect]:
 		if player.stream_paused != paused:
 			player.stream_paused = paused
 	if _audio_bridge != null:
-		_audio_bridge.setActive(active and auto_play and not suspended and not more_open, _muted)
+		_audio_bridge.setActive(active and auto_play and not suspended, _muted)
 
 func _show_scene(next_index: int, blend: bool = true) -> void:
+	if more_open: _set_more(false)
 	var old_art: Node2D = get_node("Panels/" + scenes[index].node + "/Art")
 	$Transition/Image.texture = old_art.get_node("Illustration").texture
 	$Transition.position = old_art.position
@@ -253,7 +253,7 @@ func _process(dt: float) -> void:
 	_refresh_audio()
 	if waiting_for_audio != was_waiting:
 		_refresh_controls()
-	if suspended or more_open or not auto_play or waiting_for_audio:
+	if suspended or not auto_play or waiting_for_audio:
 		return
 	var step = minf(dt, float(scenes[index].duration) - elapsed)
 	elapsed += step

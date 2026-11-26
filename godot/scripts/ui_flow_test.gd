@@ -112,23 +112,42 @@ func run() -> void:
  var picture_time: float=prologue.animation.current_animation_position
  prologue._process(.3)
  check(prologue.elapsed>0 and prologue.animation.current_animation_position==picture_time and not prologue.get_node("Transition").visible, "reduced motion holds the picture while narration timing continues")
+ game.reduced_motion=false
+ game._sync_scene()
  await frames()
  prologue.toggle_more()
  var elapsed: float=prologue.elapsed
- prologue._process(1)
- check(prologue.more_open and prologue.voice.stream_paused and prologue.elapsed==elapsed, "more menu pauses narration and scene time together")
+ picture_time=prologue.animation.current_animation_position
+ prologue._process(.3)
+ check(prologue.more_open and not prologue.voice.stream_paused and not prologue.ambience.stream_paused and not prologue.effect.stream_paused and prologue.elapsed>elapsed and prologue.animation.current_animation_position>picture_time, "more menu keeps narration, ambience and scene animation playing")
  await frames()
  prologue.replay_current()
  check(not prologue.more_open and not prologue.voice.stream_paused and prologue.elapsed==0, "relisten closes menu and restarts current narration")
+ prologue._process(.25)
+ check(prologue.elapsed>0 and not prologue.voice.stream_paused, "relisten continues playing without an extra resume action")
  await frames()
  prologue.toggle_auto()
  await frames()
  prologue.toggle_more()
+ elapsed=prologue.elapsed
+ prologue._process(.3)
+ check(prologue.more_open and prologue.elapsed==elapsed and prologue.voice.stream_paused, "more menu preserves an explicit playback pause")
  var escape=InputEventKey.new()
  escape.physical_keycode=KEY_ESCAPE
  escape.pressed=true
  prologue._input(escape)
  check(not prologue.more_open and not prologue.auto_play and prologue.voice.stream_paused and game.state=="prologue", "Esc closes more without pausing the screen or resuming manual narration")
+ await frames()
+ prologue.toggle_more()
+ await frames()
+ prologue.replay_current()
+ check(prologue.auto_play and not prologue.voice.stream_paused and prologue.elapsed==0, "relisten from manual pause immediately restarts playback")
+ prologue._show_scene(0, false)
+ await frames()
+ prologue.toggle_more()
+ prologue.elapsed=float(prologue.scenes[0].duration)-.1
+ prologue._process(.2)
+ check(prologue.index==1 and not prologue.more_open and not prologue.voice.stream_paused, "automatic scene change closes the transient menu without stopping playback")
  prologue.stop()
  game.state="victory"
  game._sync_scene()

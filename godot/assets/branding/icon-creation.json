@@ -1,0 +1,14 @@
+{
+  "tool": "OpenAI built-in imagegen",
+  "date": "2026-11-25",
+  "intent": "generate",
+  "transparent_background": false,
+  "asset": "guan-seal-icon.png",
+  "source_file": "/Users/yuyuanzhengjack/.codex/generated_images/01a20bce-f43f-7431-8961-10f0af2494f5/exec-fccb2fe6-9eb3-411f-b89d-56e4849e8640.png",
+  "prompt": "Use case: icon. Create ONE final square application icon for a Chinese wuxia game titled 关公. A bold cinnabar-red seal stamp filling almost the entire square, with subtly hand-cut squared corners, and ONE large warm ivory Chinese character exactly “关” (simplified Chinese, NOT 關 and NOT 过). Character should be beautifully balanced strong thick regular-calligraphy, centered optically, occupy 75 percent width and height, with generously open counter spaces, all strokes recognizable at 16px. Use a compact clean silhouette inspired by an antique Chinese seal but use the clearly readable modern simplified glyph 关, not cryptic seal script. Minimal nearly flat design: rich cinnabar #AD3026 solid red background, ivory #F4E7C8 glyph, only a very thin restrained ivory inset square border (optional if it interferes with legibility); exceedingly subtle ink texture allowed only at outer edge, no holes or scratches through character. Straight front-on, no perspective, no 3D, no drop shadow, no gradients, no background scene, no extra lettering, no weapons or faces. Full bleed square red tile, opaque background, no outside blank margin. Favicon-first, high contrast, premium calm wuxia identity. Output single square image, no mockup, no multiple sizes or panels.",
+  "notes": "Copied unchanged from generated output. Project application/config/icon drives Godot Web favicon and Apple touch icon. Original assets remain intact.",
+  "size": [
+    1254,
+    1254
+  ]
+}

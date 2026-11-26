@@ -83,8 +83,25 @@
       "output_format": "mp3_44100_128",
       "text": "[elderly voice] [seriously] 曹操虽已允行，沿途关口仍须文书。 未领文书的一行，来到东岭关。",
       "text_sha256": "88f6bd074aa83e1074a45381a4cd3013a50bdfe7698cf0a5b6402aaf62d792d5",
-      "duration_seconds": 8.08,
-      "audio_file": "06-dongling.mp3"
+      "duration_seconds": 7.3,
+      "audio_file": "06-dongling-clean.mp3",
+      "source_generation_duration_seconds": 8.08,
+      "audio_sha256": "79bb4b2e6c18d3cb17d617fba8838f86a2ec3869fb762606805bcfe3ee43c964",
+      "postprocess": {
+        "date": "2026-11-25",
+        "operation": "remove duplicated first 曹操; preserve second occurrence and remaining narration",
+        "source_audio_file": "06-dongling.mp3",
+        "source_audio_sha256": "5a49c2d5579496712248eed0e77f41bf7f03b19b2b5ad20f89f48ddf60bcbee6",
+        "trim_start_seconds": 0.78,
+        "fade_in_seconds": 0.005,
+        "source_silence_interval_seconds": [
+          0.666871,
+          0.896349
+        ],
+        "tool": "ffmpeg atrim + asetpts + afade; libmp3lame 128k 44100 Hz mono",
+        "verification": "Offline cached mlx-whisper/base before/after word timestamps show removed lead-in and complete remaining two sentences; transcription has proper-name homophone errors and is not human pronunciation acceptance",
+        "retained_pcm_correlation": 0.999957
+      }
     }
   ]
 }

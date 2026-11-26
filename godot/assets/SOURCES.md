@@ -58,3 +58,7 @@ HUD头像复用`animations/guan-yu-sheet.png`首帧，AtlasTexture取(180,122,14
 ## 道旁茶歇（2026-11-25）
 
 一体木桌、青瓷壶碗、低凳与水篮的透明像素图由内置OpenAI imagegen生成，原样复制；短饮茶提示音为本项目程序合成。素材、完整提示及来源见[茶歇素材说明](tea-rest/SOURCES.md)。蒸汽／阴影／交互是独立真实节点，恢复轮廓和光点由短暂表现层驱动；原tea-set和素材库保留。
+
+## 项目图标（2026-11-25）
+
+朱砂红底、米白简体“关”字图标由内置OpenAI imagegen生成，设置为项目`application/config/icon`，Web导出同步favicon及Apple触屏图标。原图、完整提示与使用范围见[品牌图标来源](branding/SOURCES.md)。原有通关章框／角色素材保留。
