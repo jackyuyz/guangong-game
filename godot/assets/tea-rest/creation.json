@@ -1,0 +1,23 @@
+{
+  "tool": "OpenAI built-in imagegen",
+  "date": "2026-11-25",
+  "source_file": "/Users/yuyuanzhengjack/.codex/generated_images/01a20bce-f43f-7431-8961-10f0af2494f5/exec-155516da-4fda-420b-8909-c18a3ac3ad4e.png",
+  "output": "roadside-tea-rest.png",
+  "transparent_background": true,
+  "size": [
+    1536,
+    1024
+  ],
+  "prompt": "Use case: stylized-concept. Create ONE production-ready transparent PNG sprite asset for a Chinese wuxia side-scrolling 2D game. Subject: a small humble roadside tea rest station as a single coherent prop group: a weathered low dark-brown wooden trestle table with believable four grounded legs and crossbraces, a narrow faded beige linen runner, a modest celadon-green teapot and two small tea bowls on the tabletop, ONE low worn wooden stool to the right, and a small wicker water vessel tucked under the left of the table. Tiny muted grass tufts and a few pebbles around the feet, subtle contact shading directly under the furniture. No people, no canopy, no sign, no lettering, no symbols, no food, no trees, no scene background, NO drawn steam (steam will be animated in-engine). Frontal side-view with a very slight top-down view of the tabletop, suitable for a platformer road rear shoulder, not isometric. Warm sunlight from upper left. Style: detailed hand-painted PIXEL ART, discrete crisp pixel clusters, earthy golden ochre and moss green, restrained colors, natural textured aged wood, matching a pixel Guan Yu warrior and richly painted Chinese mountain forest road. Silhouette must read clearly at roughly 180 pixels wide in game, tabletop around a standing warrior's waist. Not photorealistic, not glossy 3D, not flat vector. Composition: complete prop group centered, nothing cropped, wide silhouette roughly 3:2, generous fully transparent padding on all sides; every table foot and stool foot visibly grounded along a shared baseline near the lower portion of the sprite. Preserve real alpha transparency, no checkerboard painted into pixels, no white/black rectangle, no large opaque ground island. Render only the prop group.",
+  "notes": "Copied unchanged; PNG alpha validated (1106290 fully transparent pixels); solid bounds x113..1497,y257..809. Source art library and old tea-set remain untouched.",
+  "audio": {
+    "file": "tea-sip.wav",
+    "method": "Original procedural PCM synthesis; no external recording or ElevenLabs generation used.",
+    "duration_seconds": 0.72,
+    "sample_rate": 22050,
+    "channels": 1,
+    "bits": 16,
+    "seed": 82439,
+    "description": "Soft filtered-noise pour, three damped watery bubbles, short breath and muted ceramic taps. Tiny game cue, not a realistic recorded drinking performance."
+  }
+}

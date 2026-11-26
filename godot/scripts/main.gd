@@ -76,6 +76,8 @@ var dialogue_after = "play"
 var message = "向右前行，抵达旗标"
 var message_time = 0.0
 var tutorial_hits = 0
+var tutorial_forward_dodge = false
+var tutorial_dodge_completed = false
 var score = 0
 var best = 0
 var cleared = false
@@ -189,6 +191,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if state != "play" or await_input_release:
 		return
 	if ext.handle_key(self, key):
+		if key == KEY_E and ext.rest_feedback > 0:
+			message_time = 0.0
 		return
 	if key == KEY_J and attack_cooldown <= 0.0 and dodge_time <= 0.0:
 		combo = combo + 1 if combo_window > 0.0 else 1
@@ -202,6 +206,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if key == KEY_SPACE and dodge_cooldown <= 0.0 and attack_time <= 0.0:
 		dodge_time = 0.36
 		dodge_cooldown = 0.8
+		tutorial_forward_dodge = phase == 2 and not tutorial_dodge_completed and facing > 0
 		_tone(120, 0.09, 0.06)
 
 func _action(action: String) -> void:
@@ -383,6 +388,7 @@ func _inputs_held() -> bool:
 func _reset_run() -> void:
 	set_meta("dummy_hits", 0)
 	tutorial_hits = 0
+	tutorial_dodge_completed = false
 	await_input_release = false
 	hp = 6
 	facing = 1
@@ -395,6 +401,7 @@ func _reset_run() -> void:
 	_reset_effects()
 
 func _reset_effects() -> void:
+	tutorial_forward_dodge = false
 	player_fallen = false
 	death_elapsed = 0.0
 	death_attack_left = 0.0
@@ -506,8 +513,10 @@ func _process(dt: float) -> void:
 			_update_death(minf(dt, 0.04))
 	if state in ["play", "finishing", "dying", "dialogue", "victory"]:
 		var camera_end = maxf(level.world_left, level.world_right - VIEWPORT_WIDTH)
+		if phase < 3 and not tutorial_dodge_completed:
+			camera_end = minf(camera_end, maxf(level.world_left, level.training_exit_x - VIEWPORT_WIDTH))
 		var target = camera_end if phase in [5, 6, 7] else clampf(x - 350, level.world_left, camera_end)
-		camera_x = lerpf(camera_x, target, minf(dt * 5, 1))
+		camera_x = clampf(lerpf(camera_x, target, minf(dt * 5, 1)), level.world_left, camera_end)
 	if state in ["play", "finishing", "dying", "victory"] and hit_stop <= 0:
 		shake = maxf(0, shake - dt * 20)
 		for p in particles:
@@ -533,7 +542,9 @@ func _update_play(dt: float) -> void:
 	message_time = maxf(0, message_time - dt)
 	var direction = float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
 	moving = false
-	if dodge_time > 0:
+	if ext.rest_feedback > 0:
+		moving = false
+	elif dodge_time > 0:
 		dodge_time = maxf(0, dodge_time - dt)
 		x += facing * 580 * dt
 	elif attack_time <= 0 and ext.heavy_time <= 0:
@@ -555,10 +566,14 @@ func _update_play(dt: float) -> void:
 			_sparks(level.dummy_hit_origin.x, level.dummy_hit_origin.y, GOLD)
 			if count >= 2:
 				phase = 2
-				_banner("按空格向前闪避，再向右迎战守军")
-	if phase == 2 and dodge_time > 0:
+				_banner("按空格向右闪避，完成后迎战守军")
+	if phase == 2 and tutorial_forward_dodge and dodge_time <= 0:
+		tutorial_forward_dodge = false
+		tutorial_dodge_completed = true
+		_banner("向右前行，迎战守军")
+	if phase == 2 and tutorial_dodge_completed and x >= level.training_encounter_x:
 		phase = 3
-		_spawn_wave(1)
+		_spawn_wave(1, true)
 		_banner("第一阵 · 击退两名守军")
 	for enemy in enemies:
 		if enemy.hp <= 0:
@@ -648,7 +663,12 @@ func _update_enemy(e: Dictionary, dt: float) -> void:
 
 func _clamp_player_x(position_x: float) -> float:
 	var left: float = level.world_left + 65 if phase < 6 else level.arena_min_x
-	return clampf(position_x, left, level.world_right - 80)
+	var right: float = level.world_right - 80
+	if phase < 3 and not tutorial_dodge_completed:
+		right = minf(right, level.training_exit_x - 80)
+	if phase < 2:
+		right = minf(right, level.dummy_origin.x - 95)
+	return clampf(position_x, left, maxf(left, right))
 
 func _hurt(direction: float, attacker: Dictionary = {}) -> void:
 	if invincible > 0 or (dodge_time > 0.06 and dodge_time < 0.30) or state != "play":
@@ -778,9 +798,14 @@ func _tone(frequency: float, seconds: float, volume: float) -> void:
 	tone_player.play()
 
 
-func _spawn_wave(wave: int) -> void:
-	for spawn in level.wave_spawns(wave):
-		_spawn(spawn.origin, spawn.view)
+func _spawn_wave(wave: int, enter_from_right: bool = false) -> void:
+	var offset_x = 0.0
+	var spawns: Array = level.wave_spawns(wave)
+	if enter_from_right and not spawns.is_empty():
+		var entrance_x = maxf(camera_x + VIEWPORT_WIDTH + 80, x + 300)
+		offset_x = maxf(0, entrance_x - float(spawns[0].origin.x))
+	for spawn in spawns:
+		_spawn(spawn.origin + Vector2(offset_x, 0), spawn.view)
 
 func _sync_scene() -> void:
 	journey.visible = state == "map"

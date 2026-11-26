@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=3]
+[ext_resource type="Script" path="res://scripts/tea_rest_view.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/tea-rest/roadside-tea-rest.png" id="art"]
+[ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="cutout"]
+[ext_resource type="FontVariation" path="res://themes/wuxia-display-font.tres" id="kai"]
+[ext_resource type="FontFile" path="res://assets/demo-font.ttf" id="sans"]
+[ext_resource type="AudioStream" path="res://assets/tea-rest/tea-sip.wav" id="sip"]
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("cutout")
+[sub_resource type="StyleBoxFlat" id="keycap"]
+bg_color = Color(0.035,0.065,0.05,0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.6,0.43,0.23,1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+[node name="RestPoint" type="Node2D"]
+script = ExtResource("script")
+[node name="ContactShadow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-107,0,-83,-4,45,-4,105,0,92,5,-75,5)
+color = Color(0.09,0.11,0.06,0.2)
+[node name="Artwork" type="Sprite2D" parent="."]
+texture = ExtResource("art")
+material = SubResource("material")
+centered = false
+scale = Vector2(0.15,0.15)
+offset = Vector2(-800,-809)
+[node name="Steam" type="Node2D" parent="."]
+position = Vector2(-33,-82)
+[node name="Wisp1" type="Line2D" parent="Steam"]
+points = PackedVector2Array(0,0,-1,-4,1,-8,0,-12)
+width = 1.5
+antialiased = true
+default_color = Color(0.95,0.94,0.81,0.8)
+modulate = Color(1,1,1,0.16)
+[node name="Wisp2" type="Line2D" parent="Steam"]
+points = PackedVector2Array(0,0,-1,-4,1,-8,0,-12)
+width = 1.5
+antialiased = true
+default_color = Color(0.95,0.94,0.81,0.8)
+modulate = Color(1,1,1,0.16)
+[node name="Wisp3" type="Line2D" parent="Steam"]
+points = PackedVector2Array(0,0,-1,-4,1,-8,0,-12)
+width = 1.5
+antialiased = true
+default_color = Color(0.95,0.94,0.81,0.8)
+modulate = Color(1,1,1,0.16)
+[node name="Hint" type="HBoxContainer" parent="."]
+visible = false
+offset_left = -47.0
+offset_top = -121.0
+offset_right = 47.0
+offset_bottom = -92.0
+mouse_filter = 2
+alignment = 1
+theme_override_constants/separation = 8
+[node name="Key" type="Label" parent="Hint"]
+custom_minimum_size = Vector2(25,25)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+text = "E"
+theme_override_fonts/font = ExtResource("sans")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.95,0.89,0.74,1)
+theme_override_styles/normal = SubResource("keycap")
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Caption" type="Label" parent="Hint"]
+layout_mode = 2
+mouse_filter = 2
+text = "歇脚"
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.95,0.89,0.74,1)
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(0.04,0.07,0.05,0.9)
+vertical_alignment = 1
+[node name="Sip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("sip")
+volume_db = -13.0

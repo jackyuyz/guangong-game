@@ -38,7 +38,7 @@ func run() -> void:
 	game.x = 450
 	game._update_play(0.01)
 	check(game.phase == 1, "movement tutorial")
-	game.x = 600
+	game.x = game.level.dummy_origin.x - 90
 	press(KEY_J)
 	game._update_play(0.09)
 	game._update_play(0.30)
@@ -47,7 +47,9 @@ func run() -> void:
 	check(game.phase == 2, "two distinct training hits")
 	game._update_play(0.30)
 	press(KEY_SPACE)
-	game._update_play(0.09)
+	for i in 40: game._update_play(0.01)
+	game.x = game.level.training_encounter_x
+	game._update_play(0.01)
 	check(game.phase == 3 and game.enemies.size() == 2, "dodge and first wave")
 	game._reset_effects()
 	game.x = game.enemies[0].x - 90
@@ -60,10 +62,12 @@ func run() -> void:
 	game._update_play(0.01)
 	check(game.phase == 4 and game.enemies.size() == 3, "second wave")
 	game.enemies.clear()
-	game.x = 2060
+	game.x = game.rest_x
 	game.hp = 3
+	game._update_play(0.4)
 	press(KEY_E)
 	check(game.hp == 4 and game.ext.resource == 4 and game.ext.rest_used, "tea stall heals and fills resolve through normal key handling")
+	for i in 80: game._update_play(0.01)
 	game.x = 2200
 	game._update_play(0.01)
 	check(game.phase == 5 and game.state == "dialogue", "boss introduction")

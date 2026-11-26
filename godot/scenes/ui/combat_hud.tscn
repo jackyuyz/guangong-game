@@ -225,6 +225,19 @@ texture_filter = 2
 texture_progress = SubResource("wash")
 tint_progress = Color(0.88, 0.21, 0.14, 1)
 
+[node name="RestGain" type="TextureRect" parent="Health"]
+visible = false
+layout_mode = 0
+offset_left = 70.0
+offset_top = 38.0
+offset_right = 110.0
+offset_bottom = 56.0
+mouse_filter = 2
+texture = SubResource("wash")
+expand_mode = 1
+texture_filter = 2
+self_modulate = Color(0.8,0.95,0.6,1)
+
 [node name="LowHealth" type="Label" parent="Health"]
 layout_mode = 0
 offset_left = 318.0
@@ -748,3 +761,33 @@ theme_override_colors/font_outline_color = Color(0.02, 0.035, 0.03, 0.95)
 theme_override_constants/outline_size = 1
 vertical_alignment = 1
 visible = false
+
+[node name="RestNotice" type="Control" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 312.0
+offset_top = 122.0
+offset_right = 648.0
+offset_bottom = 162.0
+mouse_filter = 2
+[node name="Ink" type="TextureRect" parent="RestNotice"]
+layout_mode = 0
+offset_left = -6.0
+offset_top = -4.0
+offset_right = 342.0
+offset_bottom = 42.0
+mouse_filter = 2
+texture = ExtResource("ink_wash")
+expand_mode = 1
+modulate = Color(0.65,0.8,0.65,0.7)
+[node name="Text" type="Label" parent="RestNotice"]
+layout_mode = 0
+offset_right = 336.0
+offset_bottom = 38.0
+mouse_filter = 2
+text = "气血回复 · 义气充盈"
+theme_override_fonts/font = ExtResource("kai")
+theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.9,0.94,0.75,1)
+horizontal_alignment = 1
+vertical_alignment = 1

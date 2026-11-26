@@ -32,14 +32,17 @@ func present(game: Node) -> void:
 	$Extensions.visible = game.phase >= 3 and (game.phase < 7 or game.state == "finishing")
 	for i in 4:
 		$Extensions/Pips.get_child(i).self_modulate = FILLED if i < game.ext.resource else EMPTY
+	_present_rest(game)
 	$Extensions.tooltip_text = "义气 %d / %d" % [game.ext.resource, game.ext.RESOURCE_MAX]
 	var ready: bool = game.state == "play" and game.ext.heavy_ready()
 	$Extensions/Skill.modulate = Color.WHITE if ready else Color(0.68, 0.7, 0.61, 1)
 	$Extensions/Skill/Ready.visible = ready
 	$ObjectivePanel.visible = game.phase < 6
-	$ObjectivePanel/Objective.text = ["前往旗标", "练习挥刀", "练习闪避", "击退第一阵守军", "清除守军，前往关门", "关前对话", "", ""][game.phase]
+	$ObjectivePanel/Objective.text = ["前往旗标", "练习挥刀", "向右闪避", "击退第一阵守军", "清除守军，前往关门", "关前对话", "", ""][game.phase]
 	if game.phase == 4 and game.enemies.is_empty(): $ObjectivePanel/Objective.text = "前往关门"
-	_present_hint(game.phase, new_session)
+	var approach: bool = game.phase == 2 and game.tutorial_dodge_completed
+	if approach: $ObjectivePanel/Objective.text = "向右前行"
+	_present_hint(0 if approach else game.phase, new_session)
 	$Controls/Dodge.visible = game.dodge_cooldown > 0.0
 	$Mute.text = "开声" if game.muted else "静音"
 	# Entry narration is already communicated by the boss name. Event/error messages remain.
@@ -88,3 +91,19 @@ func _present_hint(phase: int, reset: bool) -> void:
 func _paint_hint() -> void:
 	$Controls/Hint.modulate.a = hint_alpha
 	$Controls/Hint.visible = hint_alpha > 0.0
+
+func _present_rest(game: Node) -> void:
+	var recovering: bool = game.ext.rest_feedback > 0
+	var age: float = game.ext.REST_FEEDBACK_TIME - game.ext.rest_feedback
+	var weight = sin(clampf(age / game.ext.REST_FEEDBACK_TIME, 0, 1) * PI)
+	$Health/RestGain.visible = recovering and not game.reduced_motion and game.hp > game.ext.rest_hp_before
+	$Health/RestGain.position.x = $Health/HP.position.x + $Health/HP.size.x * game.ext.rest_hp_before / 6.0
+	$Health/RestGain.size.x = $Health/HP.size.x * maxf(0, game.hp - game.ext.rest_hp_before) / 6.0
+	$Health/RestGain.modulate.a = weight * .7
+	if recovering and not game.reduced_motion:
+		for i in 4:
+			var pulse = maxf(0, 1.0 - absf(age - (.14 + i * .12)) / .17)
+			$Extensions/Pips.get_child(i).self_modulate = Color(1 + pulse, 1 + pulse * .8, 1 + pulse * .35)
+	$RestNotice.visible = game.ext.rest_notice > 0 and game.phase in [4, 5] and game.state in ["play", "pause", "confirm"]
+	$RestNotice.modulate.a = minf(1, game.ext.rest_notice / .4)
+	$RestNotice/Text.text = ("气血已满" if game.ext.rest_hp_before >= 6 else "气血回复") + " · 义气充盈"

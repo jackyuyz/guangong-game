@@ -13,7 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://cd5qh4yemq0f1" path="res://assets/dongling-layers/road.png" id="road"]
 [ext_resource type="Texture2D" uid="uid://b7mid4cyghdbr" path="res://assets/dongling-layers/roadside.png" id="roadside"]
 [ext_resource type="Shader" uid="uid://s3qnpohu12l7" path="res://scripts/road_blend.gdshader" id="road_blend"]
-[ext_resource type="Texture2D" uid="uid://com0a0qxl23lu" path="res://assets/tea-set.png" id="tea_set"]
+[ext_resource type="PackedScene" path="res://scenes/levels/tea_rest.tscn" id="tea_rest"]
+[ext_resource type="PackedScene" path="res://scenes/characters/rest_recovery.tscn" id="rest_recovery"]
 [ext_resource type="Texture2D" uid="uid://bl016l4vv026t" path="res://assets/dongling-layers/tree.png" id="tree"]
 [ext_resource type="Texture2D" uid="uid://djvc8hf16a5i8" path="res://assets/dongling-layers/wall.png" id="wall"]
 
@@ -171,45 +172,18 @@ centered = false
 offset = Vector2(-445, -1192)
 
 [node name="Dummy" parent="Ground/Training" unique_id=506891207 instance=ExtResource("training_dummy")]
-position = Vector2(650, 440)
+position = Vector2(785, 440)
 
-[node name="RestPoint" type="Node2D" parent="Ground" unique_id=186598618]
+[node name="Exit" type="Marker2D" parent="Ground/Training"]
+position = Vector2(1040, 440)
+
+[node name="Encounter" type="Marker2D" parent="Ground/Training"]
+position = Vector2(1100, 440)
+
+[node name="RestPoint" parent="Ground" instance=ExtResource("tea_rest")]
 position = Vector2(2060, 390)
 
-[node name="Table" type="Polygon2D" parent="Ground/RestPoint" unique_id=537325122]
-color = Color(0.35, 0.22, 0.12, 1)
-polygon = PackedVector2Array(-48, -43, 48, -43, 48, -33, -48, -33)
-
-[node name="LeftLeg" type="Polygon2D" parent="Ground/RestPoint" unique_id=1133097697]
-color = Color(0.25, 0.16, 0.1, 1)
-polygon = PackedVector2Array(-39, -33, -31, -33, -31, 0, -39, 0)
-
-[node name="RightLeg" type="Polygon2D" parent="Ground/RestPoint" unique_id=74031089]
-color = Color(0.25, 0.16, 0.1, 1)
-polygon = PackedVector2Array(31, -33, 39, -33, 39, 0, 31, 0)
-
-[node name="TeaPot" type="Sprite2D" parent="Ground/RestPoint" unique_id=997065917]
-position = Vector2(6, -64)
-scale = Vector2(0.075, 0.075)
-texture = ExtResource("tea_set")
-region_enabled = true
-region_rect = Rect2(650, 0, 850, 570)
-
-[node name="Cup" type="Sprite2D" parent="Ground/RestPoint" unique_id=1675965264]
-position = Vector2(-29, -54)
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("tea_set")
-region_enabled = true
-region_rect = Rect2(190, 210, 400, 330)
-
-[node name="Hint" type="Label" parent="Ground/RestPoint" unique_id=678799265]
-offset_left = -75.0
-offset_top = -112.0
-offset_right = 110.0
-offset_bottom = -86.0
-theme_override_fonts/font = ExtResource("e4")
-theme_override_font_sizes/font_size = 13
-text = "E  茶摊歇脚"
+[node name="RestRecovery" parent="Ground" instance=ExtResource("rest_recovery")]
 
 [node name="Player" parent="Ground" unique_id=154100233 instance=ExtResource("e5")]
 position = Vector2(330, 440)

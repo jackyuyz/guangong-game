@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/rest_recovery.gd" id="script"]
+[ext_resource type="Shader" path="res://scripts/rest_glow.gdshader" id="shader"]
+[sub_resource type="ShaderMaterial" id="glow"]
+resource_local_to_scene = true
+shader = ExtResource("shader")
+[node name="RestRecovery" type="Node2D"]
+visible = false
+z_index = 2
+script = ExtResource("script")
+[node name="Silhouette" type="Sprite2D" parent="."]
+material = SubResource("glow")
+texture_filter = 1

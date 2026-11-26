@@ -22,6 +22,7 @@ const HEAVY_COOLDOWN = 0.9
 const HEAVY_STAGGER = 0.9
 const REST_RANGE = 85.0
 const REST_HEAL = 1
+const REST_FEEDBACK_TIME = 0.8
 const JADE = Color("72b69a")
 const GOLD = Color("dfbc76")
 const PAPER = Color("f3e8cd")
@@ -40,6 +41,10 @@ var heavy_cooldown = 0.0
 var heavy_pending = false
 var rest_used = false
 var rest_announced = false
+var rest_feedback = 0.0
+var rest_notice = 0.0
+var rest_hp_before = 6
+var rest_qi_before = 0
 var parries = 0
 var blocks = 0
 # Boss-checkpoint snapshot of 义气 (-1 = none). Kept across reset() so a boss
@@ -61,6 +66,8 @@ func reset() -> void:
 	heavy_cooldown = 0.0
 	rest_used = false
 	rest_announced = false
+	rest_feedback = 0.0
+	rest_notice = 0.0
 	parries = 0
 	blocks = 0
 	_last_phase = -1
@@ -76,11 +83,14 @@ func heavy_ready() -> bool:
 
 func can_rest(game: Node) -> bool:
 	return not rest_used and game.state == "play" and game.phase == 4 \
-		and game.enemies.is_empty() and absf(game.x - game.rest_x) <= REST_RANGE
+		and game.enemies.is_empty() and absf(game.x - game.rest_x) <= REST_RANGE \
+		and game.attack_time <= 0 and game.dodge_time <= 0 and heavy_time <= 0
 
 func update(game: Node, dt: float) -> void:
 	if game.state != "play":
 		return
+	rest_feedback = maxf(0, rest_feedback - dt)
+	rest_notice = maxf(0, rest_notice - dt)
 	if guard_timer > 0.0:
 		guard_age += dt
 		guard_timer = maxf(0.0, guard_timer - dt)
@@ -110,6 +120,8 @@ func update(game: Node, dt: float) -> void:
 func handle_key(game: Node, key: int) -> bool:
 	if game.state != "play":
 		return false
+	if rest_feedback > 0 and key in [KEY_J, KEY_SPACE, KEY_K, KEY_L]:
+		return true
 	if heavy_time > 0 and key in [KEY_J, KEY_SPACE, KEY_K, KEY_L]:
 		return true
 	match key:
@@ -126,11 +138,13 @@ func handle_key(game: Node, key: int) -> bool:
 		KEY_E:
 			if can_rest(game):
 				rest_used = true
+				rest_feedback = REST_FEEDBACK_TIME
+				rest_notice = 1.8
+				rest_hp_before = game.hp
+				rest_qi_before = resource
+				guard_timer = 0.0
 				game.hp = mini(6, game.hp + REST_HEAL)
 				resource = RESOURCE_MAX
-				game._sparks(game.x, game.player_y - 70, JADE)
-				game._tone(440, 0.18, 0.07)
-				game._banner("茶摊歇脚 · 气血回复一格，义气充盈")
 				return true
 			return false
 		KEY_J:

@@ -87,8 +87,11 @@ func run() -> void:
  check(game.get_meta("dummy_hits")==2 and sprite.frame==2,"further swings cannot overflow or restore broken state")
  game._reset_effects()
  key(KEY_SPACE)
+ step(0.4)
+ check(game.phase==2 and game.tutorial_dodge_completed and game.enemies.is_empty(),"completed forward dodge opens the approach without premature guards")
+ game.x=game.level.training_encounter_x
  step(0.01)
- check(game.phase==3 and game.enemies.size()==2 and sprite.frame==2 and dummy.visible,"dodge still starts first wave and leaves grounded debris")
+ check(game.phase==3 and game.enemies.size()==2 and sprite.frame==2 and dummy.visible,"reaching encounter after practice starts first wave and leaves grounded debris")
  game.state="dead"
  game._action("retry")
  game._sync_scene()

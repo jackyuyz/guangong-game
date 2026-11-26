@@ -123,10 +123,19 @@ func run() -> void:
 	check(sprite.frame != 1 and not game.tone_player.stream_paused, "resuming advances animation and audio")
 	game.muted = true
 	game.phase = 2
-	game.dodge_time = 0.2
+	game._reset_effects()
+	game.facing = 1
+	game.await_input_release = false
+	var dodge = InputEventKey.new()
+	dodge.physical_keycode = KEY_SPACE
+	dodge.pressed = true
+	game._unhandled_input(dodge)
+	for i in 40: game._update_play(0.01)
+	game.x = game.level.training_encounter_x
 	game._update_play(0.01)
 	game._sync_scene()
-	check(game.enemies.size() == 2 and game.enemies[0].x > 1170, "first wave comes from authored guard positions")
+	var wave_gap: float = game.level.wave_spawns(1)[1].origin.x - game.level.wave_spawns(1)[0].origin.x
+	check(game.enemies.size() == 2 and game.enemies[0].x > game.camera_x + game.VIEWPORT_WIDTH and is_equal_approx(game.enemies[1].x - game.enemies[0].x, wave_gap), "first wave keeps authored spacing and enters from the right after practice")
 	var guard = game.get_node("Level/Ground/Guards/WaveOne/Guard1")
 	check(guard.visible and is_equal_approx(guard.position.x, game.enemies[0].x), "enemy presentation tracks combat position")
 	game.enemies[0].mode = "windup"

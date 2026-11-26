@@ -10,6 +10,8 @@ extends Node2D
 @onready var flag_origin = to_local($Ground/Training/Flag.global_position)
 @onready var dummy_origin = to_local($Ground/Training/Dummy.global_position)
 @onready var dummy_hit_origin = to_local($Ground/Training/Dummy/HitOrigin.global_position)
+@onready var training_exit_x: float = to_local($Ground/Training/Exit.global_position).x
+@onready var training_encounter_x: float = to_local($Ground/Training/Encounter.global_position).x
 @onready var rest_origin = to_local($Ground/RestPoint.global_position)
 @onready var gate_x: float = to_local($Ground/GateTrigger.global_position).x
 @onready var arena_min_x: float = to_local($Ground/ArenaLeft.global_position).x
@@ -52,7 +54,10 @@ func present(game: Node) -> void:
 	var moving: bool = game.moving
 	var frozen: bool = game.state != "play" or game.hit_stop > 0
 	var bob = sin(game.clock * 15) * 2.3 if moving else sin(game.clock * 2) * 0.7
+	if game.ext.rest_feedback > 0 and not game.reduced_motion:
+		bob -= sin((game.ext.REST_FEEDBACK_TIME - game.ext.rest_feedback) / game.ext.REST_FEEDBACK_TIME * PI) * 1.4
 	var tint = Color(1, 1, 1, 0.35) if game.ext.heavy_time <= 0 and game.invincible > 0 and int(game.clock * 18) % 2 == 0 else Color.WHITE
+	if game.ext.rest_feedback > 0: tint = Color.WHITE
 	var tilt: float = game.facing * (0.16 if game.dodge_time > 0 else (-0.10 if game.attack_time > 0 else 0.0))
 	player.pose(game.facing, tint, tilt, bob)
 	var motion = "idle"
@@ -66,6 +71,7 @@ func present(game: Node) -> void:
 		motion = "hurt"
 	elif moving or game.dodge_time > 0:
 		motion = "walk"
+	if game.ext.rest_feedback > 0: motion = "idle"
 	player.animate(motion, frozen)
 	if game.attack_time > 0:
 		player.pose_at("attack", game.ATTACK_TIME - game.attack_time)
@@ -81,9 +87,8 @@ func present(game: Node) -> void:
 		player.pose_at("fall", game.death_elapsed)
 	# The dialogue stage owns the large portraits; avoid duplicate small actors behind it.
 	player.visible = game.phase != 5
-	$Ground/RestPoint.visible = game.phase in [4, 5]
-	$Ground/RestPoint/Hint.text = "已歇脚" if game.ext.rest_used else "E  茶摊歇脚"
-	$Ground/RestPoint.modulate.a = 0.5 if game.ext.rest_used else 1.0
+	$Ground/RestPoint.present(game)
+	$Ground/RestRecovery.present(game, player)
 	for view in guard_views:
 		view.hide()
 	boss.hide()
