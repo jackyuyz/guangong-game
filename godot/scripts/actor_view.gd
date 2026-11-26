@@ -15,7 +15,7 @@ func pose(direction: float, tint: Color = Color.WHITE, tilt: float = 0.0, bob: f
 	visual.rotation = rest_rotation + tilt
 	visual.position.y = rest_y + bob
 
-func present_enemy(enemy: Dictionary, player_x: float, frozen: bool) -> void:
+func present_enemy(enemy: Dictionary, player_x: float, frozen: bool, road_limits: Vector2 = Vector2(-INF, INF)) -> void:
 	var windup: bool = enemy.mode == "windup"
 	var attacking: bool = windup or enemy.mode == "strike"
 	$Telegraph.visible = attacking
@@ -25,7 +25,7 @@ func present_enemy(enemy: Dictionary, player_x: float, frozen: bool) -> void:
 	$Health.value = enemy.hp
 	var reach = 190.0 if enemy.boss else 120.0
 	var sweep: bool = enemy.boss and enemy.move % 2 == 0
-	$Telegraph.present(enemy.facing, reach, sweep, enemy.mode == "strike")
+	$Telegraph.present(enemy, reach, sweep, road_limits)
 	$AttackHint.text = "横扫" if sweep else "突刺"
 	$AttackHint.position.x = hint_origin.x if enemy.facing < 0 else -hint_origin.x - $AttackHint.size.x
 	var tint = Color(1.8, 1.4, 0.9) if enemy.flash > 0 else Color.WHITE

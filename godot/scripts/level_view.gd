@@ -99,7 +99,7 @@ func present(game: Node) -> void:
 		var view: Node2D = enemy.view
 		view.global_position = to_global(Vector2(enemy.x, enemy.y))
 		view.show()
-		view.present_enemy(enemy, game.x, frozen)
+		view.present_enemy(enemy, game.x, frozen, Vector2(game._clamp_player_x(-1.0e20), game._clamp_player_x(1.0e20)))
 		if game.player_fallen:
 			view.get_node("Telegraph").hide()
 			view.get_node("AttackHint").hide()

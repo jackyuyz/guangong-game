@@ -25,6 +25,10 @@
 
 音效由程序生成短音，未使用外部音频。故事文本见 `data/story.json`，均为原型草稿，尚无配音或文本组审定版本。
 
+## 攻击范围表现（2026-11-26）
+
+关羽刀弧在原程序绘制基础上增加内侧金光、细白亮锋与短流光；敌方地面箭形／弧带为真实Polygon2D、Line2D节点。没有新增生成图、外部下载、音频或人物动作素材，原图集与角色场景未改。实现与验证见[攻击范围表现规格](../../docs/design/attack-range-effects-spec.md)。
+
 ## 孔秀登场前对白
 
 孔秀登场前的双人对白复用 `animations/guan-yu-sheet.png` 与 `animations/kong-xiu-sheet.png` 首个idle帧；原生AtlasTexture裁取，最近邻采样、共享透明边缘材质，未增加生成素材或独立口型帧。布局见 `scenes/ui/duel_dialogue.tscn`。
