@@ -34,7 +34,7 @@ func run() -> void:
 	check(game.state == "map", "chapter cannot start during scroll reveal")
 	map._process(.9)
 	check(map.ready_to_start and is_equal_approx(map.get_node("ScrollClip").size.x, 960), "scroll reveal completes to full authored width")
-	check(map.get_node("Progress").text == "已通过 0 / 5 关" and map.selected == 0, "new journey shows actual zero progress and first recommendation")
+	check(game.progress.completed_count() == 0 and map.selected == 0, "new journey keeps zero progress and the first recommendation")
 	check(map.can_enter("dongling"), "first chapter is available")
 	var caravan: Vector2 = map.get_node("ScrollClip/Caravan").position
 	check(not map.has_node("ScrollClip/ReadyFlag") and not map.nodes[0].has_node("State"), "map uses no ambiguous red flag or redundant per-stop state captions")
@@ -106,7 +106,7 @@ func run() -> void:
 	game._finish_dialogue()
 	game._action("culture")
 	game._action("map_return")
-	check(game.state == "map" and map.selected == 0 and map.get_node("Progress").text == "已通过 1 / 5 关", "settlement returns to map with one of five complete")
+	check(game.state == "map" and map.selected == 0 and game.progress.completed_count() == 1, "settlement returns to map with one of five complete")
 	check(map.get_node("ScrollClip/Stops/Pass1/Seal").visible and map.get_node("ScrollClip/Details/Start").text == "再次挑战", "completed chapter shows stamp and replay action")
 	check(map.get_node("ScrollClip/Caravan").position == map.get_node("ScrollClip/TravelEnd").position and map.get_node("ScrollClip/Caravan").scale.x > 1.0, "larger party reaches the authored first-pass exit without entering an unfinished chapter")
 	check(map.nodes[0].get_node("Seal/Glyph").text == game.ui.get_node("Root/Victory/Seal/Glyph").text and map.nodes[0].get_node("Seal").texture == game.ui.get_node("Root/Victory/Seal").texture, "map reuses the victory page's legible guo glyph and red seal artwork")

@@ -114,7 +114,6 @@ func confirm_selection() -> void:
 
 func present() -> void:
 	if progress == null or chapters.size() != nodes.size(): return
-	$Progress.text = "已通过 %d / 5 关" % progress.completed_count()
 	$SaveNotice.text = progress.error_text
 	$Hint.visible = _keyboard_navigation
 	var chapter = chapters[selected]
