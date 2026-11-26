@@ -115,7 +115,7 @@ func run() -> void:
 	check(game.utility_panel == "credits" and panel.is_visible_in_tree() and game.state == "menu", "keyboard opens credits without starting the journey")
 	check(root.gui_get_focus_owner() == close and not menu.get_node("Credits").visible, "credits focuses return and hides the covered menu")
 	check(not game.ui.get_node("Root/Utility/Settings").visible and not game.ui.get_node("Root/Utility/Body").visible, "credits replaces other utility content")
-	check(panel.get_node("Team").text == "吴老师的82439-Black Myth: Wukong and the Journey to the West F26", "credits preserves the supplied team name exactly")
+	check(panel.get_node("Team").text == "吴老师与 82-439 课程团队", "credits preserves the supplied team name exactly")
 	for code in [KEY_TAB, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]: key(code)
 	check(root.gui_get_focus_owner() == close, "credits traps keyboard navigation inside its return action")
 	var echo_key = InputEventKey.new()

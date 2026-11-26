@@ -33,3 +33,8 @@
 用户选择教学提示概念图第二张后，实际界面复用现有`wuxia-kai.otf`，在`combat_hud.tscn`内独立FontVariation加厚0.75、32px，不修改原OTF或通用展示字体。小键帽改用工程已有`assets/demo-font.ttf`（Noto Sans SC子集，遵循`assets/FONT-LICENSE.txt`），独立加厚0.55，不新增下载字体；前行／挥刀／闪避及A、D、J、SPACE实机正常。
 
 柔墨为原`combat-ink-wash.png`，朱红横线由原`assets/main-menu/menu-brush.png`的Atlas区域着色并缩放，静态装饰不代表练习进度。没有新增生成运行素材或覆盖源图。概念图来源和完整提示保留在`docs/art/tutorial-hint-concepts-2026-11-25/`，不是运行背景或字库。
+
+## 制作团队文案补字（2026-11-25）
+
+- 宋体子集从上述官方Noto Serif SC变量字体固定400重建，保留旧版全部字符、字形轮廓及水平指标；当前cmap由543增至546码点，补入满、罗、贯。制作团队页仅团队名使用独立FontVariation轻加厚0.35／23px；英文17px、正文18px沿用宋体400。字体族、版权及许可不变。
+- 本页完整文案在宋体、楷体及默认Noto Sans SC子集中逐字检查无缺字。原始完整字体仅在临时目录；未引入新的字体来源或修改许可证。

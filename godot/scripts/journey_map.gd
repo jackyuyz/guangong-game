@@ -7,7 +7,6 @@ var selected = 0
 var reduced_motion = false
 var suspended = false
 var ready_to_start = false
-var _keyboard_navigation = false
 var _opened = false
 var _opening = false
 var _time = 0.0
@@ -115,7 +114,6 @@ func confirm_selection() -> void:
 func present() -> void:
 	if progress == null or chapters.size() != nodes.size(): return
 	$SaveNotice.text = progress.error_text
-	$Hint.visible = _keyboard_navigation
 	var chapter = chapters[selected]
 	var cleared = progress.is_cleared(chapter.id)
 	var unlocked = progress.is_unlocked(chapter.id)
@@ -160,12 +158,7 @@ func present() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not visible or suspended: return
-	if event is InputEventMouseButton or event is InputEventMouseMotion:
-		_keyboard_navigation = false
-		$Hint.hide()
 	if not event is InputEventKey or not event.pressed or event.echo: return
-	_keyboard_navigation = true
-	$Hint.show()
 	if event.keycode in [KEY_LEFT, KEY_RIGHT] or event.physical_keycode in [KEY_LEFT, KEY_RIGHT]:
 		var code = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 		select_chapter(selected + (-1 if code == KEY_LEFT else 1))

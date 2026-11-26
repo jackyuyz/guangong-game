@@ -62,3 +62,7 @@ HUD头像复用`animations/guan-yu-sheet.png`首帧，AtlasTexture取(180,122,14
 ## 项目图标（2026-11-25）
 
 朱砂红底、米白简体“关”字图标由内置OpenAI imagegen生成，设置为项目`application/config/icon`，Web导出同步favicon及Apple触屏图标。原图、完整提示与使用范围见[品牌图标来源](branding/SOURCES.md)。原有通关章框／角色素材保留。
+
+## 制作团队默认字体补字（2026-11-25）
+
+`demo-font.ttf`继续使用上述官方Noto Sans SC Regular 400，保留旧版全部540个码点及对应轮廓／水平指标，补齐制作团队新文案后共555个码点。字体族、版权及SIL Open Font License保持；实际制作团队正文仍使用宋体，默认字体补齐用于全局回退。
