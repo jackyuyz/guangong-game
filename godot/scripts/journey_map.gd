@@ -84,7 +84,8 @@ func set_reduced_motion(value: bool) -> void:
 		$ScrollClip.size.x = 960
 		if _celebration: _celebration.kill()
 		_celebration_pending = false
-		$ScrollClip/Stops/Pass1/Seal.scale = Vector2.ONE
+		for stop in nodes:
+			stop.get_node("Seal").scale = Vector2.ONE
 	if progress != null: present()
 
 func set_suspended(value: bool) -> void:
@@ -131,8 +132,12 @@ func present() -> void:
 	$ScrollClip/Details/Number.text = "第%s关" % ["一", "二", "三", "四", "五"][selected]
 	$ScrollClip/Details/Title.text = chapter.name
 	$ScrollClip/Details/Description.text = chapter.description
-	$ScrollClip/Details/Record.visible = cleared and chapter.id == "dongling"
-	$ScrollClip/Details/Record/Value.text = str(progress.best_score())
+	var second_record: Dictionary = progress.luoyang_record() if chapter.id == "luoyang" else {}
+	$ScrollClip/Details/Record.visible = cleared and (chapter.id == "dongling" or not second_record.is_empty())
+	$ScrollClip/Details/Record/Caption.text = "最快" if chapter.id == "luoyang" else "最佳"
+	$ScrollClip/Details/Record/Caption.add_theme_font_override("font", $ScrollClip/Details/Record/Value.get_theme_font("font") if chapter.id == "luoyang" else preload("res://assets/ui/wuxia-reading-font.ttf"))
+	$ScrollClip/Details/Record/Value.add_theme_font_size_override("font_size", 22 if chapter.id == "luoyang" else 30)
+	$ScrollClip/Details/Record/Value.text = ("%.1f秒" % second_record.seconds) if not second_record.is_empty() else str(progress.best_score())
 	var reason = ""
 	if not chapter.released:
 		reason = "前置已完成\n此关尚未开放。" if unlocked else "先通过%s\n此关尚未开放。" % chapters[maxi(0, selected - 1)].name
@@ -146,15 +151,18 @@ func present() -> void:
 	$ScrollClip/Details/Start.visible = playable or (chapter.released and unlocked)
 	var complete_first = progress.is_cleared("dongling")
 	$ScrollClip/Caravan.position = $ScrollClip/TravelEnd.position if complete_first else $ScrollClip/TravelStart.position
+	if progress.is_cleared("luoyang"):
+		$ScrollClip/Caravan.position = $ScrollClip/TravelLuoyangEnd.position
 	if _celebration_pending and ready_to_start:
 		_celebration_pending = false
 		if not reduced_motion and complete_first:
 			var destination = $ScrollClip/Caravan.position
 			$ScrollClip/Caravan.position = _caravan_origin
-			$ScrollClip/Stops/Pass1/Seal.scale = Vector2(1.5, 1.5)
+			var seal: Control = $ScrollClip/Stops/Pass2/Seal if progress.is_cleared("luoyang") else $ScrollClip/Stops/Pass1/Seal
+			seal.scale = Vector2(1.5, 1.5)
 			_celebration = create_tween()
 			_celebration.tween_property($ScrollClip/Caravan, "position", destination, .8)
-			_celebration.parallel().tween_property($ScrollClip/Stops/Pass1/Seal, "scale", Vector2.ONE, .6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			_celebration.parallel().tween_property(seal, "scale", Vector2.ONE, .6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _input(event: InputEvent) -> void:
 	if not visible or suspended: return

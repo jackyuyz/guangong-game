@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/luoyang-art/roadside-props.png" id="props"]
+
+[sub_resource type="AtlasTexture" id="atlas"]
+atlas = ExtResource("props")
+region = Rect2(32, 168, 904, 489)
+filter_clip = true
+
+[node name="barricade" type="Node2D"]
+texture_filter = 1
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.18, 0.18)
+texture = SubResource("atlas")
+centered = false
+offset = Vector2(-452, -460)

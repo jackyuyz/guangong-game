@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[node name="Arrow" type="Node2D"]
+
+[node name="Ground" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-10, 0, 0, -4, 10, 0, 0, 4)
+color = Color(0.12, 0.12, 0.09, 0.5)
+
+[node name="Shaft" type="Line2D" parent="."]
+points = PackedVector2Array(0, -97, 0, -45)
+width = 4.0
+default_color = Color(0.96, 0.86, 0.58, 1)
+
+[node name="Head" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, -37, -9, -54, 0, -50, 9, -54)
+color = Color(0.98, 0.94, 0.79, 1)
+
+[node name="Target" type="Node2D" parent="."]
+z_index = 220
+
+[node name="Outline" type="Line2D" parent="Target"]
+points = PackedVector2Array(-86, -6, -69, -27, 69, -27, 86, -6, -86, -6)
+width = 3.0
+default_color = Color(1, 1, 1, 1)
+
+[node name="Direction" type="Polygon2D" parent="Target"]
+polygon = PackedVector2Array(-9, 15, 0, 23, 9, 15, 0, 18)
+color = Color(1, 1, 1, 1)

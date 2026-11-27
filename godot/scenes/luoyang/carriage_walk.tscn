@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/luoyang_sprite.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/luoyang-art/carriage-walk-v2.png" id="sheet"]
+[ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="cutout"]
+
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("cutout")
+
+[sub_resource type="AtlasTexture" id="frame0"]
+atlas = ExtResource("sheet")
+region = Rect2(0.0, 0.0, 887.0, 443.5)
+filter_clip = true
+metadata/ground_baseline = 396.0
+metadata/ground_pivot = Vector2(443.5, 396)
+
+[sub_resource type="AtlasTexture" id="frame1"]
+atlas = ExtResource("sheet")
+region = Rect2(887.0, 0.0, 887.0, 443.5)
+filter_clip = true
+metadata/ground_baseline = 396.0
+metadata/ground_pivot = Vector2(443.5, 396)
+
+[sub_resource type="AtlasTexture" id="frame2"]
+atlas = ExtResource("sheet")
+region = Rect2(0.0, 443.5, 887.0, 443.5)
+filter_clip = true
+metadata/ground_baseline = 395.0
+metadata/ground_pivot = Vector2(443.5, 395)
+
+[sub_resource type="AtlasTexture" id="frame3"]
+atlas = ExtResource("sheet")
+region = Rect2(887.0, 443.5, 887.0, 443.5)
+filter_clip = true
+metadata/ground_baseline = 397.0
+metadata/ground_pivot = Vector2(443.5, 397)
+
+[node name="carriage_walk" type="Node2D"]
+texture_filter = 1
+script = ExtResource("script")
+frames = Array[AtlasTexture]([SubResource("frame0"), SubResource("frame1"), SubResource("frame2"), SubResource("frame3")])
+
+[node name="Shadow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-42, 0, -25, -7, 25, -7, 42, 0, 25, 6, -25, 6)
+color = Color(0.14, 0.12, 0.08, 0.27)
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Body"]
+material = SubResource("material")
+scale = Vector2(0.48, 0.48)
+texture = SubResource("frame0")
+centered = false
+offset = Vector2(-443.5, -396)
+
+[node name="Weapon" type="Node2D" parent="."]
+
+[node name="Wound" type="Node2D" parent="."]
+visible = false

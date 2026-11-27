@@ -14,6 +14,11 @@ def main():
     parser.add_argument("source", type=Path)
     args = parser.parse_args()
     text = "".join(chr(i) for i in range(32, 127)) + "←→↑↓›◆·—，。！？：；（）「」、…％"
+    target = ROOT / "godot/assets/ui/wuxia-reading-font.ttf"
+    # Older delivered text must remain renderable even if it moves out of current scenes.
+    if target.exists():
+        with TTFont(target) as existing:
+            text += "".join(chr(code) for code in existing.getBestCmap())
     for folder, suffixes in [("scenes", {".tscn"}), ("scripts", {".gd"}), ("data", {".json"})]:
         for path in sorted((ROOT / "godot" / folder).rglob("*")):
             if path.suffix in suffixes and not path.stem.endswith(("_test", "_fixture")):
@@ -34,7 +39,6 @@ def main():
                  16: "Guangong Wuxia Reading", 17: "Regular"}.get(name.nameID)
         if value is not None:
             name.string = value.encode(name.getEncoding())
-    target = ROOT / "godot/assets/ui/wuxia-reading-font.ttf"
     font.save(target)
     print(f"Saved {target.relative_to(ROOT)}: {target.stat().st_size} bytes")
 

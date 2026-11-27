@@ -63,7 +63,7 @@ func run() -> void:
  check(game.state=="map" and map.selected==1, "direct chapter entry remains blocked by settings")
  game._action("utility_close")
  check(map.selected==1 and map.get_node("ScrollClip/Caravan").position==position and not map.suspended, "closing map settings restores selection and actual position")
- check(not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Reason").text.contains("尚未开放"), "locked preview uses one actionable reason without a redundant button")
+ check(not map.get_node("ScrollClip/Details/Start").visible and map.get_node("ScrollClip/Details/Reason").text.contains("通关东岭关后开启"), "second chapter prerequisite uses one actionable reason without a redundant button")
  map.select_chapter(0)
  map._process(0)
  await frames()

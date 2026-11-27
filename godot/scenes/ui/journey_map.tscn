@@ -140,6 +140,9 @@ position = Vector2(112, 350)
 [node name="TravelEnd" type="Marker2D" parent="ScrollClip"]
 position = Vector2(222, 305)
 
+[node name="TravelLuoyangEnd" type="Marker2D" parent="ScrollClip"]
+position = Vector2(317, 267)
+
 [node name="Caravan" type="Node2D" parent="ScrollClip"]
 position = Vector2(112, 350)
 scale = Vector2(1.35, 1.35)

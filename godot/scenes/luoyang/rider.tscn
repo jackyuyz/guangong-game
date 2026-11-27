@@ -1,0 +1,115 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://scripts/luoyang_sprite.gd" id="script"]
+[ext_resource type="Texture2D" path="res://assets/luoyang-art/guan-yu-rear.png" id="sheet"]
+[ext_resource type="Shader" path="res://scripts/sprite_cutout.gdshader" id="cutout"]
+
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("cutout")
+
+[sub_resource type="AtlasTexture" id="frame0"]
+atlas = ExtResource("sheet")
+region = Rect2(0.0, 0.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 333.0
+metadata/ground_pivot = Vector2(181.0, 333)
+
+[sub_resource type="AtlasTexture" id="frame1"]
+atlas = ExtResource("sheet")
+region = Rect2(362.0, 0.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 341.0
+metadata/ground_pivot = Vector2(181.0, 341)
+
+[sub_resource type="AtlasTexture" id="frame2"]
+atlas = ExtResource("sheet")
+region = Rect2(724.0, 0.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 330.0
+metadata/ground_pivot = Vector2(181.0, 330)
+
+[sub_resource type="AtlasTexture" id="frame3"]
+atlas = ExtResource("sheet")
+region = Rect2(1086.0, 0.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 339.0
+metadata/ground_pivot = Vector2(181.0, 339)
+
+[sub_resource type="AtlasTexture" id="frame4"]
+atlas = ExtResource("sheet")
+region = Rect2(0.0, 362.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 333.0
+metadata/ground_pivot = Vector2(181.0, 333)
+
+[sub_resource type="AtlasTexture" id="frame5"]
+atlas = ExtResource("sheet")
+region = Rect2(362.0, 362.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 341.0
+metadata/ground_pivot = Vector2(181.0, 341)
+
+[sub_resource type="AtlasTexture" id="frame6"]
+atlas = ExtResource("sheet")
+region = Rect2(724.0, 362.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 328.0
+metadata/ground_pivot = Vector2(181.0, 328)
+
+[sub_resource type="AtlasTexture" id="frame7"]
+atlas = ExtResource("sheet")
+region = Rect2(1086.0, 362.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 338.0
+metadata/ground_pivot = Vector2(181.0, 338)
+
+[sub_resource type="AtlasTexture" id="frame8"]
+atlas = ExtResource("sheet")
+region = Rect2(0.0, 724.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 327.0
+metadata/ground_pivot = Vector2(181.0, 327)
+
+[sub_resource type="AtlasTexture" id="frame9"]
+atlas = ExtResource("sheet")
+region = Rect2(362.0, 724.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 333.0
+metadata/ground_pivot = Vector2(181.0, 333)
+
+[sub_resource type="AtlasTexture" id="frame10"]
+atlas = ExtResource("sheet")
+region = Rect2(724.0, 724.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 339.0
+metadata/ground_pivot = Vector2(181.0, 339)
+
+[sub_resource type="AtlasTexture" id="frame11"]
+atlas = ExtResource("sheet")
+region = Rect2(1086.0, 724.0, 362.0, 362.0)
+filter_clip = true
+metadata/ground_baseline = 330.0
+metadata/ground_pivot = Vector2(181.0, 330)
+
+[node name="rider" type="Node2D"]
+texture_filter = 1
+script = ExtResource("script")
+frames = Array[AtlasTexture]([SubResource("frame0"), SubResource("frame1"), SubResource("frame2"), SubResource("frame3"), SubResource("frame4"), SubResource("frame5"), SubResource("frame6"), SubResource("frame7"), SubResource("frame8"), SubResource("frame9"), SubResource("frame10"), SubResource("frame11")])
+
+[node name="Shadow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-42, 0, -25, -7, 25, -7, 42, 0, 25, 6, -25, 6)
+color = Color(0.14, 0.12, 0.08, 0.27)
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Body"]
+material = SubResource("material")
+scale = Vector2(0.57, 0.57)
+texture = SubResource("frame0")
+centered = false
+offset = Vector2(-181.0, -333)
+
+[node name="Weapon" type="Node2D" parent="."]
+
+[node name="Wound" type="Node2D" parent="."]
+visible = false

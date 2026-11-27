@@ -1,7 +1,7 @@
 {
   "chapters": [
     {"id":"dongling","name":"东岭关","theme":"关前受阻","description":"护送甘夫人、糜夫人，闯过第一道关口。","released":true,"entry":"res://scenes/levels/dongling_pass.tscn"},
-    {"id":"luoyang","name":"洛阳","theme":"古都险途","description":"城楼高耸，前路暗藏危机。","released":false,"entry":""},
+    {"id":"luoyang","name":"洛阳","theme":"古都险途","description":"城楼高耸，\n前路暗藏危机。","released":true,"entry":"res://scenes/levels/luoyang_chapter.tscn"},
     {"id":"sishui","name":"汜水关","theme":"寺前疑云","description":"山寺深处，赴宴之前须辨人心。","released":false,"entry":""},
     {"id":"xingyang","name":"荥阳","theme":"夜宿危城","description":"灯火之下，护住同行之人。","released":false,"entry":""},
     {"id":"yellow_river","name":"黄河渡口","theme":"渡河北行","description":"越过大河，继续寻兄之路。","released":false,"entry":""}

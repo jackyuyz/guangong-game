@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/prototypes/luoyang_arrow.tscn" id="base"]
+
+[node name="Arrow" instance=ExtResource("base")]
+
+[node name="Ribbon" type="Polygon2D" parent="Target"]
+z_index = -1
+polygon = PackedVector2Array(-76, 0, -16, -250, 16, -250, 76, 0)
+color = Color(1, 0.9, 0.7, 0.08)
+
+[node name="Tracking" type="Line2D" parent="Target"]
+points = PackedVector2Array(-80, -17, -80, -31, -58, -31)
+width = 2.0
+default_color = Color(1, 0.9, 0.65, 1)
+
+[node name="TrackingRight" type="Line2D" parent="Target"]
+points = PackedVector2Array(58, -31, 80, -31, 80, -17)
+width = 2.0
+default_color = Color(1, 0.9, 0.65, 1)
+
+[node name="Locked" type="Line2D" parent="Target"]
+visible = false
+points = PackedVector2Array(-23, -48, 0, -32, 23, -48)
+width = 5.0
+default_color = Color(1, 0.91, 0.70, 1)
+
+[node name="ReleaseBar" type="Line2D" parent="Target"]
+visible = false
+points = PackedVector2Array(-62, 8, 62, 8)
+width = 4.0
+default_color = Color(1, 0.9, 0.65, 1)

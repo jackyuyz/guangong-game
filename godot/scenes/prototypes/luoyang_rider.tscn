@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[node name="Rider" type="Node2D"]
+
+[node name="Shadow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-48, -3, -32, -10, 32, -10, 48, -3, 34, 6, -34, 6)
+color = Color(0.12, 0.15, 0.11, 0.45)
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="FarLegs" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-25, -48, -17, -48, -13, -12, -22, -12, -28, -22)
+color = Color(0.36, 0.15, 0.12, 1)
+
+[node name="FarLegRight" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(17, -48, 25, -48, 28, -22, 22, -12, 13, -12)
+color = Color(0.36, 0.15, 0.12, 1)
+
+[node name="Horse" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-21, -113, -28, -99, -38, -73, -36, -43, -24, -27, 24, -27, 36, -43, 38, -73, 28, -99, 21, -113)
+color = Color(0.63, 0.25, 0.15, 1)
+
+[node name="Neck" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-14, -111, -13, -137, -10, -151, -4, -143, 4, -143, 10, -151, 13, -137, 14, -111)
+color = Color(0.69, 0.29, 0.16, 1)
+
+[node name="Mane" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-4, -142, 5, -142, 10, -116, -5, -113)
+color = Color(0.24, 0.13, 0.10, 1)
+
+[node name="Saddle" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-30, -87, -32, -49, 32, -49, 30, -87)
+color = Color(0.80, 0.62, 0.28, 1)
+
+[node name="Back" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-24, -116, -32, -97, -19, -73, 19, -73, 32, -97, 24, -116)
+color = Color(0.10, 0.24, 0.18, 1)
+
+[node name="Cape" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-22, -115, -25, -89, -31, -60, -17, -53, 0, -58, 17, -53, 31, -60, 25, -89, 22, -115)
+color = Color(0.17, 0.38, 0.27, 1)
+
+[node name="CapeTrim" type="Line2D" parent="Body"]
+points = PackedVector2Array(-28, -61, -17, -57, 0, -62, 17, -57, 28, -61)
+width = 2.0
+default_color = Color(0.72, 0.64, 0.31, 1)
+
+[node name="Head" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-11, -137, -13, -124, -8, -114, 8, -114, 13, -124, 11, -137)
+color = Color(0.64, 0.40, 0.23, 1)
+
+[node name="Turban" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-13, -134, -9, -145, 9, -145, 13, -134, 11, -127, -11, -127)
+color = Color(0.10, 0.30, 0.21, 1)
+
+[node name="TurbanTail" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-8, -132, -14, -103, -6, -111, 0, -134)
+color = Color(0.08, 0.25, 0.18, 1)
+
+[node name="BladeShaft" type="Line2D" parent="Body"]
+points = PackedVector2Array(33, -39, 39, -151)
+width = 4.0
+default_color = Color(0.64, 0.49, 0.25, 1)
+
+[node name="Blade" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(39, -151, 44, -179, 61, -192, 55, -175, 46, -165, 44, -148)
+color = Color(0.81, 0.88, 0.75, 1)
+
+[node name="Tail" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-5, -42, -10, -16, -6, -3, 3, -12, 6, -42)
+color = Color(0.25, 0.12, 0.09, 1)
+
+[node name="HindLegLeft" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(-32, -43, -21, -40, -27, -17, -22, -3, -35, -3, -38, -14)
+color = Color(0.50, 0.20, 0.13, 1)
+
+[node name="HindLegRight" type="Polygon2D" parent="Body"]
+polygon = PackedVector2Array(21, -40, 32, -43, 38, -14, 35, -3, 22, -3, 27, -17)
+color = Color(0.50, 0.20, 0.13, 1)
+
+[node name="HoofLeft" type="Line2D" parent="Body"]
+points = PackedVector2Array(-35, -3, -23, -3)
+width = 5.0
+default_color = Color(0.15, 0.13, 0.10, 1)
+
+[node name="HoofRight" type="Line2D" parent="Body"]
+points = PackedVector2Array(23, -3, 35, -3)
+width = 5.0
+default_color = Color(0.15, 0.13, 0.10, 1)

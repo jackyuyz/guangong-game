@@ -85,8 +85,10 @@ var show_culture = false
 var muted = false
 var save_path = "user://progress.cfg"
 var tone_player: AudioStreamPlayer
+var chapter_two: Node
 
 func _ready() -> void:
+	get_window().title = "关公 · 过五关斩六将"
 	story = JSON.parse_string(FileAccess.get_file_as_string("res://data/story.json"))
 	progress.load_file(save_path)
 	best = progress.best_score()
@@ -144,6 +146,8 @@ func _exit_tree() -> void:
 		tone_player.stop()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if state == "chapter_two":
+		return
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
 	var key = event.physical_keycode
@@ -351,7 +355,24 @@ func _return_to_map(preserve: bool = false) -> void:
 	_sync_scene()
 
 func _enter_chapter(id: String) -> void:
-	if state != "map" or not utility_panel.is_empty() or journey.suspended or not journey.ready_to_start or journey._release_pending or not journey.can_enter(id) or id != "dongling":
+	if state != "map" or not utility_panel.is_empty() or journey.suspended or not journey.ready_to_start or journey._release_pending or not journey.can_enter(id) or id not in ["dongling", "luoyang"]:
+		return
+	if id == "luoyang":
+		state = "chapter_two"
+		_sync_scene()
+		ui.get_node("BladeCursor")._hide_cursor()
+		level.hide()
+		ui.hide()
+		level.process_mode = Node.PROCESS_MODE_DISABLED
+		ui.process_mode = Node.PROCESS_MODE_DISABLED
+		tone_player.stop()
+		chapter_two = preload("res://scenes/levels/luoyang_chapter.tscn").instantiate()
+		chapter_two.embedded = true
+		chapter_two.return_requested.connect(_leave_luoyang)
+		chapter_two.cleared.connect(_clear_luoyang)
+		chapter_two.preferences_changed.connect(_luoyang_preferences)
+		add_child(chapter_two)
+		chapter_two.apply_preferences(muted, reduced_motion)
 		return
 	_reset_run()
 	phase = 0
@@ -363,6 +384,39 @@ func _enter_chapter(id: String) -> void:
 	await_input_release = true
 	_banner("护送二位夫人，过关寻刘备。向右前行，抵达旗标")
 	_sync_scene()
+
+func _clear_luoyang(_result: Dictionary) -> void:
+	if state != "chapter_two" or not is_instance_valid(chapter_two) or not chapter_two.model.victory_locked:
+		return
+	var first_clear = not progress.is_cleared("luoyang")
+	if not progress.record_luoyang(chapter_two.model.result()):
+		chapter_two.save_notice = progress.error_text
+	_first_clear_pending = first_clear
+
+func _luoyang_preferences(sound_muted: bool, reduce_motion: bool) -> void:
+	muted = sound_muted
+	reduced_motion = reduce_motion
+	journey.set_reduced_motion(reduced_motion)
+	_save()
+	if is_instance_valid(chapter_two):
+		chapter_two.save_notice = progress.error_text
+
+func _leave_luoyang() -> void:
+	if state != "chapter_two" or not is_instance_valid(chapter_two):
+		return
+	chapter_two.set_process(false)
+	chapter_two.set_process_input(false)
+	chapter_two.get_node("UI").hide()
+	chapter_two.queue_free()
+	chapter_two = null
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("document.getElementById('canvas').removeAttribute('aria-label')")
+	level.process_mode = Node.PROCESS_MODE_INHERIT
+	ui.process_mode = Node.PROCESS_MODE_INHERIT
+	level.show()
+	ui.show()
+	journey.selected = 1
+	_return_to_map(true)
 
 func _finish_prologue() -> void:
 	if state != "prologue": return
@@ -492,6 +546,8 @@ func _retry() -> void:
 	ext.update(self, 0.0)
 
 func _process(dt: float) -> void:
+	if state == "chapter_two":
+		return
 	if await_input_release and not _inputs_held():
 		await_input_release = false
 	if state == "menu" or (state == "play" and hit_stop <= 0):

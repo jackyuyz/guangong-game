@@ -1,6 +1,7 @@
 extends RefCounted
 ## One ConfigFile owns settings, story progress and versioned scores.
 const SCORE_VERSION = "ch01-v2-checkpoint"
+const LUOYANG_ROUTE = "ch02-v1-route"
 const IDS = ["dongling", "luoyang", "sishui", "xingyang", "yellow_river"]
 var config = ConfigFile.new()
 var path = ""
@@ -80,6 +81,34 @@ func mark_cleared(id: String, score: int) -> void:
 	if id == "dongling":
 		config.set_value(SCORE_VERSION, "cleared", true)
 		config.set_value(SCORE_VERSION, "best", maxi(best_score(), score))
+
+func luoyang_record() -> Dictionary:
+	var record = config.get_value(LUOYANG_ROUTE, "best", {})
+	return record.duplicate(true) if _valid_route(record) else {}
+
+func _valid_route(record: Variant) -> bool:
+	if not record is Dictionary:
+		return false
+	var seconds = record.get("seconds", 0.0)
+	if not (seconds is float or seconds is int) or not is_finite(float(seconds)) or seconds <= 0.0:
+		return false
+	for key in ["hits", "retries", "switches"]:
+		if not record.get(key) is int or record[key] < 0:
+			return false
+	return true
+
+func record_luoyang(record: Dictionary) -> bool:
+	if not _valid_route(record):
+		error_text = "本次洛阳成绩无效，暂不能保存"
+		return false
+	var best_route = luoyang_record()
+	var better = best_route.is_empty() or record.seconds < best_route.seconds
+	if not best_route.is_empty() and is_equal_approx(record.seconds, best_route.seconds):
+		better = record.hits < best_route.hits or (record.hits == best_route.hits and record.retries < best_route.retries)
+	if better:
+		config.set_value(LUOYANG_ROUTE, "best", record.duplicate(true))
+	mark_cleared("luoyang", 0)
+	return save_file()
 
 func save_preferences(sound_muted: bool, reduce_motion: bool, best: int) -> bool:
 	config.set_value("settings", "muted", sound_muted)
