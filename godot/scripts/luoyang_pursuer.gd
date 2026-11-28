@@ -25,7 +25,7 @@ func reset() -> void:
 	changes = 0
 	avoiding = false
 
-func step(dt: float, depth: float, hazards: Array[Dictionary]) -> void:
+func step(dt: float, depth: float, hazards: Array[Dictionary], allow_roam: bool = true) -> void:
 	elapsed += dt
 	lane_time = minf(CHANGE_SECONDS, lane_time + dt)
 	var t = lane_time / CHANGE_SECONDS
@@ -52,7 +52,7 @@ func step(dt: float, depth: float, hazards: Array[Dictionary]) -> void:
 					destination = candidate
 			_change_lane(destination)
 		next_roam = maxf(next_roam, elapsed + 0.8)
-	elif lane_time >= CHANGE_SECONDS and elapsed >= next_roam:
+	elif allow_roam and lane_time >= CHANGE_SECONDS and elapsed >= next_roam:
 		if target_lane + roam_direction not in [-1, 0, 1]:
 			roam_direction *= -1
 		_change_lane(target_lane + roam_direction)

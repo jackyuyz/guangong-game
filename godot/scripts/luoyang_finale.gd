@@ -28,6 +28,7 @@ func update(game: Node, phase: String, t: float) -> void:
 	game.get_node("Cutscene/HeroBinding").hide()
 	game.get_node("Cutscene/Procession").hide()
 	game.get_node("Cutscene/ClosingShade").hide()
+	game.get_node("Cutscene/BindingGate").hide()
 	if phase == "escape": _escape(game, t)
 	elif phase == "ending": _ending(game, t)
 
@@ -65,12 +66,13 @@ func _ending(game: Node, t: float) -> void:
 	var hero = game.get_node("Cutscene/HeroBinding")
 	var cart = game.get_node("Cutscene/Procession")
 	hero.show()
-	hero.position = game.get_node("Cutscene/HeroContact").position
+	hero.position = game.get_node("Cutscene/BindingGround").position
 	var poses = [0, 1, 2, 3, 4, 5]
 	hero.pose(poses[mini(int(t / 0.55), 5)])
 	var wide = t >= CUT
 	game.get_node("Cutscene/Gate").visible = wide
-	game.get_node("Cutscene/ArcheryPosition").visible = not wide
+	game.get_node("Cutscene/ArcheryPosition").hide()
+	game.get_node("Cutscene/BindingGate").visible = not wide
 	game.get_node("Cutscene/HanFu").hide()
 	var shade = game.get_node("Cutscene/ClosingShade")
 	shade.visible = t >= BIND_END and t < 3.8

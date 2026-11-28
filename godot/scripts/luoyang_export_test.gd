@@ -26,6 +26,8 @@ func run() -> void:
 			actor.pose(i)
 			anchors_ok = anchors_ok and actor.get_node("Body/Sprite").offset == -Vector2(frame.get_meta("ground_pivot", Vector2.ZERO))
 	check(anchors_ok, "exported actor frames retain every ground anchor and sprite offset")
+	var gallop = game.get_node("Hooves").stream
+	check(gallop is AudioStreamMP3 and gallop.loop and gallop.resource_path.ends_with("harse-gallop-loop2.mp3"), "exported hoof channel uses the user-supplied full gallop loop")
 	game.model._begin_play("chase")
 	game.model.step(0.3)
 	game._sync_world()
@@ -37,9 +39,22 @@ func run() -> void:
 	check(game.model.pursuer.lane < 1.0 and game.get_node("World/MengTan").position.is_equal_approx(game.road.project(game.model.pursuer.lane, game.model.gap)), "exported target follows the moving shared-road lane")
 	var s = game.rider.get_node("Body/Sprite")
 	check(s.offset.y < -250 and s.scale.y < 1.0, "exported rear rider stays above its hoof anchor")
+	game.model._begin_play("chase")
+	game.model.next_spawn = INF
+	game.model.gap = game.model.CATCH_GAP
+	game.model.step(0.02)
+	game._sync_world()
+	var burst_gap: float = game.model.gap
+	check(game.model.phase == "chase" and game.model.breakaways == 1 and game.get_node("UI/Warning").text.contains("加速"), "exported wrong-lane approach accelerates away with visible feedback")
+	game.model.step(0.5)
+	check(game.model.gap > burst_gap and not game.model.meng_defeated, "exported breakaway opens distance continuously instead of awarding a remote kill")
+	game.model.request_lane(1)
+	game.model.step(5.0)
+	check(game.model.phase == "meng_strike" and game.model.meng_defeated, "exported target can be caught after changing to its actual lane")
 	game.model._story("intro")
 	game._sync_world()
 	check(game.get_node("Cutscene/Hero").position == game.get_node("Cutscene/HeroRest").position and game.get_node("Cutscene/Hero/Body/Sprite").offset.y < -250, "exported side-view hero remains above the story panel")
+	check(game.story_panel.theme_type_variation == &"WuxiaHUD" and game.story_panel.position == Vector2(40, 352) and game.get_node("UI/Story/Advance").theme_type_variation == &"WuxiaPrimary", "exported story card uses first-chapter layout and gold-brush action")
 	game.model._story("ambush")
 	game.model.phase_clock = 4.4
 	game._sync_world()
@@ -62,6 +77,7 @@ func run() -> void:
 	game.model._story("ending")
 	game.model.phase_clock = 1.8
 	game._sync_world()
+	check(game.get_node("Cutscene/BindingGate").visible and game.get_node("Cutscene/BindingGate").texture == game.get_node("Cutscene/Gate").texture and game.get_node("Cutscene/BindingGate").scale.x > 0.4 and game.get_node("Cutscene/HeroBinding").position == game.get_node("Cutscene/BindingGround").position, "exported bandaging uses the full-sized chapter gate and independent ground anchor")
 	check(game.get_node("Cutscene/HeroBinding").pose_index == 3 and game.get_node("Cutscene/HeroBinding").visible, "exported ending contains the drawn cloth-tightening pose")
 	game.model.phase_clock = 7.0
 	game._sync_world()
@@ -73,6 +89,27 @@ func run() -> void:
 	var arrow = game.model.hazards[0]
 	var target = game.hazard_nodes[arrow.id].get_node("Target")
 	check(arrow.phase == "locked" and arrow.lock_seconds == 0.75 and target.get_node("Locked").visible and target.get_node("ReleaseBar").visible, "exported opening shot retains the longer lock and authored shape/countdown")
+	arrow.phase = "flying"
+	arrow.distance = 8.0
+	arrow.age = 3.5
+	game._sync_world()
+	var projectile = game.hazard_nodes[arrow.id]
+	check(projectile.get_node("Flight/Sprite").texture.atlas.resource_path.ends_with("war-arrow-incoming.png") and projectile.get_node("Flight").visible and projectile.get_node("Wake/Trail").points.size() == 4 and not projectile.get_node("Shaft").visible, "exported projectile uses the generated arrow and perspective wake instead of the old line")
+	game.reduced_motion = true
+	game._sync_world()
+	check(projectile.get_node("Flight").visible and not projectile.get_node("Wake").visible and not projectile.get_node("Flight/Ghost").visible and projectile.get_node("Target/Locked").visible, "exported reduced-motion setting retains real arrow and warning without decorative motion")
+	game.reduced_motion = false
+	game.model._begin_play("chase")
+	for lane in [-1, 0, 1]:
+		game.model._add_hazard("barricade", lane)
+		game.model.hazards[-1].distance = -17.8
+		game.model.hazards[-1].resolved = true
+	game._sync_world()
+	var offscreen = true
+	for h in game.model.hazards:
+		var sprite: Sprite2D = game.hazard_nodes[h.id].get_node("Sprite")
+		offscreen = offscreen and not (sprite.global_transform * sprite.get_rect()).intersects(Rect2(0, 0, 960, 540))
+	check(offscreen, "exported foreground barricades leave the entire viewport before retirement")
 	game.queue_free()
 	await process_frame
 	print("LUOYANG EXPORTED PACK CHECKS: %d; failures: %d" % [checks, failures])

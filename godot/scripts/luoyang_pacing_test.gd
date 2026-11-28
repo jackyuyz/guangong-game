@@ -45,6 +45,8 @@ func chase(dt: float, initial: int, reaction: float, penalties = 0) -> Dictionar
 					best = absf(candidate - m.lane)
 			direction = signi(safe - m.target_lane)
 			respond_at = m.elapsed + reaction
+		if m.gap <= m.CLOSE_APPROACH and m.target_lane not in blocked and m.pursuer.target_lane not in blocked and m.lane_time >= m.LANE_SECONDS and not is_finite(respond_at):
+			m.request_lane(signi(m.pursuer.target_lane - m.target_lane))
 		m.step(dt)
 		for h in m.hazards:
 			if not seen.has(h.id):

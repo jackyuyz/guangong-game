@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3]
+[gd_scene load_steps=41 format=3]
 
 [ext_resource type="Script" path="res://scripts/luoyang_chapter.gd" id="controller"]
 [ext_resource type="Script" path="res://scripts/luoyang_road.gd" id="road"]
@@ -37,6 +37,8 @@
 [ext_resource type="Script" path="res://scripts/luoyang_interface.gd" id="interface"]
 [ext_resource type="AudioStream" path="res://assets/main-menu/hover.wav" id="ui_hover"]
 [ext_resource type="AudioStream" path="res://assets/main-menu/confirm.wav" id="ui_confirm"]
+
+[ext_resource type="AudioStream" path="res://assets/luoyang-audio/harse-gallop-loop2.mp3" id="gallop_loop"]
 
 [sub_resource type="FontVariation" id="hint_display"]
 base_font = ExtResource("font")
@@ -730,16 +732,17 @@ texture = ExtResource("sideplate")
 centered = false
 
 [node name="Hero" parent="Cutscene" instance=ExtResource("chapter_side")]
-position = Vector2(210, 347)
+position = Vector2(290, 347)
 
 [node name="MengTan" parent="Cutscene" instance=ExtResource("meng_side")]
-position = Vector2(620, 347)
+position = Vector2(700, 347)
 modulate = Color(1, 1, 1, 1)
 
 [node name="HanFu" instance=ExtResource("han") parent="Cutscene"]
 position = Vector2(620, 347)
 
 [node name="Slash" type="Line2D" parent="Cutscene"]
+position = Vector2(80, 0)
 visible = false
 points = PackedVector2Array(492, 169, 550, 189, 598, 227, 634, 288, 648, 341)
 width = 9.0
@@ -761,38 +764,45 @@ color = Color(0.94, 0.90, 0.76, 1)
 
 [node name="Story" type="Panel" parent="UI"]
 visible = false
-offset_left = 96.0
-offset_top = 340.0
-offset_right = 864.0
-offset_bottom = 504.0
+offset_left = 40.0
+offset_top = 352.0
+offset_right = 920.0
+offset_bottom = 520.0
 theme = ExtResource("shared_theme")
 mouse_filter = 0
+theme_type_variation = &"WuxiaHUD"
 
 [node name="Title" type="Label" parent="UI/Story"]
-offset_left = 24.0
-offset_top = 10.0
-offset_right = 744.0
+offset_left = 28.0
+offset_top = 12.0
+offset_right = 850.0
 offset_bottom = 44.0
-theme_override_font_sizes/font_size = 26
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("display_font")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.875, 0.737, 0.463, 1)
 text = "洛阳关前"
-theme_type_variation = &"WuxiaTitle"
 
 [node name="Text" type="Label" parent="UI/Story"]
-offset_left = 24.0
-offset_top = 51.0
-offset_right = 744.0
-offset_bottom = 107.0
+offset_left = 28.0
+offset_top = 52.0
+offset_right = 850.0
+offset_bottom = 108.0
+mouse_filter = 2
 theme_override_font_sizes/font_size = 18
-autowrap_mode = 2
+theme_override_colors/font_color = Color(0.953, 0.91, 0.804, 1)
+autowrap_mode = 3
 text = "韩福阻路，孟坦出战。"
 
 [node name="Advance" type="Button" parent="UI/Story"]
-offset_left = 568.0
-offset_top = 115.0
-offset_right = 744.0
-offset_bottom = 159.0
-theme_override_font_sizes/font_size = 20
-text = "跳过  Enter"
+offset_left = 704.0
+offset_top = 118.0
+offset_right = 858.0
+offset_bottom = 162.0
+theme_override_fonts/font = ExtResource("display_font")
+theme_override_font_sizes/font_size = 18
+theme_type_variation = &"WuxiaPrimary"
+text = "跳过  ENTER"
 
 [node name="SaveNotice" type="Label" parent="UI"]
 offset_left = 20.0
@@ -807,7 +817,8 @@ mouse_filter = 2
 
 
 [node name="Hooves" type="AudioStreamPlayer" parent="."]
-volume_db = -20.0
+stream = ExtResource("gallop_loop")
+volume_db = -12.0
 
 [node name="Effects" type="AudioStreamPlayer" parent="."]
 volume_db = -7.0
@@ -850,13 +861,13 @@ scale = Vector2(0.23, 0.23)
 texture = ExtResource("archery")
 
 [node name="HeroStart" type="Marker2D" parent="Cutscene"]
-position = Vector2(210, 347)
+position = Vector2(290, 347)
 
 [node name="HeroContact" type="Marker2D" parent="Cutscene"]
-position = Vector2(490, 347)
+position = Vector2(570, 347)
 
 [node name="HeroRest" type="Marker2D" parent="Cutscene"]
-position = Vector2(390, 347)
+position = Vector2(470, 347)
 
 [node name="LeftArm" type="Marker2D" parent="Cutscene"]
 position = Vector2(382, 212)
@@ -865,7 +876,7 @@ position = Vector2(382, 212)
 position = Vector2(590, 215)
 
 [node name="StrikeContact" type="Marker2D" parent="Cutscene"]
-position = Vector2(582, 252)
+position = Vector2(662, 252)
 
 [node name="CarriageStart" type="Marker2D" parent="Cutscene"]
 position = Vector2(180, 320)
@@ -1042,7 +1053,7 @@ position = Vector2(480, 145)
 scale = Vector2(0.075, 0.075)
 
 [node name="Opponent" type="Marker2D" parent="Cutscene"]
-position = Vector2(620, 347)
+position = Vector2(700, 347)
 
 [node name="IntroHan" type="Marker2D" parent="Cutscene"]
 position = Vector2(208, 347)
@@ -1066,22 +1077,22 @@ scale = Vector2(1.1, 1.1)
 position = Vector2(680, 333)
 
 [node name="IntroContact" type="Marker2D" parent="Cutscene"]
-position = Vector2(450, 347)
+position = Vector2(530, 347)
 
 [node name="IntroBladeContact" type="Marker2D" parent="Cutscene"]
-position = Vector2(535, 230)
+position = Vector2(615, 230)
 
 [node name="FlightExit" type="Marker2D" parent="Cutscene"]
-position = Vector2(1100, 333)
+position = Vector2(1180, 333)
 
 [node name="WaitingCarriage" type="Marker2D" parent="Cutscene"]
 position = Vector2(270, 285)
 
 [node name="TurnGround" type="Marker2D" parent="Cutscene"]
-position = Vector2(505, 347)
+position = Vector2(585, 347)
 
 [node name="ReturnGround" type="Marker2D" parent="Cutscene"]
-position = Vector2(420, 347)
+position = Vector2(540, 347)
 
 [node name="GateArrowOffset" type="Marker2D" parent="Cutscene"]
 position = Vector2(30, -132)
@@ -1305,3 +1316,13 @@ theme_override_styles/normal = SubResource("hint_keycap")
 text = "D"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="BindingGround" type="Marker2D" parent="Cutscene"]
+position = Vector2(490, 347)
+
+[node name="BindingGate" type="Sprite2D" parent="Cutscene"]
+visible = false
+z_index = -1
+position = Vector2(800, 292)
+scale = Vector2(0.44, 0.44)
+texture = ExtResource("gate")

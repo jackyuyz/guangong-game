@@ -3,6 +3,10 @@ extends "res://scripts/luoyang_model.gd"
 const INITIAL_GAP = 78.0
 const CATCH_GAP = 10.0
 const CLOSING_SPEED = 2.0
+const CATCH_LANE_TOLERANCE = 0.22
+const CLOSE_APPROACH = 24.0
+const BREAKAWAY_SECONDS = 1.0
+const BREAKAWAY_SPEED = 10.0
 const CHASE_LIMIT = 65.0
 const SPRINT_SECONDS = 32.0
 const Story = preload("res://scripts/luoyang_story.gd")
@@ -23,6 +27,10 @@ var victory_locked = false
 var failure_reason = ""
 var escape_origin = Vector2.ZERO
 var gap_recoil = 0.0
+var breakaway_left = 0.0
+var breakaway_notice = 0.0
+var breakaways = 0
+var _pursuer_dt = 0.0
 var tutorial_directions: Array[int] = []
 var checkpoint: Dictionary = {}
 var pursuer = preload("res://scripts/luoyang_pursuer.gd").new()
@@ -44,6 +52,9 @@ func start(_selected_mode: String = "chapter") -> void:
 	checkpoint.clear()
 	escape_origin = Vector2.ZERO
 	gap_recoil = 0.0
+	breakaway_left = 0.0
+	breakaway_notice = 0.0
+	breakaways = 0
 	_begin_stage("barricades")
 	_story("intro")
 
@@ -66,6 +77,9 @@ func _begin_play(selected_phase: String) -> void:
 	failure_reason = ""
 	escape_origin = Vector2.ZERO
 	gap_recoil = 0.0
+	breakaway_left = 0.0
+	breakaway_notice = 0.0
+	breakaways = 0
 	if phase == "chase": next_spawn = Pacing.ROWS[0][0]
 	elif phase == "sprint": next_spawn = Pacing.SHOTS[0]
 	if phase == "chase":
@@ -108,14 +122,17 @@ func _tick(dt: float) -> void:
 	if phase in ["chase", "sprint"]:
 		seconds += dt
 	if phase == "chase":
+		breakaway_notice = maxf(0.0, breakaway_notice - dt)
+		var burst = minf(breakaway_left, dt)
+		gap += BREAKAWAY_SPEED * burst
+		breakaway_left = maxf(0.0, breakaway_left - dt)
 		# A hit opens distance over the horse's actual recovery, avoiding an enemy teleport.
 		var pushed = minf(gap_recoil, (GAP_PENALTY - Pacing.GAP_IMPACT) / Pacing.GAP_RECOIL_SECONDS * dt)
 		gap += pushed
 		gap_recoil -= pushed
 		gap = maxf(CATCH_GAP, gap - CLOSING_SPEED * dt * (0.55 if slowdown > 0.0 else 1.0))
+	_pursuer_dt = dt
 	super._tick(dt)
-	if state == "running" and phase == "chase":
-		pursuer.step(dt, gap, hazards)
 	if state == "running":
 		phase_clock = elapsed
 
@@ -131,7 +148,7 @@ func _spawn_due() -> void:
 			spawn_index += 1
 			next_spawn = Pacing.ROWS[spawn_index][0] if spawn_index < Pacing.ROWS.size() else INF
 			# Consume close-approach beats too: a later collision must not replay a backlog.
-			if gap <= 24.0: continue
+			if gap <= CLOSE_APPROACH: continue
 			for occupied_lane in row[1]:
 				_add_hazard("barricade", occupied_lane)
 				hazards[-1].distance = maxf(SPAWN_DISTANCE, gap + pursuer.LOOK_AHEAD)
@@ -152,11 +169,22 @@ func _finish_tick() -> void:
 	if phase == "tutorial" and tutorial_directions.size() == 2 and elapsed >= 1.5 and lane_time >= LANE_SECONDS:
 		_begin_play("chase")
 	elif phase == "chase":
-		if gap <= CATCH_GAP:
+		# Hazards and the player already moved; sample the enemy before capture.
+		pursuer.step(_pursuer_dt, gap, hazards, gap > CLOSE_APPROACH)
+		if gap <= CATCH_GAP and breakaway_left <= 0.0 and catch_lane_aligned():
 			meng_defeated = true
 			_story("meng_strike")
 		elif elapsed >= CHASE_LIMIT:
 			_fail("孟坦逃脱")
+		elif gap <= CATCH_GAP and breakaway_left <= 0.0:
+			breakaway_left = BREAKAWAY_SECONDS
+			breakaway_notice = 1.8
+			breakaways += 1
+			events.append("breakaway")
+
+func catch_lane_aligned() -> bool:
+	# Do not count a requested lane or two horses crossing between lanes as a catch.
+	return target_lane == pursuer.target_lane and absf(lane - pursuer.lane) <= CATCH_LANE_TOLERANCE and absf(lane - target_lane) <= CATCH_LANE_TOLERANCE and absf(pursuer.lane - target_lane) <= CATCH_LANE_TOLERANCE
 
 func _hit(kind: String) -> void:
 	if phase == "tutorial" or victory_locked:

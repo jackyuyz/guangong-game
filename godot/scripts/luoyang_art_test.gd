@@ -44,20 +44,22 @@ func run() -> void:
 	for channel in ["Hooves", "Effects", "BowCue"]: game.art.cue(game, "hoof", channel)
 	game.model.pause()
 	game._sync_world()
-	var frozen = [game.rider.pose_index, game.art.hit_age, game.get_node("Road/Grit/Stone0").position, game.get_node("World/Dust/Puff0").position, game.art.hoof_clock, game.art.hoof_step]
+	var frozen = [game.rider.pose_index, game.art.hit_age, game.get_node("Road/Grit/Stone0").position, game.get_node("World/Dust/Puff0").position, game.art.hoof_clock]
 	game.model.step(5.0)
 	game._sync_world()
-	check([game.rider.pose_index, game.art.hit_age, game.get_node("Road/Grit/Stone0").position, game.get_node("World/Dust/Puff0").position, game.art.hoof_clock, game.art.hoof_step] == frozen, "pause freezes gallop, feedback, road grit, dust and hoof cadence")
+	check([game.rider.pose_index, game.art.hit_age, game.get_node("Road/Grit/Stone0").position, game.get_node("World/Dust/Puff0").position, game.art.hoof_clock] == frozen, "pause freezes gallop, feedback, road grit, dust and hoof cadence")
 	check(game.get_node("Hooves").stream_paused and game.get_node("Effects").stream_paused and game.get_node("BowCue").stream_paused, "all new audio channels pause together")
 	game.muted = true
 	game.art.audio_state(game)
 	game.model.retry()
 	game._sync_world()
 	check(not game.get_node("World/Impact").visible and game.rider.get_node("Body").modulate == Color.WHITE, "checkpoint restart clears hit effects and actor tint")
-	var beat: int = game.art.hoof_step
+	game.muted = false
 	game.model.step(0.5)
 	game._sync_world()
-	check(game.art.hoof_step == (beat + 1) % 3 and game.art.hoof_clock > game.model.phase_clock, "a late frame schedules one hoof contact instead of replaying missed beats in a burst")
+	check(game.get_node("Hooves").stream == game.art.GALLOP and game.get_node("Hooves").playing and game.art.hoof_clock == game.model.phase_clock, "a late frame keeps one continuous imported gallop loop instead of replaying short beats")
+	game.muted = true
+	game.art.audio_state(game)
 	game.reduced_motion = true
 	game.model._hit("barricade")
 	game._sync_world()

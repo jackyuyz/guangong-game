@@ -5,20 +5,15 @@ var last_clock = -1.0
 var last_hit = 0
 var hit_age = 99.0
 var hoof_clock = 0.0
-var hoof_step = 0
-var hoof_variants: Array[AudioStreamWAV] = []
+const GALLOP = preload("res://assets/luoyang-audio/harse-gallop-loop2.mp3")
 var sounds: Dictionary = {}
 var story = preload("res://scripts/luoyang_story.gd").new()
 var finale = preload("res://scripts/luoyang_finale.gd").new()
-const HOOF_GAPS = [0.10, 0.10, 0.20]
 
 func _init() -> void:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = 274
-	# Dry, unpitched contacts: the old sine sweep sounded like a repeating alarm.
-	for i in 3:
-		hoof_variants.append(_hoof_contact(274 + i, [0.78, 0.55, 1.0][i]))
-	sounds["hoof"] = hoof_variants[0]
+	sounds["hoof"] = GALLOP
 	for kind in ["impact", "bow", "arrow", "slash", "wind"]:
 		var stream = AudioStreamWAV.new()
 		stream.format = AudioStreamWAV.FORMAT_16_BITS
@@ -44,32 +39,6 @@ func _init() -> void:
 			stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 			stream.loop_end = count
 		sounds[kind] = stream
-
-func _hoof_contact(seed_value: int, strength: float) -> AudioStreamWAV:
-	var rng = RandomNumberGenerator.new()
-	rng.seed = seed_value
-	var stream = AudioStreamWAV.new()
-	stream.format = AudioStreamWAV.FORMAT_16_BITS
-	stream.mix_rate = 22050
-	var count = int(stream.mix_rate * 0.075)
-	var data = PackedByteArray()
-	data.resize(count * 2)
-	var body = 0.0
-	var grit = 0.0
-	for i in count:
-		var t = float(i) / stream.mix_rate
-		var noise = rng.randf_range(-1.0, 1.0)
-		body = lerpf(body, noise, 0.24)
-		grit = lerpf(grit, noise, 0.06)
-		var attack = 1.0 - exp(-t / 0.0015)
-		var contact = body * attack * exp(-t / 0.012)
-		var scuff = grit * attack * exp(-t / 0.024) * 0.22
-		# A softer toe/gravel contact follows the initial hoof, without a ringing tone.
-		var toe = body * (1.0 - exp(-maxf(0.0, t - 0.017) / 0.002)) * exp(-maxf(0.0, t - 0.017) / 0.007) * 0.30
-		var fade = clampf((0.075 - t) / 0.008, 0.0, 1.0)
-		data.encode_s16(i * 2, int((contact + scuff + toe) * fade * strength * 18000.0))
-	stream.data = data
-	return stream
 
 func cue(game: Node, kind: String, channel = "Effects") -> void:
 	if game.muted or game.model.state not in ["running", "story"]: return
@@ -103,7 +72,6 @@ func update(game: Node) -> void:
 		hit_age = 99.0
 		last_hit = m.hits
 		hoof_clock = clock
-		hoof_step = 0
 		for name in ["Hooves", "Effects", "BowCue", "Wind"]:
 			game.get_node(name).stream_paused = false
 			game.get_node(name).stop()
@@ -177,13 +145,19 @@ func update(game: Node) -> void:
 	game.get_node("UI/HitFlash").color.a = 0.06 * clampf(1.0 - hit_age / 0.18, 0.0, 1.0) if not game.reduced_motion else 0.0
 	var story_gallop = (phase == "intro" and clock >= 2.65) or (phase == "ambush" and clock >= 2.4 and clock < 3.35)
 	var procession_walk = phase == "ending" and (clock >= 3.8 and clock < finale.MEET or clock >= finale.DEPART and clock < finale.EXIT)
-	if active and (phase in ["tutorial", "chase", "sprint"] or story_gallop or procession_walk) and clock >= hoof_clock:
-		if not game.muted:
-			var hooves: AudioStreamPlayer = game.get_node("Hooves")
-			hooves.stream = hoof_variants[hoof_step]
-			hooves.play()
-		hoof_clock = clock + (0.38 if procession_walk else HOOF_GAPS[hoof_step] * (1.6 if m.slowdown > 0.0 else 1.0))
-		hoof_step = (hoof_step + 1) % hoof_variants.size()
+	var riding = phase in ["tutorial", "chase", "sprint"] or story_gallop or procession_walk
+	var hooves: AudioStreamPlayer = game.get_node("Hooves")
+	if active: hoof_clock = clock
+	if game.muted or not riding or m.state not in ["running", "story", "paused"]:
+		hooves.stop()
+	elif active:
+		# Paused players report playing=false; unpause before deciding to start a new loop.
+		hooves.stream_paused = false
+		hooves.pitch_scale = 0.65 if procession_walk else (0.8 if m.slowdown > 0.0 else 1.0)
+		hooves.volume_db = -16.0 if procession_walk else (-15.0 if m.slowdown > 0.0 else -12.0)
+		# Play only on entering motion, never retrigger a complete loop on a hoof beat.
+		if hooves.stream != GALLOP: hooves.stream = GALLOP
+		if not hooves.playing: hooves.play()
 	if phase in ["meng_strike", "han_strike", "ambush", "intro", "ending"]: _story(game, phase, clock)
 	finale.update(game, phase, clock)
 	if active and phase != "fall" and not game.muted and not game.get_node("Wind").playing:

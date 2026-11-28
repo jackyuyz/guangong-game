@@ -24,6 +24,8 @@ func avoid(m: RefCounted) -> void:
 			if candidate not in blocked:
 				m.request_lane(signi(candidate - m.target_lane))
 				break
+	elif m.gap <= m.CLOSE_APPROACH and m.pursuer.target_lane not in blocked:
+		m.request_lane(signi(m.pursuer.target_lane - m.target_lane))
 func route(collisions: int, dt: float) -> RefCounted:
 	var m = Chapter.new()
 	m.start()

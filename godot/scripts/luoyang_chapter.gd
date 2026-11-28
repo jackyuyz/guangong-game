@@ -152,6 +152,12 @@ func _sync_world() -> void:
 	if phase == "chase":
 		$UI/Stage.text = "追孟坦 · 相距 %d" % ceili(maxf(0.0, model.gap - ChapterModel.CATCH_GAP))
 		$UI/Progress.value = clampf((ChapterModel.INITIAL_GAP - model.gap) / (ChapterModel.INITIAL_GAP - ChapterModel.CATCH_GAP) * 100.0, 0.0, 100.0)
+		if feedback_time <= 0.0 and model.gap <= ChapterModel.CLOSE_APPROACH:
+			if model.breakaway_notice > 0.0:
+				$UI/Warning.text = "孟坦加速 · 同道追击"
+			elif not model.catch_lane_aligned():
+				$UI/Warning.text = "同道追击 · 孟坦在" + ["左道", "中道", "右道"][model.pursuer.target_lane + 1]
+			$UI/WarningBacking.visible = not $UI/Warning.text.is_empty()
 		if model.elapsed >= ChapterModel.CHASE_LIMIT - art.finale.WARNING_SECONDS:
 			$UI/Warning.text = "岔口将近 · 孟坦即将逃脱"
 			$UI/WarningBacking.show()
@@ -181,7 +187,7 @@ func _sync_world() -> void:
 		$UI/Story/Title.text = caption[0]
 		$UI/Story/Text.text = caption[1] if phase != "fall" else model.failure_reason
 		$UI/Story/Advance.visible = phase not in ["fall", "escape"]
-		$UI/Story/Advance.text = "查看结算" if phase == "culture" else "跳过  Enter"
+		$UI/Story/Advance.text = "查看结算" if phase == "culture" else "跳过  ENTER"
 		$UI/Story/Advance.disabled = overlay_guard > 0.0
 		$UI/Story/Advance.focus_mode = Control.FOCUS_NONE
 	$UI/SaveNotice.text = save_notice
@@ -452,7 +458,9 @@ func _on_web_focus_change(arguments: Array) -> void:
 func _sync_arrow_tells() -> void:
 	for h in model.hazards:
 		if h.kind != "arrow" or not hazard_nodes.has(h.id): continue
-		var target: Node2D = hazard_nodes[h.id].get_node("Target")
+		var arrow: Node2D = hazard_nodes[h.id]
+		arrow.sample(h, road, reduced_motion)
+		var target: Node2D = arrow.get_node("Target")
 		var aiming: bool = h.phase == "aim"
 		var locked: bool = h.phase == "locked"
 		target.get_node("Tracking").visible = aiming

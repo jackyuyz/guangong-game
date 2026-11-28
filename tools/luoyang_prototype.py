@@ -23,6 +23,7 @@ RESOURCES = (
     "assets/branding/guan-seal-icon.png",
 )
 CHAPTER_RESOURCES = (
+    "assets/luoyang-audio/harse-gallop-loop2.mp3",
     "scripts/luoyang_chapter_model.gd", "scripts/luoyang_chapter.gd",
     "scripts/luoyang_interface.gd", "scripts/wuxia_feedback.gd",
     "scripts/settings_panel.gd", "scenes/ui/settings_panel.tscn",
@@ -36,6 +37,7 @@ CHAPTER_RESOURCES = (
     "assets/journey-map/five-passes-scroll.png",
     "scripts/luoyang_pursuer.gd", "scripts/luoyang_story.gd",
     "scripts/luoyang_pacing.gd", "scenes/luoyang/arrow.tscn",
+    "scripts/luoyang_arrow_view.gd", "assets/luoyang-art/war-arrow-incoming.png",
     "scripts/luoyang_finale.gd", "assets/luoyang-art/guan-yu-binding.png",
     "assets/luoyang-art/carriage-walk-v2.png", "assets/luoyang-art/approach-fork.png",
     "scenes/luoyang/hero_binding.tscn", "scenes/luoyang/carriage_walk.tscn",
