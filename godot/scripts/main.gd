@@ -516,10 +516,16 @@ func _enter_boss() -> void:
 	checkpoint = {"hp": hp, "seconds": combat_seconds, "hits": hits}
 	enemies.clear()
 	_reset_effects()
-	_spawn(level.boss_origin, level.boss, true)
+	_spawn_boss_group()
 	state = "play"
 	ext.update(self, 0.0)
 	_banner("孔秀 · 东岭关守将  /  看清蓄力，闪避后反击")
+
+func _spawn_boss_group() -> void:
+	# Boss first: lethal contact keeps victory priority over either escort's strike.
+	_spawn(level.boss_origin, level.boss, true)
+	for spawn in level.authored_boss_guards:
+		_spawn(spawn.origin, spawn.view)
 
 func _retry() -> void:
 	prologue.stop()
@@ -534,7 +540,7 @@ func _retry() -> void:
 		hits = checkpoint.hits
 		_place_player(level.boss_player_origin)
 		phase = 6
-		_spawn(level.boss_origin, level.boss, true)
+		_spawn_boss_group()
 	else:
 		hp = 6
 		_place_player(level.wave_retry_origin)

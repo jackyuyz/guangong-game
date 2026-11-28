@@ -212,6 +212,14 @@ position = Vector2(2110, 440)
 [node name="Boss" parent="Ground" unique_id=986997596 instance=ExtResource("e7")]
 position = Vector2(2780, 440)
 
+[node name="BossGuards" type="Node2D" parent="Ground"]
+
+[node name="LeftGuard" parent="Ground/BossGuards" instance=ExtResource("e6")]
+position = Vector2(2650, 440)
+
+[node name="RightGuard" parent="Ground/BossGuards" instance=ExtResource("e6")]
+position = Vector2(2910, 440)
+
 [node name="BossPlayerSpawn" type="Marker2D" parent="Ground" unique_id=879283361]
 position = Vector2(2460, 440)
 

@@ -22,8 +22,10 @@ extends Node2D
 @onready var backdrop_origin = $Backdrop.position
 @onready var wave_one: Array = $Ground/Guards/WaveOne.get_children()
 @onready var wave_two: Array = $Ground/Guards/WaveTwo.get_children()
-@onready var guard_views: Array = wave_one + wave_two
+@onready var boss_guards: Array = $Ground/BossGuards.get_children()
+@onready var guard_views: Array = wave_one + wave_two + boss_guards
 var authored_waves: Dictionary = {}
+var authored_boss_guards: Array = []
 
 func _ready() -> void:
 	for wave in [1, 2]:
@@ -31,6 +33,8 @@ func _ready() -> void:
 		authored_waves[wave] = []
 		for view in views:
 			authored_waves[wave].append({"origin": to_local(view.global_position), "view": view})
+	for view in boss_guards:
+		authored_boss_guards.append({"origin": to_local(view.global_position), "view": view})
 	for guard in $Ground/RetreatGuards.get_children():
 		guard.get_node("Health").hide()
 		guard.pose(1.0)

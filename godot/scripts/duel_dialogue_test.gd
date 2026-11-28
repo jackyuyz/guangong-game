@@ -49,13 +49,13 @@ func run() -> void:
 	var saved_resource = game.ext.resource
 	game.ui.get_node("Root/Dialogue/Skip").pressed.emit()
 	game._sync_scene()
-	check(game.phase == 6 and game.state == "play" and game.enemies.size() == 1 and not panel.visible and game.level.player.visible and game.level.boss.visible, "skip enters one real boss fight and restores world actors")
+	check(game.phase == 6 and game.state == "play" and game.enemies.size() == 3 and not panel.visible and game.level.player.visible and game.level.boss.visible, "skip enters one boss fight with two escorts and restores world actors")
 	game._action("skip")
 	game._action("next")
-	check(game.enemies.size() == 1 and game.ext.resource == saved_resource, "stale dialogue button actions cannot repeat boss entry or spend qi")
+	check(game.enemies.size() == 3 and game.ext.resource == saved_resource, "stale dialogue button actions cannot repeat boss entry or spend qi")
 	game._retry()
 	game._sync_scene()
-	check(game.phase == 6 and not panel.visible and game.enemies.size() == 1, "checkpoint retry bypasses the introduction")
+	check(game.phase == 6 and not panel.visible and game.enemies.size() == 3, "checkpoint retry bypasses the introduction and restores both escorts")
 	game.phase = 5
 	game.enemies.clear()
 	game._begin_dialogue(game.story.boss, "play")
@@ -67,7 +67,7 @@ func run() -> void:
 	check(game.dialogue_index == 2 and game.state == "dialogue" and panel.get_node("Speaker").text == "孔秀", "all three lines remain in order")
 	game._action("next")
 	game._sync_scene()
-	check(game.phase == 6 and game.enemies.size() == 1 and not panel.visible, "finishing the third line enters the same boss flow")
+	check(game.phase == 6 and game.enemies.size() == 3 and not panel.visible, "finishing the third line enters the same boss and escorts flow")
 	game.phase = 7
 	game.enemies.clear()
 	game.reduced_motion = false
